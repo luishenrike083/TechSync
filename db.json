@@ -1,0 +1,27 @@
+{
+  "usuarios": [
+    {
+      "id": "f1ee",
+      "nome": "luis",
+      "email": "luis@gmail.com",
+      "senha": "123456A!",
+      "telefoneCompleto": "+55 83982162814"
+    }
+  ],
+  "contatos": [
+    {
+      "id": "22ff",
+      "nome": "qwd qwwdwdd ",
+      "email": "luis@gmail.com",
+      "telefoneCompleto": "+55 83 982162814",
+      "mensagem": "sjhbacbwjkc sajk cbkjsaqucwi"
+    },
+    {
+      "id": "f6c3",
+      "nome": "qwd qwwdwdd ",
+      "email": "luis@gmail.com",
+      "telefoneCompleto": "+55 83 982162814",
+      "mensagem": "sjhbacbwjkc sajk cbkjsaqucwi"
+    }
+  ]
+}

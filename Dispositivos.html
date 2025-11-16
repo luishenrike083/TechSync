@@ -7,20 +7,16 @@
   <link rel="icon" href="imagem/logo.png">
   <style>
     :root {
-        /* Ajustei o roxo para ficar mais "neon" no fundo escuro */
         --cor-principal: #6a61ff; 
+        --cor-fundo-card: #20202a;
+        --cor-fundo-sidebar: #272734;
         
-        /* Novos tons para o tema escuro */
-        --cor-fundo-card: #20202a; /* Cinza azulado escuro para cards */
-        --cor-fundo-sidebar: #272734; /* Quase preto para sidebar */
+        --cor-texto-primario: #e1e1e6;
+        --cor-texto-secundario: #dbdbe8;
         
-        --cor-texto-primario: #e1e1e6; /* Branco gelo para texto principal */
-        --cor-texto-secundario: #dbdbe8; /* Cinza para textos secundários */
-        
-        --cor-destaque: #ff79c6; /* Rosa mais vibrante */
-        --cor-borda: #383842; /* Bordas mais sutis */
+        --cor-destaque: #ff79c6;
+        --cor-borda: #383842;
 
-        /* Cores de Status (mantidas ou levemente ajustadas) */
         --status-online: #50fa7b;
         --status-offline: #ff5555;
         --status-alerta: #f1fa8c;
@@ -34,7 +30,7 @@
       /* Mantive o background original como pedido */
       background: url("imagem/fundo_roxo.png") no-repeat center center/cover; 
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background-color: #121214; /* Cor de fallback escura */
+      background-color: #121214;
       color: var(--cor-texto-primario);
       height: 100vh;
       display: flex;
@@ -62,7 +58,7 @@
     .btn-principal:hover {
         background-color: var(--cor-destaque);
         transform: translateY(-2px);
-        box-shadow: 0 0 10px var(--cor-destaque); /* Brilho neon ao passar o mouse */
+        box-shadow: 0 0 10px var(--cor-destaque);
     }
 
     .dashboard { display: flex; height: 100vh; }
@@ -70,10 +66,9 @@
     /* Sidebar */
     .sidebar {
       width: 220px;
-      /* Removi a imagem 'fundo_branco' e coloquei cor escura */
       background: var(--cor-fundo-sidebar); 
       padding: 20px;
-      box-shadow: 2px 0 5px var(--sombra-suave);
+      box-shadow: 2px 0 5px rgba(0,0,0,0.2);
       border-right: 1px solid var(--cor-borda);
     }
     .sidebar h2 { 
@@ -81,7 +76,7 @@
       text-align: center; 
       margin-bottom: 20px; 
       color: var(--cor-principal); 
-      -webkit-text-stroke-width: 0; /* Removi o contorno para ficar mais limpo no dark */
+      -webkit-text-stroke-width: 0; 
       text-shadow: 0 0 10px rgba(106, 97, 255, 0.3);
     }
     .sidebar img { width: 100px; display: block; margin: 0 auto 20px auto; }
@@ -102,9 +97,9 @@
 
     /* Header */
     .header {
-      background-color: rgba(18, 18, 20, 0.7); /* Escuro com transparência */
-      backdrop-filter: blur(5px); /* Efeito de vidro */
-      box-shadow: var(--sombra-suave);
+      background-color: rgba(18, 18, 20, 0.7);
+      backdrop-filter: blur(5px); 
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
       padding: 15px 30px;
       display: flex;
       justify-content: space-between;
@@ -177,12 +172,12 @@
         color: var(--cor-texto-primario);
     }
     .device-list th {
-        background-color: #292933; /* Cabeçalho da tabela ligeiramente mais claro que o fundo */
+        background-color: #292933;
         font-weight: 600;
         color: var(--cor-principal);
         border-radius: 5px 5px 0 0;
     }
-    .device-list tr:hover { background-color: #2a2a35; } /* Hover na linha da tabela */
+    .device-list tr:hover { background-color: #2a2a35; } 
     
     .status-online { color: var(--status-online); font-weight: bold; text-shadow: 0 0 5px rgba(80, 250, 123, 0.3);}
     .status-offline { color: var(--status-offline); font-weight: bold; }
@@ -190,7 +185,7 @@
 
     .modal-overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background-color: rgba(0, 0, 0, 0.8); /* Fundo do modal mais escuro */
+      background-color: rgba(0, 0, 0, 0.8); 
       display: flex; justify-content: center; align-items: center;
       display: none; z-index: 1000;
       backdrop-filter: blur(3px);
@@ -262,7 +257,7 @@
         
         <div class="header-actions-left">
           <div class="search">
-            <input type="text" placeholder="Pesquisar dispositivo...">
+            <input type="text" id="inputPesquisaDispositivo" placeholder="Pesquisar dispositivo...">
           </div>
           <button class="btn btn-principal btn-add-device">+ Adicionar Dispositivo</button>
         </div>
@@ -348,6 +343,10 @@
     const totalDevicesEl = document.getElementById('totalDevices');
     const onlineDevicesEl = document.getElementById('onlineDevices');
     const alertDevicesEl = document.getElementById('alertDevices');
+    
+    // VARIÁVEL INTUITIVA PARA A BUSCA
+    const inputPesquisa = document.getElementById('inputPesquisaDispositivo');
+
 
     const openModal = () => modalOverlay.classList.add('modal-visible');
     const closeModal = () => modalOverlay.classList.remove('modal-visible');
@@ -374,7 +373,7 @@
         alertDevicesEl.textContent = alert;
     }
 
-    //Integração com o Json server
+    // Integrafão com o Json server
     async function loadDevices() {
         try {
             const response = await fetch(API_ENDPOINT);
@@ -424,6 +423,44 @@
         }
     }
 
+    function filtrarDispositivos() {
+        // Pega o texto de pesquisa e converte para maiúsculas para buscar melhor
+        const textoFiltro = inputPesquisa.value.toUpperCase();
+        
+        // Obtém todas as linhas do corpo da tabela
+        const linhasTabela = deviceTableBody.getElementsByTagName('tr');
+
+        for (let i = 0; i < linhasTabela.length; i++) {
+            const linhaAtual = linhasTabela[i];
+            const celulas = linhaAtual.getElementsByTagName('td');
+            
+            let encontrouCorrespondencia = false;
+            
+            for (let j = 0; j < celulas.length; j++) {
+                const celulaAtual = celulas[j];
+                
+                if (celulaAtual) {
+                    // Pega o conteúdo da célula
+                    const textoCelula = celulaAtual.textContent || celulaAtual.innerText;
+                    
+                    // Verifica se o texto da célula contém o texto do filtro
+                    if (textoCelula.toUpperCase().indexOf(textoFiltro) > -1) {
+                        encontrouCorrespondencia = true;
+                        break;
+                    }
+                }
+            }
+            
+
+            if (encontrouCorrespondencia) {
+                linhaAtual.style.display = "";
+            } else {
+                linhaAtual.style.display = "none";
+            }
+        }
+    }
+
+
     document.querySelector('.btn-add-device').addEventListener('click', openModal);
     document.querySelector('.close-modal').addEventListener('click', closeModal);
     
@@ -447,6 +484,10 @@
 
       createNewDevice(novoDispositivo);
     });
+    
+    if (inputPesquisa) {
+        inputPesquisa.addEventListener('keyup', filtrarDispositivos);
+    }
 
     loadDevices();
     displayUserName();

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechSync - Cadastro</title>
+    <link rel="icon" href="imagem/logo.png">
+</head>
+<style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: url("imagem/fundo_roxo.png") no-repeat center center/cover; 
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #333;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px 0; /* Adiciona um padding para rolagem em telas menores */
+    }
+
+    .cadastro-container {
+      width: 100%;
+      max-width: 500px;
+      padding: 20px;
+    }
+
+    .cadastro-box {
+      background: #fff;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    
+    .cadastro-box img {
+      width: 80px;
+      margin-bottom: 15px;
+    }
+
+    .cadastro-box h1 {
+      font-size: 2rem;
+      color: #5329eb;
+      margin-bottom: 25px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      text-align: left;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+
+    .telefone-box {
+      display: flex;
+      gap: 15px;
+    }
+
+    .codigo {
+      flex: 1;
+    }
+
+    .telefone-input {
+      flex: 2;
+    }
+
+    label {
+      font-size: 0.9rem;
+      font-weight: bold;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .senha-info {
+      font-size: 12px;
+      color: #666;
+      margin-top: 5px;
+    }
+
+    button {
+      padding: 12px;
+      border: none;
+      background: #5329eb;
+      color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1.1rem;
+      transition: background-color 0.3s ease;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background: #e25b88;
+    }
+
+    .login-link {
+      margin-top: 15px;
+      font-size: 14px;
+    }
+</style>
+<body>
+  <div class="cadastro-container">
+    <div class="cadastro-box">
+      <img src="imagem/logo.png" alt="Logo TechSync">
+      <h1>Cadastre-se</h1>
+      <form>
+        <div>
+          <label for="nome">Nome</label>
+          <input type="text" id="nome" name="nome" placeholder="Seu nome completo" required>
+        </div>
+
+        <div>
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="seu@email.com" required>
+        </div>
+
+        <div>
+          <label for="senha">Senha</label>
+          <input type="password" id="senha" name="senha" placeholder="Crie uma senha forte" required>
+          <p class="senha-info">Use 8+ caracteres com letras, números e símbolos.</p>
+        </div>
+
+        <div class="telefone-box">
+          <div class="codigo">
+            <label for="codigo">País</label>
+            <select id="codigo" name="codigo">
+              <option value="+55">BR +55</option>
+              <option value="+1">US +1</option>
+              <option value="+351">PT +351</option>
+              <option value="+44">GB +44</option>
+              <!-- Adicione outros códigos conforme necessário -->
+            </select>
+          </div>
+          <div class="telefone-input">
+            <label for="telefone">Telefone/WhatsApp</label>
+            <input type="tel" id="telefone" name="telefone" placeholder="Apenas números" required>
+          </div>
+        </div>
+
+        <button type="submit">Enviar</button>
+        <p class="login-link">Já tem uma conta? <a href="login.html">Faça login</a></p>
+      </form>
+    </div>
+  </div>
+
+<script type="module">
+  import { create } from './js/services/api.js';
+
+  const form = document.querySelector('form');
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault(); // Impede a página de recarregar
+
+    // Captura os valores dos campos
+    const nome = document.getElementById('nome').value;
+    const email = document.getElementById('email').value;
+    const senha = document.getElementById('senha').value;
+    const codigo = document.getElementById('codigo').value;
+    const telefone = document.getElementById('telefone').value;
+
+    // Cria o objeto do usuário
+    const novoUsuario = {
+      nome: nome,
+      email: email,
+      senha: senha,
+      telefoneCompleto: `${codigo} ${telefone}`
+    };
+
+    try {
+      // Envia para o db.json na coleção 'usuarios'
+      await create('usuarios', novoUsuario);
+      
+      alert('Cadastro realizado com sucesso!');
+      form.reset(); // Limpa os campos do formulário
+
+    } catch (error) {
+      console.error('Erro no cadastro:', error);
+      alert('Erro ao realizar cadastro. Verifique se o json-server está rodando.');
+    }
+  });
+</script>
+</body>
+</html>

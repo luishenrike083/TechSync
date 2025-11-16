@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechSync - Login</title>
+    <link rel="icon" href="imagem/logo.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: url("imagem/fundo_roxo.png") no-repeat center center/cover; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #333;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+        }
+        
+
+        .login-box {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .login-box img {
+            width: 80px;
+            margin-bottom: 15px;
+        }
+
+        .login-box h1 {
+            font-size: 2rem;
+            color: #5329eb;
+            margin-bottom: 25px;
+        }
+
+        .login-box form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .login-box input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .login-box button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            background: #5329eb;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .login-box button:hover {
+            background: #e25b88;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <img src="imagem/logo.png" alt="Logo TechSync">
+            <h1>TechSync</h1>
+            <form id="loginForm">
+                <input type="text" id="user" name="username" placeholder="Usuário (Email)" required>
+                <input type="password" id="senha" name="password" placeholder="Senha" required>
+                <button type="submit">Entrar</button>
+                <h1 style="font-size: 12px;">Ainda não tem uma conta? <a href="Cadastro.html">Cadastre-se</a></h1>
+            </form>
+        </div>
+    </div>
+
+    <script type="module">
+        const API_USUARIOS_URL = 'http://localhost:3000/usuarios';
+
+        document.getElementById('loginForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const email = document.getElementById('user').value;
+            const senha = document.getElementById('senha').value;
+
+            try {
+                // Busca todos os usuários
+                const response = await fetch(API_USUARIOS_URL);
+                if (!response.ok) {
+                    throw new Error('Erro ao buscar usuários na API.');
+                }
+                const usuarios = await response.json();
+                const usuarioEncontrado = usuarios.find(u => u.email === email && u.senha === senha);
+
+                if (usuarioEncontrado) {
+                    localStorage.setItem('usuarioLogadoNome', usuarioEncontrado.nome);
+                    window.location.href = 'Dispositivos.html';
+                } else {
+                    alert('Credenciais inválidas. Verifique seu usuário (email) e senha.');
+                }
+
+            } catch (error) {
+                console.error('Erro de login:', error);
+                alert('Não foi possível conectar ao servidor de usuários. Verifique se o json-server está rodando.');
+            }
+        });
+    </script>
+</body>
+</html>

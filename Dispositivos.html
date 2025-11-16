@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TechSync - Dispositivos</title>
+  <link rel="icon" href="imagem/logo.png">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: url("imagem/fundo_dashboard.jpg") no-repeat center center/cover;;
+      color: #333;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ===== DASHBOARD ===== */
+    .dashboard {
+      display: flex;
+      height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 220px;
+      background: url("imagem/fundo_contato.png") no-repeat center center/cover;;
+      color: #fff;
+      padding: 20px;
+    }
+
+    .sidebar h2 {
+      margin-bottom: 0px;
+      font-size: 40px;
+      text-align: center;
+      color: #fff;
+    }
+
+    .sidebar img {
+      width: 100px;   /* largura fixa da logo */
+      height: auto;   /* mantém a proporção */
+      margin-bottom: 20px; /* espaço abaixo da logo */
+      display: block;
+      margin: 0 auto 20px auto; /* centraliza horizontalmente */
+    }
+
+    .sidebar ul {
+      list-style: none;
+    }
+    .sidebar ul li {
+      margin: 15px 0;
+      font-size: 22px;
+    }
+    .sidebar ul li a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+    .sidebar ul li a:hover { color: #ffad33; }
+    
+    .sidebar ul li a.active { color: #ffad33; } 
+
+    /* Main */
+    .main {
+      flex: 1;
+      display: flex;
+      color: #fff;
+      flex-direction: column;
+    }
+
+    /* Header */
+    .header {
+      background: none;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .search input {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .header-actions-left {
+      display: flex;
+      align-items: center; 
+      gap: 15px;
+    }
+
+    .btn-add-device {
+      background-color: #ffad33;
+      color: #fff;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    
+    .btn-add-device:hover {
+      background-color: #e69c2e;
+    }
+
+    /* Conteúdo */
+    .content {
+      padding: 20px;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    /* Cards */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background: transparent;
+      transition: all 0.3s ease-in-out;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      margin: 10px 0;
+      color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .card:hover {
+      box-shadow: 0 5px 25px rgba(255, 255, 255, 0.6);
+      transform: translateY(-10px) scale(1.02);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      background-color: rgba(255, 255, 255, 0.08);
+      cursor: pointer
+    }
+
+
+    /* Lista de Dispositivos */
+    .devices, .reports {
+      background: transparent;
+      color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .device-list {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+    .device-list th, .device-list td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .device-list th {
+        background-color: rgba(255, 255, 255, 0.1);
+        font-weight: bold;
+    }
+    .device-list tr:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+    }
+    .status-online { color: #4CAF50; font-weight: bold; }
+    .status-offline { color: #F44336; font-weight: bold; }
+    .status-alert { color: #FFEB3B; font-weight: bold; }
+
+
+    .devices:hover, .reports:hover {
+      box-shadow: 0 5px 25px rgba(255, 255, 255, 0.6);
+      transform: translateY(-10px) scale(1.02);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      background-color: rgba(255, 255, 255, 0.08);
+      cursor: pointer
+    }
+    .devices h3, .reports h3 { margin-bottom: 15px; }
+    .device-item, .report-item {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+    }
+    .device-item:last-child, .report-item:last-child {
+      border: none;
+    }
+
+    /* --- NOVO: Estilos do Modal (Pop-up) --- */
+
+    /* O fundo escuro que cobre a página */
+    .modal-overlay {
+      position: fixed; /* Fica fixo na tela */
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7); /* Fundo preto transparente */
+      
+      /* Centraliza o conteúdo do modal */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      /* Escondido por padrão */
+      display: none; 
+      z-index: 1000; /* Garante que fique na frente de tudo */
+    }
+
+    /* Classe que o JavaScript vai adicionar para MOSTRAR o modal */
+    .modal-visible {
+      display: flex; 
+    }
+
+    /* A caixa branca do modal */
+    .modal-content {
+      background-color: #fff;
+      color: #333; /* Texto escuro para legibilidade */
+      padding: 25px;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 500px; /* Largura máxima */
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      position: relative;
+    }
+
+    /* Botão 'X' para fechar */
+    .close-modal {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 24px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    /* Estilos para o formulário dentro do modal */
+    #addDeviceForm {
+      display: flex;
+      flex-direction: column;
+      gap: 15px; /* Espaço entre os campos */
+    }
+    #addDeviceForm h3 {
+      margin-bottom: 10px;
+      color: #333;
+    }
+    #addDeviceForm label {
+      font-weight: bold;
+    }
+    #addDeviceForm input,
+    #addDeviceForm select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    #addDeviceForm button {
+      background-color: #4CAF50; /* Verde para "salvar" */
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    #addDeviceForm button:hover {
+      background-color: #45a049;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="dashboard" id="dashboard">
+    <aside class="sidebar">
+      <img src="imagem/logo.png" alt="Logo TechSync">
+      <h2>TechSync</h2>
+      <ul>
+        <li><a href="techSyncD.html"> Dashboard</a></li>
+        <li><a href="#" class="active"> Dispositivos</a></li>
+        <li><a href="#"> Relatórios</a></li>
+        <li><a href="#"> Configurações</a></li>
+      </ul>
+    </aside>
+
+    <main class="main">
+      <div class="header">
+        
+        <div class="header-actions-left">
+          <div class="search">
+            <input type="text" placeholder="Pesquisar dispositivo...">
+          </div>
+          <button class="btn-add-device">+ Adicionar Dispositivo</button>
+        </div>
+
+        <div class="user">👤 Admin</div>
+      </div>
+
+      <div class="content">
+        <div class="cards">
+          <div class="card">
+            <h3>Total de Dispositivos</h3>
+            <p>150</p>
+          </div>
+          <div class="card">
+            <h3>Online Agora</h3>
+            <p>120</p>
+          </div>
+          <div class="card">
+            <h3>Dispositivos Críticos</h3>
+            <p>3</p>
+          </div>
+        </div>
+
+        <div class="devices">
+          <h3>Lista de Dispositivos Conectados</h3>
+          
+          <table class="device-list">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Tipo</th>
+                <th>Endereço IP</th>
+                <th>Status</th>
+                <th>Última Atualização</th>
+              </tr>
+            </thead>
+            <tbody> 
+              <tr>
+                <td>Roteador - Escritório</td>
+                <td>Roteador</td>
+                <td>192.168.0.1</td>
+                <td class="status-online">Online</td>
+                <td>há 5s</td>
+              </tr>
+              <tr>
+                <td>Switch - DataCenter</td>
+                <td>Switch</td>
+                <td>10.0.0.5</td>
+                <td class="status-alert">Alerta</td>
+                <td>há 1m</td>
+              </tr>
+              <tr>
+                <td>Access Point - Recepção</td>
+                <td>Access Point</td>
+                <td>172.16.0.2</td>
+                <td class="status-online">Online</td>
+                <td>há 10s</td>
+              </tr>
+              <tr>
+                <td>Servidor Web</td>
+                <td>Servidor</td>
+                <td>10.0.0.10</td>
+                <td class="status-online">Online</td>
+                <td>há 2s</td>
+              </tr>
+              <tr>
+                <td>Impressora RH</td>
+                <td>Periférico</td>
+                <td>192.168.0.25</td>
+                <td class="status-offline">Offline</td>
+                <td>há 3h</td>
+              </tr>
+              <tr>
+                <td>Firewall Principal</td>
+                <td>Firewall</td>
+                <td>10.0.0.1</td>
+                <td class="status-online">Online</td>
+                <td>há 15s</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="reports">
+          <h3>Estatísticas de Rede</h3>
+          <p>Utilização Média de CPU: <strong>35%</strong></p>
+          <p>Tráfego de Saída: <strong>120 Mbps</strong></p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="modal-overlay" id="deviceModalOverlay">
+    <div class="modal-content">
+      <span class="close-modal">&times;</span>
+      
+      <form id="addDeviceForm">
+        <h3>Adicionar Novo Dispositivo</h3>
+        
+        <label for="deviceName">Nome:</label>
+        <input type="text" id="deviceName" required>
+        
+        <label for="deviceType">Tipo:</label>
+        <input type="text" id="deviceType" required>
+        
+        <label for="deviceIp">Endereço IP:</label>
+        <input type="text" id="deviceIp" required>
+        
+        <label for="deviceStatus">Status:</label>
+        <select id="deviceStatus">
+          <option value="Online">Online</option>
+          <option value="Offline">Offline</option>
+          <option value="Alerta">Alerta</option>
+        </select>
+        
+        <button type="submit">Salvar Dispositivo</button>
+      </form>
+    </div>
+  </div>
+
+
+  <script>
+    // 1. Pegar os elementos do HTML
+    const openModalBtn = document.querySelector('.btn-add-device');
+    const modalOverlay = document.getElementById('deviceModalOverlay');
+    const closeModalBtn = document.querySelector('.close-modal');
+    const addDeviceForm = document.getElementById('addDeviceForm');
+    const deviceTableBody = document.querySelector('.device-list tbody');
+
+    // 2. Funções para abrir e fechar o modal
+    function openModal() {
+      modalOverlay.classList.add('modal-visible');
+    }
+
+    function closeModal() {
+      modalOverlay.classList.remove('modal-visible');
+    }
+
+    // 3. Adicionar "escutadores" de clique
+    openModalBtn.addEventListener('click', openModal);
+    closeModalBtn.addEventListener('click', closeModal);
+
+    // Fecha o modal se clicar fora da caixa (no overlay)
+    modalOverlay.addEventListener('click', function(event) {
+      if (event.target === modalOverlay) {
+        closeModal();
+      }
+    });
+
+    // 4. Lógica para ADICIONAR o dispositivo na tabela
+    addDeviceForm.addEventListener('submit', function(event) {
+      // Impede o formulário de recarregar a página
+      event.preventDefault(); 
+
+      // 4.1. Pegar os valores dos campos do formulário
+      const nome = document.getElementById('deviceName').value;
+      const tipo = document.getElementById('deviceType').value;
+      const ip = document.getElementById('deviceIp').value;
+      const status = document.getElementById('deviceStatus').value;
+
+      // 4.2. Determinar a classe CSS para o status
+      let statusClass = '';
+      if (status === 'Online') {
+        statusClass = 'status-online';
+      } else if (status === 'Offline') {
+        statusClass = 'status-offline';
+      } else if (status === 'Alerta') {
+        statusClass = 'status-alert';
+      }
+
+      // 4.3. Criar a nova linha da tabela (<tr>) com os dados
+      const newRow = document.createElement('tr');
+      newRow.innerHTML = `
+        <td>${nome}</td>
+        <td>${tipo}</td>
+        <td>${ip}</td>
+        <td class="${statusClass}">${status}</td>
+        <td>agora mesmo</td>
+      `;
+
+      // 4.4. Adicionar a nova linha no corpo (tbody) da tabela
+      deviceTableBody.appendChild(newRow);
+
+      // 4.5. Fechar o modal e limpar o formulário
+      closeModal();
+      addDeviceForm.reset(); // Limpa os campos
+    });
+  </script>
+
+</body>
+</html>

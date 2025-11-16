@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechSync - Login</title>
+    <link rel="icon" href="imagem/logo_roxo.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #333;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center; /* Evita barras de rolagem se o vídeo for grande */
+        }
+
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; 
+            z-index: -1; 
+            }
+
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            position: relative; 
+            z-index: 1;
+        }
+        
+        .login-box {
+            background: rgb(255, 255, 255); 
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .login-box img {
+            width: 80px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-box h1 {
+            font-size: 30px;
+            color: #5329eb;
+            margin-bottom: 25px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .login-box form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .login-box input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 13px;
+            transform: translateY(-2px);
+        }   
+
+        .login-box button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            background: #5329eb;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            }
+
+        .login-box button:hover {
+            background: #e25b88;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+
+    <video class="video-background" autoplay muted loop playsinline>
+        <source src="imagem/Video Project 3.mp4" type="video/mp4">
+    </video>
+
+    <div class="login-container">
+        <div class="login-box">
+            <img src="imagem/logo_roxo.png" alt="Logo TechSync">
+            <h1>TechSync</h1>
+            
+            <form id="loginForm">
+                <input type="text" id="nome" name="username" placeholder="Usuário" required>
+                <input type="password" id="senha" name="password" placeholder="Senha" required>
+                <button type="submit">Entrar</button>
+                <p style="font-size: 12px;"><b> não tem uma conta? <a href="Cadastro.html">Cadastre-se</a></b></p>
+            </form>
+        </div>
+    </div>
+<script>
+    const loginForm = document.getElementById('loginForm');
+
+    loginForm.addEventListener('submit', async (event) => {
+        event.preventDefault(); 
+
+        const usuarioDigitado = document.getElementById('nome').value;
+        const senhaDigitada = document.getElementById('senha').value;
+
+        try {
+            const response = await fetch('http://localhost:3000/usuarios');
+            const usuarios = await response.json();
+
+            const usuarioEncontrado = usuarios.find(user => 
+                user.nome === usuarioDigitado && user.senha === senhaDigitada
+            );
+
+            if (usuarioEncontrado) {
+                window.location.href = "techSyncD.html";
+            } else {
+                alert("Usuário ou senha incorretos!");
+            }
+
+        } catch (error) {
+            console.error("Erro:", error);
+            alert("Erro ao conectar com o servidor");
+        }
+    });
+</script>
+</body>
+</html>

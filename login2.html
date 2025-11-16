@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechSync - Login</title>
+    <link rel="icon" href="imagem/logo_roxo.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: url("imagem/fundo_roxo.png") no-repeat center center/cover; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #333;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+        }
+        
+
+        .login-box {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .login-box img {
+            width: 80px;
+            margin-bottom: 15px;
+        }
+
+        .login-box h1 {
+            font-size: 2rem;
+            color: #5329eb;
+            margin-bottom: 25px;
+        }
+
+        .login-box form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .login-box input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .login-box button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            background: #5329eb;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .login-box button:hover {
+            background: #e25b88;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <img src="imagem/logo_roxo.png" alt="Logo TechSync">
+            <h1>TechSync</h1>
+            <form action="techSyncD.html" method="get">
+                <input type="text" id="username" name="username" placeholder="Usuário" required>
+                <input type="password" id="password" name="password" placeholder="Senha" required>
+                <button type="submit">Entrar</button>
+                <h1 style="font-size: 12px;">ainda não tem uma conta? <a href="Cadastro.html">Cadastre-se</a></h1>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TechSync - Dashboard</title>
+  <link rel="icon" href="imagem/logo.png">
+  <style>
+    :root {
+        --cor-principal: #6a61ff; 
+        --cor-fundo-card: #20202a;
+        --cor-fundo-sidebar: #272734;
+        
+        --cor-texto-primario: #e1e1e6;
+        --cor-texto-secundario: #dbdbe8;
+        
+        --cor-destaque: #ff79c6;
+        --cor-borda: #383842;
+
+        --status-online: #50fa7b;
+        --status-offline: #ff5555;
+        --status-alerta: #f1fa8c;
+
+        --sombra-suave: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: url("imagem/fundo_roxo.png") no-repeat center center/cover; 
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--cor-texto-primario);
+      height: 100vh;
+      display: flex;
+    }
+    
+    h2, h3 { font-weight: 700; margin-top: 0; }
+
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: none;
+        font-family: inherit;
+    }
+    .btn-principal {
+        background-color: var(--cor-principal);
+        color: #fff;
+    }
+    .btn-principal:hover {
+        background-color: var(--cor-destaque);
+        transform: translateY(-2px);
+        box-shadow: 0 0 10px var(--cor-destaque);
+    }
+
+    .dashboard { display: flex; height: 100%; flex: 1; }
+
+    /* Sidebar */
+    .sidebar {
+      width: 220px;
+      background: var(--cor-fundo-sidebar); 
+      padding: 20px;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+      border-right: 1px solid var(--cor-borda);
+      /* MODIFICADO/ADICIONADO */
+      transition: width 0.3s ease, min-width 0.3s ease, padding 0.3s ease;
+      overflow: hidden; 
+      white-space: nowrap;
+    }
+    
+    /* ADICIONADO */
+    .dashboard.sidebar-toggled .sidebar {
+        width: 0;
+        min-width: 0;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    /* ADICIONADO */
+    .btn-toggle-sidebar {
+        background: none;
+        border: none;
+        color: var(--cor-texto-primario);
+        font-size: 24px;
+        cursor: pointer;
+        padding: 0 5px;
+        margin-right: 10px;
+        transition: color 0.3s;
+    }
+    .btn-toggle-sidebar:hover { color: var(--cor-destaque); }
+
+
+    .sidebar h2 { 
+      font-size: 40px; 
+      text-align: center; 
+      margin-bottom: 20px; 
+      color: var(--cor-principal); 
+      text-shadow: 0 0 10px rgba(106, 97, 255, 0.3);
+    }
+    .sidebar img { width: 100px; display: block; margin: 0 auto 20px auto; }
+
+    .sidebar ul { list-style: none; }
+    .sidebar ul li { margin: 15px 0; font-size: 20px; }
+    .sidebar ul li a {
+      color: var(--cor-texto-secundario);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    .sidebar ul li a:hover { color: var(--cor-destaque); text-shadow: 0 0 7px var(--cor-destaque);}
+    .sidebar ul li a.active { color: var(--cor-destaque); font-weight: 700; }
+
+    /* Main */
+    .main { flex: 1; display: flex; flex-direction: column; }
+
+    /* Header */
+    .header {
+      background-color: rgba(18, 18, 20, 0.7);
+      backdrop-filter: blur(5px); 
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--cor-borda);
+    }
+    
+    .header .user { color: var(--cor-texto-primario); font-weight: 600;}
+    
+    .header-actions-left { display: flex; align-items: center; gap: 15px; }
+
+    .content { padding: 30px; flex: 1; overflow-y: auto; }
+
+    .componente-container {
+        background-color: var(--cor-fundo-card);
+        color: var(--cor-texto-primario);
+        padding: 25px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        box-shadow: var(--sombra-suave);
+        border: 1px solid var(--cor-borda);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .componente-container h3 { 
+        margin-bottom: 15px; 
+        color: var(--cor-principal); 
+        font-size: 1.5rem;
+    }
+    
+  </style>
+</head>
+<body>
+
+  <div class="dashboard" id="dashboard">
+    <aside class="sidebar">
+      <a href="login.html" id="logoutLinkDashboard" style="text-decoration: none; display: block; cursor: pointer;">
+        <img src="imagem/logo.png" alt="Logo TechSync">
+        <h2>TechSync</h2>
+      </a>
+      <ul>
+        <li><a href="dashboard.html" class="active"> Dashboard</a></li>
+        <li><a href="Dispositivos.html"> Dispositivos</a></li>
+        <li><a href="relatorio.html"> Relatórios</a></li>
+        <li><a href="configuracao.html"> Configurações</a></li>
+      </ul>
+    </aside>
+
+    <main class="main">
+      <div class="header">
+        <div class="header-actions-left">
+          <button class="btn-toggle-sidebar" id="toggleSidebarBtn">☰</button>
+          <h2 style="font-size: 1.5rem; color: var(--cor-texto-primario); margin: 0;">Dashboard Principal</h2>
+        </div>
+        <div class="user">👤 <span id="userNameDisplay">Admin</span></div>
+      </div>
+
+      <div class="content">
+        <div class="componente-container">
+            <h3>Bem-vindo ao TechSync!</h3>
+            <p>Este é o seu painel de controle central. Use o menu à esquerda para navegar entre as seções.</p>
+        </div>
+      </div>
+    </main>
+  </div>
+  
+  <script type="module">
+    // ADICIONADO
+    const toggleSidebarBtn = document.getElementById('toggleSidebarBtn');
+    const dashboard = document.getElementById('dashboard');
+
+    function displayUserName() {
+        const userName = localStorage.getItem('usuarioLogadoNome');
+        const userNameDisplay = document.getElementById('userNameDisplay'); // Corrigido para buscar o elemento
+
+        if (userName) {
+            userNameDisplay.textContent = userName.charAt(0).toUpperCase() + userName.slice(1);
+        } else {
+            userNameDisplay.textContent = 'Admin'; 
+        }
+    }
+
+    document.getElementById('logoutLinkDashboard').addEventListener('click', function() {
+        localStorage.removeItem('usuarioLogadoNome');
+    });
+
+    toggleSidebarBtn.addEventListener('click', () => {
+        dashboard.classList.toggle('sidebar-toggled');
+    });
+
+    displayUserName();
+  </script>
+
+</body>
+</html>

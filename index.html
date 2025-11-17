@@ -7,14 +7,25 @@
     <link rel="icon" href="imagem/logo.png">
 
     <style>
+        /* * =========================================
+         * ESTILO ATUALIZADO (DARK MODE)
+         * Baseado na identidade do dashboard.
+         * =========================================
+        */
         :root {
-            --primary-purple: #4b41e2; 
-            --primary-blue: #007bff;  
-            --dark-text: #333;
-            --light-text: #555555;
-            --bg-light-gray: #cadbf0; 
-            --white: #fff;
-            --border-color: #eee;
+            --cor-principal: #6a61ff; 
+            --cor-fundo-card: #20202a;
+            --cor-fundo-sidebar: #272734; /* Usado para seções de fundo */
+            
+            --cor-texto-primario: #e1e1e6;
+            --cor-texto-secundario: #dbdbe8;
+            
+            --cor-destaque: #ff79c6;
+            --cor-borda: #383842;
+            
+            --cor-fundo-body: #121214; /* O fundo mais escuro */
+
+            --sombra-suave: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
 
         * {
@@ -32,8 +43,12 @@
             margin: 0;
             padding: 0;
             line-height: 1.6;
-            color: var(--dark-text);
-            background-color: var(--white);
+            
+            /* Identidade Visual Dark Mode */
+            background: url("imagem/fundo_roxo.png") no-repeat center center/cover; 
+            background-color: var(--cor-fundo-body);
+            color: var(--cor-texto-primario);
+            background-attachment: fixed;
         }
 
         .container {
@@ -49,34 +64,45 @@
 
         h1 {
             font-size: 3rem;
-            color: var(--primary-purple);
+            color: var(--cor-texto-primario); /* Título principal em branco */
             margin-bottom: 20px;
         }
-
+        
+        /* Títulos de seção */
         h2 {
             font-size: 2.2rem;
             text-align: center;
             margin-bottom: 40px;
-            color: var(--dark-text);
+            color: var(--cor-principal); /* Roxo */
         }
 
+        /* Cor específica para o título "Sobre", conforme solicitado */
+        #sobre h2 {
+            color: var(--cor-texto-primario);
+        }
+
+        /* Títulos de card */
         h3 {
             font-size: 1.5rem;
-            color: var(--primary-purple);
+            color: var(--cor-principal); /* Roxo */
             margin-bottom: 15px;
         }
 
         p {
             margin-bottom: 15px;
-            color: var(--light-text);
+            color: var(--cor-texto-secundario); /* Cinza claro */
         }
 
         section {
             padding: 80px 0;
+            /* Fundo transparente por padrão, mostrando o body */
         }
 
+        /* Seções com fundo de "card" */
         .bg-gray {
-            background-color: var(--bg-light-gray);
+            background-color: var(--cor-fundo-card);
+            border-top: 1px solid var(--cor-borda);
+            border-bottom: 1px solid var(--cor-borda);
         }
 
         .btn {
@@ -88,38 +114,44 @@
             transition: all 0.3s ease;
             cursor: pointer;
             border: none;
+            font-size: 1rem;
         }
 
+        /* Botão Principal (Roxo -> Rosa) */
         .btn-primary {
-            background-color: var(--primary-purple);
-            color: var(--white);
+            background-color: var(--cor-principal);
+            color: var(--cor-texto-primario);
         }
         .btn-primary:hover {
-            background-color: #5a2ea4;
+            background-color: var(--cor-destaque);
             transform: translateY(-2px);
+            box-shadow: 0 0 10px var(--cor-destaque);
         }
 
+        /* Botão Secundário (Estilo do dashboard) */
         .btn-secondary {
-            background-color: transparent;
-            color: var(--primary-purple);
-            font-size: 17px;
-            border: 2px solid var(--primary-purple);
+            background-color: var(--cor-fundo-sidebar);
+            color: var(--cor-texto-primario);
+            border: 1px solid var(--cor-borda);
         }
         .btn-secondary:hover {
-            background-color: var(--primary-purple);
-            color: var(--white);
+            background-color: #383842;
+            border-color: var(--cor-destaque);
+            color: var(--cor-destaque);
         }
 
-            header.main-header {
-              background: var(--white);
-              padding: 20px 0; 
-              border-bottom: 1px solid var(--border-color);
-              position: sticky;
-              top: 0;
-              z-index: 100;
-          }
+        /* Header (Estilo do dashboard) */
+        header.main-header {
+            background-color: rgba(18, 18, 20, 0.7);
+            backdrop-filter: blur(5px); 
+            padding: 20px 0; 
+            border-bottom: 1px solid var(--cor-borda);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
 
-          header.main-header .container {
+        header.main-header .container {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -129,123 +161,95 @@
         }
 
         .logo {
-          display: flex;
-          align-items: center; 
-          gap: 10px;
-          text-decoration: none;
-          padding-left: 20px; 
-      }
-        .logo img {
-            height: 40px;
+            display: flex;
+            align-items: center; 
+            gap: 10px;
+            text-decoration: none;
+            padding-left: 20px; 
         }
+        .logo img { height: 40px; }
         .logo h2 {
              font-size: 1.8rem;
              font-weight: 800;
-             color: var(--primary-purple);
+             color: var(--cor-principal); /* Roxo */
              margin-bottom: 0;
         }
 
+        .main-nav { display: flex; align-items: center; }
 
-        .main-nav {
-            display: flex;
-            align-items: center;
-        }
-
+        /* Links da Navegação (Estilo da sidebar) */
         .main-nav a {
             display: flex;
             align-items: center;
             gap: 6px;
             margin-left: 20px;
             text-decoration: none;
-            color: var(--dark-text);
+            color: var(--cor-texto-secundario);
             font-weight: 500;
             transition: color 0.3s ease;
         }
-
-        .main-nav a:hover {
-            color: var(--primary-purple);
-        }
+        .main-nav a:hover { color: var(--cor-destaque); }
         
         .main-nav a svg {
             width: 18px;
             height: 18px;
-            fill: var(--dark-text);
+            fill: var(--cor-texto-secundario);
             transition: fill 0.3s ease;
         }
+        .main-nav a:hover svg { fill: var(--cor-destaque); }
         
-        .main-nav a:hover svg {
-            fill: var(--primary-purple);
-        }
-        
-        .main-nav a.btn {
-            margin-left: 25px;
-            display: inline-block;
-        }
-        .main-nav a.btn:hover {
-            color: var(--white);
-        }
-        .main-nav a.btn svg {
-            display: none;
-        }
+        .main-nav a.btn { margin-left: 25px; display: inline-block; }
+        .main-nav a.btn:hover { color: var(--cor-texto-primario); }
+        .main-nav a.btn svg { display: none; }
 
+        /* Seção Hero */
         .hero {
-            background: var(--white);
             padding: 80px 0;
             text-align: center;
         }
-
         .hero h1 {
             font-size: 3rem;
-            color: var(--primary-purple);
-            margin-bottom: 20px;
+            color: var(--cor-texto-primario); /* Branco */
         }
 
         .hero p.subtitle {
             font-size: 1.2rem;
-            color: var(--light-text);
+            color: var(--cor-texto-secundario); /* Cinza claro */
             max-width: 700px;
             margin: 0 auto 30px auto;
         }
-        
         .hero .cta-buttons {
             display: flex;
             justify-content: center;
             gap: 15px;
         }
 
-
+        /* Cards de Serviço (Estilo .componente-container) */
         .services-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 30px;
         }
-
         .service-card {
-            background: var(--white);
+            background: var(--cor-fundo-card);
             padding: 30px;
             border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease;
+            box-shadow: var(--sombra-suave);
+            border: 1px solid var(--cor-borda);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-
         .service-card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 0 10px var(--cor-destaque);
         }
-
         .service-card h3 {
             margin-bottom: 15px;
             font-size: 1.3rem; 
         }
-        
-        .service-card p {
-            font-size: 0.95rem;
-        }
-        
-        .service-card .btn {
-            margin-top: 20px;
-        }
+        .service-card p { font-size: 0.95rem; }
+        .service-card .btn { margin-top: 20px; }
 
-
+        /* Seção Sobre */
         #sobre {
             text-align: center;
             text-align: justify;
@@ -256,46 +260,41 @@
             font-size: 1.2rem;
         }
         
-
-        #contato {
-            background-color: var(--bg-light-gray);
-        }
+        /* Formulário de Contato (Estilo .modal-content) */
         .form-container {
             max-width: 600px;
             margin: 0 auto;
-            background: var(--white);
+            background: var(--cor-fundo-card);
             padding: 40px;
             border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            box-shadow: var(--sombra-suave);
+            border: 1px solid var(--cor-borda);
             text-align: center;
         }
-        
         .form-container img {
             width: 100px;
             height: auto;
             margin-bottom: 20px;
         }
-        
         .form-container h2 {
-             color: var(--primary-purple);
+             color: var(--cor-principal);
              margin-bottom: 30px;
         }
-        
         .form-container form {
             display: flex;
             flex-direction: column;
             gap: 20px;
             text-align: left;
         }
-
         .form-container label {
             display: block;
             margin-bottom: 6px;
             font-weight: 600;
-            color: var(--dark-text);
+            color: var(--cor-texto-secundario);
             font-size: 0.9rem;
         }
         
+        /* Inputs (Estilo dos inputs do dashboard/modal) */
         .form-container input[type="text"],
         .form-container input[type="email"],
         .form-container input[type="tel"],
@@ -304,16 +303,21 @@
             width: 100%;
             padding: 12px;
             font-size: 1rem;
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--cor-borda);
             border-radius: 5px;
-            background: #fdfdfd;
-            color: var(--dark-text);
+            background: var(--cor-fundo-body); /* Fundo mais escuro */
+            color: var(--cor-texto-primario);
             font-family: inherit;
         }
-        
+        .form-container input:focus,
+        .form-container select:focus,
+        .form-container textarea:focus {
+            outline: none;
+            border-color: var(--cor-principal);
+        }
         .form-container input::placeholder,
         .form-container textarea::placeholder {
-            color: #aaa;
+            color: #888;
         }
         
         .telefone-box {
@@ -321,26 +325,27 @@
             grid-template-columns: 1fr 2fr;
             gap: 15px;
         }
-
         .form-container textarea {
             resize: vertical;
             min-height: 100px;
         }
-        
         .form-container button[type="submit"] {
             font-size: 1.1rem;
             width: 100%;
         }
 
-
+        /* Footer (Estilo dark) */
         footer {
             text-align: center;
             padding: 40px 0;
-            background-color: var(--dark-text);
-            color: #aaa;
+            background-color: var(--cor-fundo-card);
+            color: var(--cor-texto-secundario);
             font-size: 14px;
+            border-top: 1px solid var(--cor-borda);
+            margin-top: 80px;
         }
         
+        /* Media Queries (Mantidas) */
         @media (max-width: 768px) {
             header.main-header .container {
                 flex-direction: column;
@@ -362,36 +367,15 @@
                 margin-left: 0;
             }
 
-            .hero {
-                padding: 40px 0;
-            }
-            .hero h1 {
-                font-size: 2.2rem;
-            }
-            .hero p.subtitle {
-                font-size: 1rem;
-            }
-            .hero .cta-buttons {
-                flex-direction: column;
-            }
+            .hero { padding: 40px 0; }
+            .hero h1 { font-size: 2.2rem; }
+            .hero p.subtitle { font-size: 1rem; }
+            .hero .cta-buttons { flex-direction: column; }
             
-            section {
-                padding: 40px 0;
-            }
-            h2 {
-                font-size: 1.8rem;
-            }
-
-            .consulting-section {
-                grid-template-columns: 1fr;
-            }
-            .consulting-section .image-placeholder {
-                min-height: 250px;
-            }
+            section { padding: 40px 0; }
+            h2 { font-size: 1.8rem; }
             
-            .telefone-box {
-                grid-template-columns: 1fr;
-            }
+            .telefone-box { grid-template-columns: 1fr; }
         }
 
     </style>
@@ -476,13 +460,14 @@
                         <h3>Relatórios e Indicadores</h3>
                         <p>Fornecimento de dados estratégicos sobre desempenho, falhas e melhorias na infraestrutura.</p>
                     </div>
-                    <a href="login.html"><button class="btn btn-secondary">Cadastre-se para acessar</button></a>
+                </div>
+                <div style="text-align: center; margin-top: 40px;">
+                    <a href="login.html" class="btn btn-secondary" style="font-size: 1.1rem; padding: 15px 30px;">Faça login para acessar o Dashboard</a>
                 </div>
             </div>
         </section>
   
-        <section class="bg-gray" id="contato">
-            <div class="container">
+        <section id="contato"> <div class="container">
                 <div class="form-container">
                     <img src="imagem/logo.png" alt="Logo TechSync">
                     <h2>Contato</h2>
@@ -538,6 +523,7 @@
             <p>© 2025 TECHSYNC - Todos os direitos reservados</p>
         </div>
     </footer>
+    
     <script type="module">
       import { create } from './js/services/api.js';
       const formContato = document.querySelector('#contato form');

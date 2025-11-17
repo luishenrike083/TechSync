@@ -72,7 +72,35 @@
       padding: 20px;
       box-shadow: 2px 0 5px rgba(0,0,0,0.2);
       border-right: 1px solid var(--cor-borda);
+      
+      /* MODIFICADO/ADICIONADO */
+      transition: width 0.3s ease, min-width 0.3s ease, padding 0.3s ease;
+      overflow: hidden; 
+      white-space: nowrap;
     }
+    
+    /* ADICIONADO */
+    .dashboard.sidebar-toggled .sidebar {
+        width: 0;
+        min-width: 0;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    /* ADICIONADO */
+    .btn-toggle-sidebar {
+        background: none;
+        border: none;
+        color: var(--cor-texto-primario);
+        font-size: 24px;
+        cursor: pointer;
+        padding: 0 5px;
+        margin-right: 10px;
+        transition: color 0.3s;
+    }
+    .btn-toggle-sidebar:hover { color: var(--cor-destaque); }
+
+
     .sidebar h2 { 
       font-size: 40px; 
       text-align: center; 
@@ -195,7 +223,21 @@
         border-radius: 3px;
         margin-right: 8px;
     }
-
+    
+    /* Regra da tabela (só para garantir que está aqui) */
+    .device-list th, .device-list td {
+        padding: 15px 15px;
+        text-align: left;
+        border-bottom: 1px solid var(--cor-borda);
+        color: var(--cor-texto-primario);
+    }
+    .device-list th {
+        background-color: #292933;
+        font-weight: 600;
+        color: var(--cor-principal);
+    }
+    .device-list tr:hover { background-color: #2a2a35; }
+    
   </style>
 </head>
 <body>
@@ -218,6 +260,8 @@
       <div class="header">
         
         <div class="header-actions-left">
+          <button class="btn-toggle-sidebar" id="toggleSidebarBtn">☰</button>
+          
           <div class="search">
             <input type="text" placeholder="Filtro de Período (Ex: Últimos 30 dias)">
           </div>
@@ -314,6 +358,10 @@
   </div>
   
   <script type="module">
+    // ADICIONADO
+    const toggleSidebarBtn = document.getElementById('toggleSidebarBtn');
+    const dashboard = document.getElementById('dashboard');
+
     function displayUserName() {
         const userName = localStorage.getItem('usuarioLogadoNome');
         const userNameDisplay = document.getElementById('userNameDisplay');
@@ -332,6 +380,13 @@
     document.getElementById('logoutLinkRelatorio').addEventListener('click', function() {
         localStorage.removeItem('usuarioLogadoNome');
     });
+
+    // ADICIONADO
+    if (toggleSidebarBtn && dashboard) {
+        toggleSidebarBtn.addEventListener('click', () => {
+            dashboard.classList.toggle('sidebar-toggled');
+        });
+    }
 
     displayUserName();
     loadReportData();

@@ -76,7 +76,35 @@
       padding: 20px;
       box-shadow: 2px 0 5px rgba(0,0,0,0.2);
       border-right: 1px solid var(--cor-borda);
+
+      /* MODIFICADO/ADICIONADO */
+      transition: width 0.3s ease, min-width 0.3s ease, padding 0.3s ease;
+      overflow: hidden; 
+      white-space: nowrap;
     }
+
+    /* ADICIONADO */
+    .dashboard.sidebar-toggled .sidebar {
+        width: 0;
+        min-width: 0;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    /* ADICIONADO */
+    .btn-toggle-sidebar {
+        background: none;
+        border: none;
+        color: var(--cor-texto-primario);
+        font-size: 24px;
+        cursor: pointer;
+        padding: 0 5px;
+        margin-right: 10px;
+        transition: color 0.3s;
+    }
+    .btn-toggle-sidebar:hover { color: var(--cor-destaque); }
+    
+
     .sidebar h2 { 
       font-size: 40px; 
       text-align: center; 
@@ -309,6 +337,8 @@
       <div class="header">
         
         <div class="header-actions-left">
+          <button class="btn-toggle-sidebar" id="toggleSidebarBtn">☰</button>
+          
           <div style="font-size: 1.5rem; font-weight: 700; color: var(--cor-texto-primario);">Configurações do Sistema</div>
         </div>
 
@@ -409,6 +439,10 @@
   </div>
   
   <script type="module">
+    // ADICIONADO
+    const toggleSidebarBtn = document.getElementById('toggleSidebarBtn');
+    const dashboard = document.getElementById('dashboard');
+
     function displayUserName() {
         const userName = localStorage.getItem('usuarioLogadoNome');
         const userNameDisplay = document.getElementById('userNameDisplay');
@@ -443,6 +477,13 @@
     document.getElementById('logoutLinkConfig').addEventListener('click', function() {
         localStorage.removeItem('usuarioLogadoNome');
     });
+
+    // ADICIONADO
+    if (toggleSidebarBtn && dashboard) {
+        toggleSidebarBtn.addEventListener('click', () => {
+            dashboard.classList.toggle('sidebar-toggled');
+        });
+    }
 
     displayUserName();
     setupConfigNavigation();

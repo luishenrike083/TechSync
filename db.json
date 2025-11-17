@@ -16,14 +16,5 @@
     }
   ],
   "contatos": [],
-  "dispositivos": [
-    {
-      "id": "7208",
-      "nome": "marcelo",
-      "tipo": "fresco",
-      "ip": "111.111.111.111",
-      "status": "Online",
-      "ultimaAtualizacao": "22:17:43"
-    }
-  ]
+  "dispositivos": []
 }

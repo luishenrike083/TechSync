@@ -7,11 +7,6 @@
     <link rel="icon" href="imagem/logo.png">
 
     <style>
-        /* * =========================================
-         * ESTILO ATUALIZADO (DARK MODE)
-         * Baseado na identidade do dashboard.
-         * =========================================
-        */
         :root {
             --cor-principal: #6a61ff; 
             --cor-fundo-card: #20202a;
@@ -44,7 +39,7 @@
             padding: 0;
             line-height: 1.6;
             
-            /* Identidade Visual Dark Mode */
+
             background: url("imagem/fundo_roxo.png") no-repeat center center/cover; 
             background-color: var(--cor-fundo-body);
             color: var(--cor-texto-primario);
@@ -64,16 +59,16 @@
 
         h1 {
             font-size: 3rem;
-            color: var(--cor-texto-primario); /* Título principal em branco */
+            color: var(--cor-texto-primario); 
             margin-bottom: 20px;
         }
         
-        /* Títulos de seção */
+  
         h2 {
             font-size: 2.2rem;
             text-align: center;
             margin-bottom: 40px;
-            color: var(--cor-principal); /* Roxo */
+            color: var(--cor-principal); 
         }
 
         /* Cor específica para o título "Sobre", conforme solicitado */
@@ -84,18 +79,17 @@
         /* Títulos de card */
         h3 {
             font-size: 1.5rem;
-            color: var(--cor-principal); /* Roxo */
+            color: var(--cor-principal);
             margin-bottom: 15px;
         }
 
         p {
             margin-bottom: 15px;
-            color: var(--cor-texto-secundario); /* Cinza claro */
+            color: var(--cor-texto-secundario);
         }
 
         section {
             padding: 80px 0;
-            /* Fundo transparente por padrão, mostrando o body */
         }
 
         /* Seções com fundo de "card" */
@@ -128,7 +122,6 @@
             box-shadow: 0 0 10px var(--cor-destaque);
         }
 
-        /* Botão Secundário (Estilo do dashboard) */
         .btn-secondary {
             background-color: var(--cor-fundo-sidebar);
             color: var(--cor-texto-primario);
@@ -171,13 +164,13 @@
         .logo h2 {
              font-size: 1.8rem;
              font-weight: 800;
-             color: var(--cor-principal); /* Roxo */
+             color: var(--cor-principal); 
              margin-bottom: 0;
         }
 
         .main-nav { display: flex; align-items: center; }
 
-        /* Links da Navegação (Estilo da sidebar) */
+
         .main-nav a {
             display: flex;
             align-items: center;
@@ -209,12 +202,12 @@
         }
         .hero h1 {
             font-size: 3rem;
-            color: var(--cor-texto-primario); /* Branco */
+            color: var(--cor-texto-primario); 
         }
 
         .hero p.subtitle {
             font-size: 1.2rem;
-            color: var(--cor-texto-secundario); /* Cinza claro */
+            color: var(--cor-texto-secundario); 
             max-width: 700px;
             margin: 0 auto 30px auto;
         }
@@ -224,7 +217,6 @@
             gap: 15px;
         }
 
-        /* Cards de Serviço (Estilo .componente-container) */
         .services-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -249,7 +241,6 @@
         .service-card p { font-size: 0.95rem; }
         .service-card .btn { margin-top: 20px; }
 
-        /* Seção Sobre */
         #sobre {
             text-align: center;
             text-align: justify;
@@ -260,7 +251,6 @@
             font-size: 1.2rem;
         }
         
-        /* Formulário de Contato (Estilo .modal-content) */
         .form-container {
             max-width: 600px;
             margin: 0 auto;
@@ -294,7 +284,7 @@
             font-size: 0.9rem;
         }
         
-        /* Inputs (Estilo dos inputs do dashboard/modal) */
+
         .form-container input[type="text"],
         .form-container input[type="email"],
         .form-container input[type="tel"],
@@ -305,7 +295,7 @@
             font-size: 1rem;
             border: 1px solid var(--cor-borda);
             border-radius: 5px;
-            background: var(--cor-fundo-body); /* Fundo mais escuro */
+            background: var(--cor-fundo-body); 
             color: var(--cor-texto-primario);
             font-family: inherit;
         }
@@ -334,7 +324,6 @@
             width: 100%;
         }
 
-        /* Footer (Estilo dark) */
         footer {
             text-align: center;
             padding: 40px 0;

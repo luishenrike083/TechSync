@@ -72,14 +72,11 @@
       padding: 20px;
       box-shadow: 2px 0 5px rgba(0,0,0,0.2);
       border-right: 1px solid var(--cor-borda);
-      
-      /* MODIFICADO/ADICIONADO */
       transition: width 0.3s ease, min-width 0.3s ease, padding 0.3s ease;
       overflow: hidden; 
       white-space: nowrap;
     }
     
-    /* ADICIONADO */
     .dashboard.sidebar-toggled .sidebar {
         width: 0;
         min-width: 0;
@@ -87,7 +84,6 @@
         padding-right: 0;
     }
 
-    /* ADICIONADO */
     .btn-toggle-sidebar {
         background: none;
         border: none;
@@ -138,18 +134,14 @@
     }
     
     .header .user { color: var(--cor-texto-primario); font-weight: 600;}
-    
-    .search input {
-      padding: 10px;
-      border: 1px solid var(--cor-borda);
-      border-radius: 5px;
-      width: 250px;
-      background-color: var(--cor-fundo-card);
-      color: var(--cor-texto-primario);
-    }
-    .search input::placeholder { color: var(--cor-texto-secundario); }
 
-    .header-actions-left { display: flex; align-items: center; gap: 15px; }
+    .search { display: none; }
+
+    .header-actions-left { 
+        display: flex; 
+        align-items: center; 
+        gap: 15px; 
+    }
 
     .content { padding: 30px; flex: 1; overflow-y: auto; }
 
@@ -224,7 +216,7 @@
         margin-right: 8px;
     }
     
-    /* Regra da tabela (só para garantir que está aqui) */
+    /* Regra da tabela */
     .device-list th, .device-list td {
         padding: 15px 15px;
         text-align: left;
@@ -237,6 +229,43 @@
         color: var(--cor-principal);
     }
     .device-list tr:hover { background-color: #2a2a35; }
+
+    .filters-container {
+        display: flex;
+        border: 1px solid var(--cor-borda);
+        border-radius: 5px;
+        overflow: hidden;
+    }
+    .btn-filter {
+        background-color: var(--cor-fundo-card);
+        color: var(--cor-texto-secundario);
+        padding: 8px 12px;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.2s, color 0.2s;
+        font-size: 0.9rem;
+        font-weight: 500;
+        border-right: 1px solid var(--cor-borda);
+    }
+    .btn-filter:last-child {
+        border-right: none;
+    }
+    .btn-filter:hover {
+        background-color: #383842;
+        color: var(--cor-texto-primario);
+    }
+    .btn-filter.active {
+        background-color: var(--cor-principal);
+        color: #fff;
+        font-weight: 600;
+        box-shadow: 0 0 5px rgba(106, 97, 255, 0.5);
+    }
+
+    #reportTitle {
+        font-size: 1.2rem;
+        color: var(--cor-destaque);
+        margin-right: 20px;
+    }
     
   </style>
 </head>
@@ -262,10 +291,15 @@
         <div class="header-actions-left">
           <button class="btn-toggle-sidebar" id="toggleSidebarBtn">☰</button>
           
-          <div class="search">
-            <input type="text" placeholder="Filtro de Período (Ex: Últimos 30 dias)">
+          <h3 id="reportTitle">Relatórios: Mês (Ativo)</h3>
+
+          <div class="filters-container" id="filtersContainer">
+              <button class="btn-filter active" data-periodo="Mês">1 Mês</button>
+              <button class="btn-filter" data-periodo="Semana">1 Semana</button>
+              <button class="btn-filter" data-periodo="Dia">1 Dia</button>
+              <button class="btn-filter" data-periodo="Ano">1 Ano</button>
           </div>
-          <button class="btn btn-principal">Gerar Relatório PDF</button>
+          <button class="btn btn-principal" id="btnGerarPDF">Gerar Relatório PDF</button>
         </div>
 
         <div class="user">👤 <span id="userNameDisplay"></span></div>
@@ -275,19 +309,19 @@
         <div class="cards-relatorio">
           <div class="card-metrica componente-container">
             <h4>Dispositivos Online (média)</h4>
-            <p>95.4%</p>
+            <p id="metricOnline">95.4%</p>
           </div>
           <div class="card-metrica componente-container">
             <h4>Alertas Críticos (24h)</h4>
-            <p style="color: var(--status-alerta);">12</p>
+            <p id="metricAlerts" style="color: var(--status-alerta);">12</p>
           </div>
           <div class="card-metrica componente-container">
             <h4>Tráfego de Dados (GB)</h4>
-            <p>458.2</p>
+            <p id="metricTraffic">458.2</p>
           </div>
           <div class="card-metrica componente-container">
             <h4>Tempo Médio de Atividade (h)</h4>
-            <p>18.5</p>
+            <p id="metricActivity">18.5</p>
           </div>
         </div>
 
@@ -295,8 +329,7 @@
             <div class="componente-container">
                 <h3>Dispositivos por Status</h3>
                 <div class="grafico-placeholder">
-                    
-                    Gráfico de Status
+                    Gráfico de Status (Filtro: <span class="active-filter-periodo">Mês</span>)
                 </div>
                 <div style="margin-top: 15px;">
                     <div class="legenda-item"><div class="legenda-cor" style="background-color: var(--cor-grafico-1);"></div> Online</div>
@@ -306,25 +339,23 @@
             </div>
 
             <div class="componente-container">
-                <h3>Tráfego de Rede (Últimas 7h)</h3>
+                <h3>Tráfego de Rede</h3>
                 <div class="grafico-placeholder">
-                    
-                    Gráfico de Linhas
+                    Gráfico de Linhas (Filtro: <span class="active-filter-periodo">Mês</span>)
                 </div>
             </div>
 
             <div class="componente-container">
                 <h3>Top 5 Dispositivos por Uso</h3>
                 <div class="grafico-placeholder">
-                    
-                    Gráfico de Barras
+                    Gráfico de Barras (Filtro: <span class="active-filter-periodo">Mês</span>)
                 </div>
             </div>
         </div>
 
         <div class="devices componente-container">
             <h3>Relatório de Ocorrências Críticas</h3>
-            <p>Detalhes sobre os alertas de segurança e falhas de conexão nos últimos 7 dias.</p>
+            <p>Detalhes sobre os alertas de segurança e falhas de conexão.</p>
             <table class="device-list">
                 <thead>
                   <tr>
@@ -335,7 +366,7 @@
                     <th>Ação</th>
                   </tr>
                 </thead>
-                <tbody> 
+                <tbody id="ocorrenciasTableBody"> 
                     <tr>
                         <td>2025-11-15 14:30</td>
                         <td>Servidor Principal</td>
@@ -357,39 +388,143 @@
     </main>
   </div>
   
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" 
+          integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" 
+          crossorigin="anonymous" 
+          referrerpolicy="no-referrer">
+  </script>
+
   <script type="module">
-    // ADICIONADO
-    const toggleSidebarBtn = document.getElementById('toggleSidebarBtn');
-    const dashboard = document.getElementById('dashboard');
+    const botaoToggleSidebar = document.getElementById('toggleSidebarBtn');
+    const painelDashboard = document.getElementById('dashboard');
+    const botaoGerarPDF = document.getElementById('btnGerarPDF'); 
+    
+    const botoesFiltro = document.querySelectorAll('.btn-filter');
+    const tituloRelatorio = document.getElementById('reportTitle');
+    const elementosPeriodoAtivo = document.querySelectorAll('.active-filter-periodo');
+    
+    let periodoAtual = 'Mês';
+
 
     function displayUserName() {
-        const userName = localStorage.getItem('usuarioLogadoNome');
-        const userNameDisplay = document.getElementById('userNameDisplay');
+        const nomeUsuario = localStorage.getItem('usuarioLogadoNome');
+        const displayNome = document.getElementById('userNameDisplay');
 
-        if (userName) {
-            userNameDisplay.textContent = userName.charAt(0).toUpperCase() + userName.slice(1);
+        if (nomeUsuario) {
+            displayNome.textContent = nomeUsuario.charAt(0).toUpperCase() + nomeUsuario.slice(1);
         } else {
-            userNameDisplay.textContent = 'Admin'; 
+            displayNome.textContent = 'Admin'; 
         }
     }
-    // Função fictícia para carregar dados dos relatórios
-    function loadReportData() {
-        console.log('Carregando dados de relatórios...');
+
+    // Simulação
+    function carregarDadosRelatorio() {
+        console.log(`Carregando dados de relatórios para o período: ${periodoAtual}`);
+        
+        let metricas = {};
+        let ocorrenciasHTML = '';
+
+        switch(periodoAtual) {
+            case 'Dia':
+                metricas = { online: '98.1%', alerts: '3', traffic: '15.7', activity: '0.8' };
+                ocorrenciasHTML = `
+                    <tr><td>2025-11-20 09:00</td><td>Switch Core</td><td style="color: var(--status-alerta);">Uso de CPU Alto</td><td>Média</td><td>Monitoramento Ativado</td></tr>
+                `;
+                break;
+            case 'Semana':
+                metricas = { online: '96.5%', alerts: '25', traffic: '105.1', activity: '5.4' };
+                ocorrenciasHTML = `
+                    <tr><td>2025-11-18 10:45</td><td>Servidor Secundário</td><td style="color: var(--status-offline);">Falha de Disco</td><td>Crítica</td><td>Substituição Necessária</td></tr>
+                    <tr><td>2025-11-16 16:20</td><td>Ponto de Acesso 2B</td><td style="color: var(--status-alerta);">Desconexões Altas</td><td>Média</td><td>Reinício Remoto</td></tr>
+                `;
+                break;
+            case 'Ano':
+                metricas = { online: '92.3%', alerts: '180', traffic: '5120.9', activity: '210.3' };
+                ocorrenciasHTML = `
+                    <tr><td>2025-09-01 11:00</td><td>Firewall Central</td><td style="color: var(--status-alerta);">Tentativa de Intrusão</td><td>Crítica</td><td>Bloqueio IP</td></tr>
+                    <tr><td>2025-03-20 08:30</td><td>Impressora Financeiro</td><td style="color: var(--status-offline);">Offline Prolongado</td><td>Baixa</td><td>Troca de Cabo</td></tr>
+                `;
+                break;
+            case 'Mês':
+            default:
+                metricas = { online: '95.4%', alerts: '12', traffic: '458.2', activity: '18.5' };
+                ocorrenciasHTML = `
+                    <tr><td>2025-11-15 14:30</td><td>Servidor Principal</td><td style="color: var(--status-alerta);">Alta Latência</td><td>Crítica</td><td>Reinício Agendado</td></tr>
+                    <tr><td>2025-11-14 09:15</td><td>Roteador Sala A</td><td style="color: var(--status-offline);">Conexão Perdida</td><td>Alta</td><td>Verificação Manual</td></tr>
+                `;
+                break;
+        }
+
+        // Atualiza Cards e Tabela
+        document.getElementById('metricOnline').textContent = metricas.online;
+        document.getElementById('metricAlerts').textContent = metricas.alerts;
+        document.getElementById('metricTraffic').textContent = metricas.traffic;
+        document.getElementById('metricActivity').textContent = metricas.activity;
+        document.getElementById('ocorrenciasTableBody').innerHTML = ocorrenciasHTML;
+        elementosPeriodoAtivo.forEach(el => el.textContent = periodoAtual);
+    }
+
+    // Filtrar Informações
+    function filtrarRelatorio(novoPeriodo) {
+        botoesFiltro.forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.getAttribute('data-periodo') === novoPeriodo) {
+                btn.classList.add('active');
+            }
+        });
+
+        periodoAtual = novoPeriodo;
+        tituloRelatorio.textContent = `Relatórios: ${periodoAtual} (Ativo)`;
+        carregarDadosRelatorio();
+    }
+    
+    // Gerar Relatório
+    function gerarRelatorioPDF() {
+        const elementoAlvo = document.querySelector('.content'); 
+        
+        // Usa o período atual no nome do arquivo
+        const nomeArquivo = `Relatorio-TechSync-Filtro-${periodoAtual}.pdf`;
+
+        const opcoesPDF = {
+            margin: 0.5,
+            filename: nomeArquivo,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+        };
+
+        if (typeof html2pdf !== 'undefined') {
+            console.log(`Iniciando geração do PDF para o período ${periodoAtual}: ${nomeArquivo}`);
+            html2pdf().set(opcoesPDF).from(elementoAlvo).save();
+        } else {
+            alert('A biblioteca de PDF ainda não foi carregada. Tente novamente em um instante.');
+            console.error('html2pdf não definida.');
+        }
     }
 
     document.getElementById('logoutLinkRelatorio').addEventListener('click', function() {
         localStorage.removeItem('usuarioLogadoNome');
     });
 
-    // ADICIONADO
-    if (toggleSidebarBtn && dashboard) {
-        toggleSidebarBtn.addEventListener('click', () => {
-            dashboard.classList.toggle('sidebar-toggled');
+    if (botaoToggleSidebar && painelDashboard) {
+        botaoToggleSidebar.addEventListener('click', () => {
+            painelDashboard.classList.toggle('sidebar-toggled');
         });
     }
 
+    if (botaoGerarPDF) {
+        botaoGerarPDF.addEventListener('click', gerarRelatorioPDF);
+    }
+    
+    botoesFiltro.forEach(button => {
+        button.addEventListener('click', (event) => {
+            const periodoSelecionado = event.target.getAttribute('data-periodo');
+            filtrarRelatorio(periodoSelecionado);
+        });
+    });
+
     displayUserName();
-    loadReportData();
+    carregarDadosRelatorio(); 
   </script>
 
 </body>

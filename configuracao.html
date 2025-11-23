@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TechSync - Configurações (Dark Mode)</title>
   <link rel="icon" href="imagem/logo.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <style>
     :root {
         --cor-principal: #6a61ff; 
@@ -29,69 +30,15 @@
     body {
       background: url("imagem/fundo_roxo.png") no-repeat center center/cover; 
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background-color: #121214;
       color: var(--cor-texto-primario);
       height: 100vh;
       display: flex;
-      flex-direction: column;
+      overflow: hidden; 
     }
     
     h2, h3 { font-weight: 700; margin-top: 0; }
-
-    .btn {
-        display: inline-block;
-        padding: 10px 20px;
-        border-radius: 5px;
-        text-decoration: none;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        cursor: pointer;
-        border: none;
-        font-family: inherit;
-    }
-    .btn-principal {
-        background-color: var(--cor-principal);
-        color: #fff;
-    }
-    .btn-principal:hover {
-        background-color: var(--cor-destaque);
-        transform: translateY(-2px);
-        box-shadow: 0 0 10px var(--cor-destaque);
-    }
-    .btn-secundario {
-        background-color: var(--cor-fundo-sidebar);
-        color: var(--cor-texto-primario);
-        border: 1px solid var(--cor-borda);
-    }
-    .btn-secundario:hover {
-        background-color: #383842;
-    }
-
-    .dashboard { display: flex; height: 100vh; }
-
-    /* Sidebar */
-    .sidebar {
-      width: 220px;
-      background: var(--cor-fundo-sidebar); 
-      padding: 20px;
-      box-shadow: 2px 0 5px rgba(0,0,0,0.2);
-      border-right: 1px solid var(--cor-borda);
-
-      /* MODIFICADO/ADICIONADO */
-      transition: width 0.3s ease, min-width 0.3s ease, padding 0.3s ease;
-      overflow: hidden; 
-      white-space: nowrap;
-    }
-
-    /* ADICIONADO */
-    .dashboard.sidebar-toggled .sidebar {
-        width: 0;
-        min-width: 0;
-        padding-left: 0;
-        padding-right: 0;
-    }
-
-    /* ADICIONADO */
+    
+    /* Layout principal - Ajustado para o estilo 'Dispositivos.html' */
     .btn-toggle-sidebar {
         background: none;
         border: none;
@@ -104,184 +51,248 @@
     }
     .btn-toggle-sidebar:hover { color: var(--cor-destaque); }
     
+    .dashboard { display: flex; height: 100%; flex: 1; } 
+
+    /* Sidebar (Menu principal) - Ajustado para o estilo 'Dispositivos.html' */
+    .sidebar {
+      width: 220px; /* Largura ajustada */
+      background: var(--cor-fundo-sidebar); 
+      padding: 20px;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+      border-right: 1px solid var(--cor-borda);
+      transition: width 0.3s ease, min-width 0.3s ease, padding 0.3s ease;
+      overflow: hidden;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .dashboard.sidebar-toggled .sidebar {
+        width: 0;
+        min-width: 0;
+        padding-left: 0;
+        padding-right: 0;
+    }
 
     .sidebar h2 { 
-      font-size: 40px; 
+      font-size: 40px; /* Tamanho ajustado */
       text-align: center; 
       margin-bottom: 20px; 
-      color: var(--cor-principal); 
-      -webkit-text-stroke-width: 0; 
+      color: var(--cor-principal);
       text-shadow: 0 0 10px rgba(106, 97, 255, 0.3);
     }
-    .sidebar img { width: 100px; display: block; margin: 0 auto 20px auto; }
+    .sidebar img { width: 100px; display: block; margin: 0 auto 20px auto; } /* Largura e margem ajustadas */
 
     .sidebar ul { list-style: none; }
-    .sidebar ul li { margin: 15px 0; font-size: 20px; }
+    .sidebar ul li { margin: 15px 0; font-size: 20px; padding: 0; } /* Padding zero e margin ajustadas */
+    
     .sidebar ul li a {
       color: var(--cor-texto-secundario);
       text-decoration: none;
       font-weight: 500;
       transition: color 0.3s;
+      display: block; /* Garante que o link preencha o li */
     }
     .sidebar ul li a:hover { color: var(--cor-destaque); text-shadow: 0 0 7px var(--cor-destaque);}
     .sidebar ul li a.active { color: var(--cor-destaque); font-weight: 700; }
+    
+    .sidebar ul li a i { margin-right: 10px; font-size: 1.1rem; }
+    
+    /* Conteúdo principal */
+    .main { flex: 1; display: flex; flex-direction: column; } /* Novo wrapper principal */
+    
+    .main-content { /* Renomeado para content no 'Dispositivos' */
+        flex-grow: 1;
+        padding: 30px; /* Padding ajustado para 30px */
+        overflow-y: auto;
+    }
 
-    /* Main */
-    .main { flex: 1; display: flex; flex-direction: column; }
-
-    /* Header */
+    /* Header - Ajustado para o estilo 'Dispositivos.html' */
     .header {
       background-color: rgba(18, 18, 20, 0.7);
-      backdrop-filter: blur(5px); 
+      backdrop-filter: blur(5px);
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
       padding: 15px 30px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       border-bottom: 1px solid var(--cor-borda);
+      margin-bottom: 0; /* Removido margem inferior */
+      padding-bottom: 15px; /* Ajustado padding */
     }
     
-    .header .user { color: var(--cor-texto-primario); font-weight: 600;}
+    .header .user { color: var(--cor-texto-primario); font-weight: 600;} /* Classe 'user' */
+    .header-actions-left { display: flex; align-items: center; gap: 15px;}
     
-    .search input {
-      padding: 10px;
-      border: 1px solid var(--cor-borda);
-      border-radius: 5px;
-      width: 250px;
-      background-color: var(--cor-fundo-card);
-      color: var(--cor-texto-primario);
-    }
-    .search input::placeholder { color: var(--cor-texto-secundario); }
-
-    .header-actions-left { display: flex; align-items: center; gap: 15px; }
-
-    .content { 
-        padding: 30px; 
-        flex: 1; 
-        overflow-y: auto; 
+    /* Remoção de estilos de header específicos para 'configuracao.html' que não se aplicam mais */
+    
+    /* Container de Configurações - Mantido */
+    .configuracoes-container {
         display: flex;
-        gap: 30px;
+        background-color: var(--cor-fundo-card);
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: var(--sombra-suave);
+        min-height: calc(100vh - 150px); /* Ajustado para caber na tela com o novo header/padding */
+    }
+
+    .config-sidebar {
+        width: 200px;
+        border-right: 1px solid var(--cor-borda);
+        padding-right: 20px;
+        flex-shrink: 0;
+    }
+
+    .config-sidebar ul {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .config-sidebar li {
+        padding: 10px 0;
+        margin-bottom: 5px;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: 500;
+        color: var(--cor-texto-secundario);
+        transition: color 0.2s;
+        display: flex;
+        align-items: center;
+    }
+
+    .config-sidebar li i {
+        margin-right: 8px;
+        font-size: 1rem;
+    }
+
+    .config-sidebar li:hover, .config-sidebar li.active {
+        color: var(--cor-principal);
+    }
+
+    /* Detalhes da Configuração */
+    .config-details {
+        flex-grow: 1;
+        padding-left: 30px;
     }
 
     .componente-container {
-        background-color: var(--cor-fundo-card);
-        color: var(--cor-texto-primario);
-        padding: 25px;
-        border-radius: 8px;
-        margin-bottom: 30px;
-        box-shadow: var(--sombra-suave);
-        border: 1px solid var(--cor-borda);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .componente-container:hover {
-        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
-        box-shadow: 0 0 10px var(--cor-destaque);
-        transform: translateY(-5px);
-        cursor: default;
-    }
-    .componente-container h3 { 
-        margin-bottom: 20px; 
-        color: var(--cor-principal); 
-        font-size: 1.5rem;
-        border-bottom: 1px solid var(--cor-borda);
-        padding-bottom: 10px;
+        animation: fadeIn 0.5s ease-out;
     }
 
-    /* Layout da Configuração */
-    .config-sidebar {
-        width: 250px;
-        padding: 0;
-        align-self: flex-start;
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
     }
-    .config-sidebar ul {
-        list-style: none;
-        padding-top: 5px;
-    }
-    .config-sidebar ul li {
-        margin: 0;
-    }
-    .config-sidebar ul li a {
-        display: block;
-        padding: 12px 15px;
-        text-decoration: none;
-        color: var(--cor-texto-secundario);
-        transition: background-color 0.2s, color 0.2s;
-        border-radius: 4px;
-        font-weight: 500;
-        border-left: 3px solid transparent;
-    }
-    .config-sidebar ul li a:hover {
-        background-color: #292933;
+
+    .componente-container h3 {
         color: var(--cor-destaque);
-    }
-    .config-sidebar ul li a.active-config {
-        background-color: #333342;
-        color: var(--cor-principal);
-        font-weight: 700;
-        border-left: 3px solid var(--cor-principal);
-    }
-
-    .config-details {
-        flex: 1;
-        min-width: 0;
+        margin-bottom: 25px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--cor-borda);
+        font-size: 1.7rem;
     }
 
     .form-group {
-        margin-bottom: 25px;
-        padding: 15px;
+        margin-bottom: 30px;
+        padding: 20px;
         border: 1px solid var(--cor-borda);
-        border-radius: 5px;
+        border-radius: 8px;
+        background-color: rgba(0, 0, 0, 0.1);
     }
+
     .form-group h4 {
+        color: var(--cor-principal);
+        margin-top: 0;
         margin-bottom: 15px;
-        color: var(--cor-texto-primario);
         font-size: 1.2rem;
     }
+
     .form-row {
         display: flex;
-        flex-wrap: wrap;
         gap: 20px;
         margin-bottom: 15px;
     }
+
     .form-item {
-        flex: 1 1 45%;
+        flex: 1;
         display: flex;
         flex-direction: column;
     }
-    .form-item label {
-        font-weight: 600; 
-        color: var(--cor-texto-secundario); 
-        font-size: 0.9rem;
+
+    label {
         margin-bottom: 5px;
+        font-size: 0.9rem;
+        color: var(--cor-texto-secundario);
     }
-    .form-item input[type="text"], 
-    .form-item input[type="email"], 
-    .form-item select,
-    .form-item input[type="password"] {
-        padding: 10px; 
+
+    input[type="text"], input[type="email"], input[type="password"], select {
+        padding: 10px;
         border: 1px solid var(--cor-borda);
-        border-radius: 5px; 
-        background: #121214;
-        color: #fff;
-        width: 100%;
+        border-radius: 6px;
+        background-color: #2e2e39;
+        color: var(--cor-texto-primario);
+        font-size: 1rem;
+        transition: border-color 0.2s;
     }
-    .form-item input:focus, .form-item select:focus {
-        outline: none;
+
+    input:focus, select:focus {
         border-color: var(--cor-principal);
+        outline: none;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: opacity 0.2s;
+        margin-top: 10px;
+    }
+
+    .btn-principal {
+        background-color: var(--cor-principal);
+        color: #fff;
+    }
+
+    .btn-secundario {
+        background-color: var(--cor-borda);
+        color: var(--cor-texto-secundario);
+    }
+
+    .btn:hover {
+        opacity: 0.9;
     }
     
+    /* Toggle Switch Styles */
+    .toggle-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        margin-bottom: 5px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
     .toggle-switch {
         position: relative;
         display: inline-block;
         width: 45px;
         height: 25px;
     }
-    .toggle-switch input { display: none; }
+
+    .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
 
     .slider {
         position: absolute;
         cursor: pointer;
-        top: 0; left: 0; right: 0; bottom: 0;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
         background-color: #ccc;
         transition: .4s;
         border-radius: 25px;
@@ -290,8 +301,8 @@
     .slider:before {
         position: absolute;
         content: "";
-        height: 17px;
-        width: 17px;
+        height: 18px;
+        width: 18px;
         left: 4px;
         bottom: 4px;
         background-color: white;
@@ -303,191 +314,403 @@
         background-color: var(--cor-principal);
     }
 
+    input:focus + .slider {
+        box-shadow: 0 0 1px var(--cor-principal);
+    }
+
     input:checked + .slider:before {
-        transform: translateX(20px);
+        transform: translateX(18px);
     }
-
-    .toggle-container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 0;
-        border-bottom: 1px solid #292933;
-    }
-
   </style>
 </head>
 <body>
 
   <div class="dashboard" id="dashboard">
     <aside class="sidebar">
-      <a href="index.html" id="logoutLinkConfig" style="text-decoration: none; display: block; cursor: pointer;">
+      <a href="index.html" id="logoutLinkConfiguracaoHeader" style="text-decoration: none; display: block; cursor: pointer;">
         <img src="imagem/logo.png" alt="Logo TechSync">
         <h2>TechSync</h2>
-      </a>
+      </a>  
       <ul>
         <li><a href="dashboard.html"> Dashboard</a></li>
         <li><a href="Dispositivos.html"> Dispositivos</a></li>
         <li><a href="relatorio.html"> Relatórios</a></li>
         <li><a href="#" class="active"> Configurações</a></li>
       </ul>
-    </aside>
+      </aside>
 
     <main class="main">
       <div class="header">
-        
         <div class="header-actions-left">
           <button class="btn-toggle-sidebar" id="toggleSidebarBtn">☰</button>
-          
-          <div style="font-size: 1.5rem; font-weight: 700; color: var(--cor-texto-primario);">Configurações do Sistema</div>
         </div>
 
-        <div class="user">👤 <span id="userNameDisplay"></span></div>
+        <div class="user">👤 <span id="userNameDisplay">Hugo</span></div>
       </div>
 
-      <div class="content">
-        <div class="config-sidebar componente-container" style="cursor: default; transform: none; box-shadow: none;">
-            <h3>Seções</h3>
-            <ul id="configMenu">
-                <li><a href="#geral" class="active-config">Geral e UI</a></li>
-                <li><a href="#usuario">Minha Conta</a></li>
-                <li><a href="#notificacoes">Notificações</a></li>
-                <li><a href="#seguranca">Segurança</a></li>
-                <li><a href="#integracoes">Integrações</a></li>
-            </ul>
-        </div>
-
-        <div class="config-details">
+      <div class="main-content">
+      
+        <section class="configuracoes-container">
             
-            <div id="geral" class="componente-container">
-                <h3>Geral e Interface do Usuário</h3>
+            <div class="config-sidebar">
+                <ul id="config-menu">
+                    <li class="active" data-componente="usuario">
+                        <i class="fa-solid fa-user"></i> Minha Conta
+                    </li>
+                    <li data-componente="notificacoes">
+                        <i class="fa-solid fa-bell"></i> Notificações
+                    </li>
+                    <li data-componente="seguranca">
+                        <i class="fa-solid fa-shield-alt"></i> Segurança
+                    </li>
+                </ul>
+            </div>
+
+            <div class="config-details">
                 
-                <div class="form-group">
-                    <h4>Preferências do Sistema</h4>
-                    <div class="form-row">
-                        <div class="form-item">
-                            <label for="fusoHorario">Fuso Horário Padrão:</label>
-                            <select id="fusoHorario">
-                                <option value="brt">(GMT-3) Brasília</option>
-                                <option value="est">(GMT-5) Eastern Time</option>
-                            </select>
-                        </div>
-                        <div class="form-item">
-                            <label for="linguagem">Linguagem:</label>
-                            <select id="linguagem">
-                                <option value="pt-br">Português (Brasil)</option>
-                                <option value="en">English (US)</option>
-                            </select>
-                        </div>
+                <div id="usuario" class="componente-container" style="display: block;">
+                    <h3>Minha Conta</h3>
+                    <div class="form-group">
+                        <h4>Informações Pessoais</h4>
+                        <form id="updateAccountForm"> 
+                            <input type="hidden" id="selectedUserId" value=""> 
+                            
+                            <div class="form-row">
+                                <div class="form-item">
+                                    <label for="nomeUserSelect">Usuário (Filtro):</label>
+                                    <select id="nomeUserSelect"></select> 
+                                </div>
+                                <div class="form-item">
+                                    <label for="emailUserSelect">E-mail (Filtro):</label>
+                                    <select id="emailUserSelect"></select>
+                                </div>
+                            </div>
+
+                            <h4 style="border-bottom: 1px solid var(--cor-borda); padding-bottom: 10px;">Informações de Contato</h4>
+                            <div class="form-row">
+                                <div class="form-item">
+                                    <label for="novoTelefone">Telefone/WhatsApp:</label>
+                                    <input type="text" id="novoTelefone" placeholder="Ex: 83988065914">
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-principal" id="btnContato">Atualizar Informações de Contato</button>
+                            
+                            <div class="form-group" style="border: none; padding: 0; margin-top: 25px;">
+                                <h4 style="border-bottom: 1px solid var(--cor-borda); padding-bottom: 10px;">Alteração de Senha</h4>
+                                <div class="form-row">
+                                    <div class="form-item">
+                                        <label for="senhaAtual">Senha Atual:</label>
+                                        <input type="password" id="senhaAtual" placeholder="Digite a senha atual do usuário selecionado">
+                                    </div>
+                                    <div class="form-item">
+                                        <label for="novaSenha">Nova Senha:</label>
+                                        <input type="password" id="novaSenha" placeholder="Digite a nova senha">
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-principal" id="btnSenha">Atualizar Senha</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <h4>Visualização</h4>
-                    <div class="toggle-container">
-                        <label>Habilitar Modo Claro (Light Mode)</label>
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="lightModeToggle">
-                            <span class="slider"></span>
-                        </label>
+                <div id="notificacoes" class="componente-container" style="display: none;">
+                    <h3>Preferências de Notificação</h3>
+                    
+                    <div class="form-group">
+                        <h4>Canais de Alerta</h4>
+                        <div class="toggle-container">
+                            <label>Notificação por **E-mail** (Alertas Críticos)</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="emailAlertToggle" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="toggle-container">
+                            <label>Notificação por **SMS/WhatsApp** (Alertas Críticos)</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="smsAlertToggle">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="toggle-container" style="border-bottom: none;">
+                            <label>Notificações **In-App** (Sinos e Banners)</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="inAppAlertToggle" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
                     </div>
-                    <div class="toggle-container" style="border-bottom: none;">
-                        <label>Atualização Automática dos Dados</label>
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="autoUpdateToggle" checked>
-                            <span class="slider"></span>
-                        </label>
+                    
+                    <div class="form-group">
+                        <h4>Tipos de Incidente</h4>
+                        <div class="toggle-container">
+                            <label>Notificar sobre incidentes de **Severidade Crítica**</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="notifyCriticalToggle" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="toggle-container">
+                            <label>Notificar sobre incidentes de **Severidade Alta**</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="notifyHighToggle" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="toggle-container" style="border-bottom: none;">
+                            <label>Notificar sobre incidentes de **Severidade Média/Baixa**</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="notifyMediumToggle">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
                     </div>
+
+                    <button class="btn btn-principal">Salvar Preferências de Notificação</button>
                 </div>
 
-                <button class="btn btn-principal">Salvar Configurações Gerais</button>
-            </div>
-            
-            <div id="usuario" class="componente-container" style="display: none;">
-                <h3>Minha Conta</h3>
-                <div class="form-group">
-                    <h4>Informações Pessoais</h4>
-                    <form>
+                <div id="seguranca" class="componente-container" style="display: none;">
+                    <h3>Configurações de Segurança</h3>
+                    
+                    <div class="form-group">
+                        <h4>Autenticação</h4>
+                        <div class="toggle-container">
+                            <label>Habilitar **Autenticação de Dois Fatores (2FA)**</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="twoFactorToggle">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="toggle-container" style="border-bottom: none;">
+                            <label>Exigir troca de senha a cada 90 dias</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="passwordExpiryToggle">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <h4>Sessão e Atividade</h4>
                         <div class="form-row">
                             <div class="form-item">
-                                <label for="nomeUser">Nome de Usuário:</label>
-                                <input type="text" id="nomeUser" value="Admin">
+                                <label for="sessionTimeout">Tempo Limite da Sessão (minutos):</label>
+                                <select id="sessionTimeout">
+                                    <option value="60">60 minutos</option>
+                                    <option value="30" selected>30 minutos (Padrão)</option>
+                                    <option value="15">15 minutos</option>
+                                </select>
                             </div>
                             <div class="form-item">
-                                <label for="emailUser">E-mail:</label>
-                                <input type="email" id="emailUser" value="admin@techsync.com">
+                                <label for="ipRestriction">Restrição de Acesso por IP:</label>
+                                <select id="ipRestriction">
+                                    <option value="none" selected>Nenhuma Restrição</option>
+                                    <option value="whitelist">Lista Branca (Whitelist)</option>
+                                    <option value="vpn">Apenas via VPN da Empresa</option>
+                                </select>
                             </div>
                         </div>
-                        <div class="form-row">
-                            <div class="form-item">
-                                <label for="senhaAtual">Senha Atual:</label>
-                                <input type="password" id="senhaAtual" placeholder="Digite sua senha atual">
-                            </div>
-                            <div class="form-item">
-                                <label for="novaSenha">Nova Senha:</label>
-                                <input type="password" id="novaSenha" placeholder="Digite sua nova senha">
-                            </div>
-                        </div>
-                        <button type="submit" class="btn btn-principal">Atualizar Conta</button>
-                    </form>
+                        <button class="btn btn-secundario" style="margin-top: 15px;">Ver Histórico de Login</button>
+                    </div>
+
+                    <button class="btn btn-principal">Salvar Configurações de Segurança</button>
                 </div>
             </div>
+        </section>
 
-            </div>
       </div>
     </main>
   </div>
   
   <script type="module">
-    // ADICIONADO
+    const API_USUARIOS_URL = 'http://localhost:3000/usuarios';
+
+    const btnSenha = document.getElementById('btnSenha');
+    const btnContato = document.getElementById('btnContato'); 
+    const inputSenhaAtual = document.getElementById('senhaAtual');
+    const inputNovaSenha = document.getElementById('novaSenha');
+    const inputTelefone = document.getElementById('novoTelefone');
+    const selectNome = document.getElementById('nomeUserSelect');
+    const selectEmail = document.getElementById('emailUserSelect');
+    const userIdInput = document.getElementById('selectedUserId');
+    const nomeDisplay = document.getElementById('userNameDisplay'); 
+    
+    // VARIÁVEIS PARA O TOGGLE DA SIDEBAR (Adicionadas)
     const toggleSidebarBtn = document.getElementById('toggleSidebarBtn');
     const dashboard = document.getElementById('dashboard');
 
+    // ===================================
+    // FUNÇÕES DE UTILIDADE E NAVEGAÇÃO
+    // ===================================
+
+    // Exibe o nome do usuário logado no cabeçalho
     function displayUserName() {
         const userName = localStorage.getItem('usuarioLogadoNome');
-        const userNameDisplay = document.getElementById('userNameDisplay');
-
-        if (userName) {
-            userNameDisplay.textContent = userName.charAt(0).toUpperCase() + userName.slice(1);
-        } else {
-            userNameDisplay.textContent = 'Admin'; 
-        }
+        nomeDisplay.textContent = userName ? (userName.charAt(0).toUpperCase() + userName.slice(1)) : 'Admin';
     }
-    
+
+    // Gerencia a navegação entre as seções de configuração
     function setupConfigNavigation() {
-        const menuItems = document.querySelectorAll('#configMenu a');
-        const sections = document.querySelectorAll('.config-details > .componente-container');
+        const menuItems = document.querySelectorAll('#config-menu li');
+        const containers = document.querySelectorAll('.componente-container');
 
+        // Garante que apenas a primeira seção ("Minha Conta") esteja visível ao carregar
+        containers.forEach(c => c.style.display = 'none');
+        document.getElementById('usuario').style.display = 'block'; // Mostra "Minha Conta" por padrão
+        
         menuItems.forEach(item => {
-            item.addEventListener('click', function(e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href').substring(1);
+            item.addEventListener('click', () => {
+                menuItems.forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
 
-                menuItems.forEach(i => i.classList.remove('active-config'));
-                sections.forEach(s => s.style.display = 'none');
+                containers.forEach(c => c.style.display = 'none');
 
-                this.classList.add('active-config');
+                const targetId = item.getAttribute('data-componente');
                 document.getElementById(targetId).style.display = 'block';
             });
         });
-
-        document.getElementById('geral').style.display = 'block';
     }
 
-    document.getElementById('logoutLinkConfig').addEventListener('click', function() {
+    // Manipula o Logout
+    document.getElementById('logoutLinkConfiguracaoHeader').addEventListener('click', function() {
         localStorage.removeItem('usuarioLogadoNome');
+        // Redirecionamento adicional pode ser adicionado aqui, se necessário (ex: window.location.href = 'login.html';)
     });
 
-    // ADICIONADO
-    if (toggleSidebarBtn && dashboard) {
-        toggleSidebarBtn.addEventListener('click', () => {
-            dashboard.classList.toggle('sidebar-toggled');
-        });
+    // ===================================
+    // FUNÇÕES DE DADOS (MINHA CONTA)
+    // ===================================
+
+    // Popula dropdowns e pré-preenche campos de contato (Simplificada)
+    async function populateUserDropdowns() {
+        const loggedInUserNome = localStorage.getItem('usuarioLogadoNome');
+
+        try {
+            const res = await fetch(API_USUARIOS_URL);
+            if (!res.ok) throw new Error('Falha ao carregar lista de usuários.');
+            const usuarios = await res.json();
+
+            const userLogado = usuarios.find(u => u.nome.toLowerCase() === loggedInUserNome.toLowerCase());
+
+            if (userLogado) {
+                userIdInput.value = userLogado.id;
+                selectNome.innerHTML = `<option value="${userLogado.id}">${userLogado.nome} (Você)</option>`;
+                selectEmail.innerHTML = `<option value="${userLogado.id}">${userLogado.email}</option>`;
+                
+                const telefone = userLogado.telefoneCompleto ? userLogado.telefoneCompleto.replace(/\+\d+\s*/, '').trim() : '';
+                inputTelefone.value = telefone; 
+                
+            } else {
+                console.warn('Usuário logado não encontrado no banco de dados.');
+            }
+
+        } catch (error) {
+            console.error('Erro ao popular dropdowns:', error.message);
+        }
     }
 
+    // Função para atualizar informações de contato (Simplificada)
+    async function handleContactUpdate() {
+        const userId = userIdInput.value;
+        const telefoneNumeros = inputTelefone.value.replace(/[^0-9]/g, '');
+
+        if (!userId || telefoneNumeros.length < 8) {
+            alert('Por favor, preencha um telefone válido (mínimo 8 dígitos).');
+            return;
+        }
+        
+        const telefoneCompleto = `+55 ${telefoneNumeros}`; 
+        const API_URL = `${API_USUARIOS_URL}/${userId}`;
+
+        try {
+            const res = await fetch(API_URL, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ telefoneCompleto: telefoneCompleto }) 
+            });
+
+            if (res.ok) {
+                alert(`Telefone atualizado com sucesso!`);
+                populateUserDropdowns();
+            } else {
+                alert("Erro ao atualizar contato. Tente novamente.");
+            }
+
+        } catch (erro) {
+            console.error('Erro de atualização de contato:', erro.message);
+            alert(`Falha: ${erro.message}. Verifique o json-server.`);
+        }
+    }
+
+    // Função para manipular a troca de senha (Simplificada)
+    async function handlePasswordUpdate() {
+        const userId = userIdInput.value;
+        const senhaAtual = inputSenhaAtual.value;
+        const novaSenha = inputNovaSenha.value;
+        
+        if (!userId || !senhaAtual || !novaSenha) {
+            alert("Preencha todos os campos de senha.");
+            return;
+        }
+
+        if (novaSenha.length < 4) {
+             alert("A nova senha deve ter no mínimo 4 caracteres.");
+             return;
+        }
+        
+        const API_URL = `${API_USUARIOS_URL}/${userId}`;
+
+        try {
+            const resVerificacao = await fetch(API_URL);
+            if (!resVerificacao.ok) throw new Error("Usuário não encontrado.");
+            
+            const dadosUsuario = await resVerificacao.json();
+
+            if (dadosUsuario.senha !== senhaAtual) {
+                alert("A Senha Atual informada está incorreta.");
+                return;
+            }
+
+            const resAtualizacao = await fetch(API_URL, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ senha: novaSenha }) 
+            });
+
+            if (resAtualizacao.ok) {
+                alert(`Senha do usuário ${dadosUsuario.nome} alterada com sucesso!`);
+                inputSenhaAtual.value = '';
+                inputNovaSenha.value = '';
+            } else {
+                alert("Erro ao atualizar a senha.");
+            }
+
+        } catch (erro) {
+            console.error('Erro na troca de senha:', erro.message);
+            alert(`Falha: ${erro.message}. Verifique o json-server.`);
+        }
+    }
+
+    // ===================================
+    // ADICIONAR EVENT LISTENERS
+    // ===================================
+    if (btnSenha) {
+        btnSenha.addEventListener('click', handlePasswordUpdate);
+    }
+    
+    if (btnContato) {
+        btnContato.addEventListener('click', handleContactUpdate);
+    }
+    
+    // Listener para o botão de toggle da sidebar (Adicionado)
+    toggleSidebarBtn.addEventListener('click', () => {
+        dashboard.classList.toggle('sidebar-toggled');
+    });
+
+    // CHAMADAS DE FUNÇÕES INICIAIS
     displayUserName();
     setupConfigNavigation();
-  </script>
-
+    populateUserDropdowns(); 
+</script>
 </body>
 </html>

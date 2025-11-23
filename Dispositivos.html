@@ -10,17 +10,10 @@
         --cor-principal: #6a61ff; 
         --cor-fundo-card: #20202a;
         --cor-fundo-sidebar: #272734;
-        
         --cor-texto-primario: #e1e1e6;
         --cor-texto-secundario: #dbdbe8;
-        
         --cor-destaque: #ff79c6;
         --cor-borda: #383842;
-
-        --status-online: #50fa7b;
-        --status-offline: #ff5555;
-        --status-alerta: #f1fa8c;
-
         --sombra-suave: 0 4px 15px rgba(0, 0, 0, 0.3);
     }
 
@@ -36,29 +29,21 @@
     
     h2, h3 { font-weight: 700; margin-top: 0; }
 
-    .btn {
-        display: inline-block;
-        padding: 10px 20px;
-        border-radius: 5px;
-        text-decoration: none;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        cursor: pointer;
+    .btn-toggle-sidebar {
+        background: none;
         border: none;
-        font-family: inherit;
+        color: var(--cor-texto-primario);
+        font-size: 24px;
+        cursor: pointer;
+        padding: 0 5px;
+        margin-right: 10px;
+        transition: color 0.3s;
     }
-    .btn-principal {
-        background-color: var(--cor-principal);
-        color: #fff;
-    }
-    .btn-principal:hover {
-        background-color: var(--cor-destaque);
-        transform: translateY(-2px);
-        box-shadow: 0 0 10px var(--cor-destaque);
-    }
+    .btn-toggle-sidebar:hover { color: var(--cor-destaque); }
 
     .dashboard { display: flex; height: 100%; flex: 1; } 
 
+    /* Sidebar */
     .sidebar {
       width: 220px;
       background: var(--cor-fundo-sidebar); 
@@ -75,17 +60,6 @@
         min-width: 0;
         padding-left: 0;
         padding-right: 0;
-    }
-
-    .btn-toggle-sidebar {
-        background: none;
-        border: none;
-        color: var(--cor-texto-primario);
-        font-size: 24px;
-        cursor: pointer;
-        padding: 0 5px;
-        margin-right: 10px;
-        transition: color 0.3s;
     }
 
     .sidebar h2 { 
@@ -108,6 +82,7 @@
     .sidebar ul li a:hover { color: var(--cor-destaque); text-shadow: 0 0 7px var(--cor-destaque);}
     .sidebar ul li a.active { color: var(--cor-destaque); font-weight: 700; }
 
+    /* Main Content */
     .main { flex: 1; display: flex; flex-direction: column; }
 
     .header {
@@ -122,11 +97,11 @@
     }
     
     .header .user { color: var(--cor-texto-primario); font-weight: 600;}
-    
     .header-actions-left { display: flex; align-items: center; gap: 15px;}
 
     .content { padding: 30px; flex: 1; overflow-y: auto;}
 
+    /* Cards */
     .componente-container {
         background-color: var(--cor-fundo-card);
         color: var(--cor-texto-primario);
@@ -145,23 +120,16 @@
       margin-bottom: 20px;
     }
 
-    .card {
-      padding: 25px; 
-      text-align: center;
-    }
+    .card { padding: 25px; text-align: center; }
     .card h3 { color: var(--cor-texto-secundario); font-size: 19px; }
     .card p { font-size: 40px; font-weight: bold; color: var(--cor-texto-primario); }
 
-    .devices-container {
-        display: flex;
-        flex-direction: column;
-        /* Removida altura fixa do container para deixar o wrapper comandar */
-    }
+    /* Grafana Wrapper */
+    .devices-container { display: flex; flex-direction: column; }
+    .componente-container h3 { margin-bottom: 0; color: var(--cor-principal); font-size: 24px; }
     
-    /* --- CORREÇÃO AQUI --- */
     .grafana-wrapper {
         width: 100%;
-        /* Usamos 75vh para garantir que o painel ocupe 75% da altura da tela */
         height: 75vh; 
         background-color: #1a1a24;
         border-radius: 5px;
@@ -169,67 +137,11 @@
         margin-top: 15px;
     }
     
-    /* Garante que o iframe ocupe todo o espaço do wrapper */
     .grafana-wrapper iframe {
         width: 100%;
         height: 100%;
         display: block;
     }
-
-    .componente-container h3 { 
-        margin-bottom: 0; 
-        color: var(--cor-principal); 
-        font-size: 24px;
-    }
-
-    .modal-overlay {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background-color: rgba(0, 0, 0, 0.8);
-      display: flex; justify-content: center; align-items: center;
-      display: none; z-index: 1000;
-      backdrop-filter: blur(3px);
-    }
-    .modal-visible { display: flex; }
-
-    .modal-content {
-      background-color: var(--cor-fundo-card);
-      color: var(--cor-texto-primario); 
-      padding: 30px;
-      border-radius: 8px; 
-      width: 500px;
-      box-shadow: 0 5px 20px var(--sombra-suave);
-      position: relative;
-      border: 1px solid var(--cor-borda);
-    }
-
-    .close-modal {
-      position: absolute; top: 15px; right: 20px; font-size: 28px; 
-      font-weight: 300; cursor: pointer; color: var(--cor-texto-secundario);
-      transition: color 0.3s;
-    }
-    .btn-toggle-sidebar:hover,
-    .close-modal:hover { color: var(--cor-destaque); }
-
-    #addDeviceForm { display: flex; flex-direction: column; gap: 15px; }
-    #addDeviceForm h3 { margin-bottom: 20px; color: var(--cor-principal); text-align: center; }
-    #addDeviceForm label { font-weight: 600; color: var(--cor-texto-primario); font-size: 15px; }
-    
-    #addDeviceForm input, #addDeviceForm select {
-      width: 100%; padding: 10px; 
-      border: 1px solid var(--cor-borda);
-      border-radius: 5px; 
-      background: #121214;
-      color: #fff;
-    }
-    #addDeviceForm button {
-      background-color: var(--cor-principal);
-      color: #fff;
-      padding: 12px; border: none; border-radius: 5px;
-      font-weight: 600; cursor: pointer; transition: background-color 0.3s;
-      margin-top: 10px;
-    }
-    #addDeviceForm button:hover { background-color: var(--cor-destaque); }
-
   </style>
 </head>
 <body>
@@ -242,7 +154,7 @@
       </a>  
       <ul>
         <li><a href="dashboard.html"> Dashboard</a></li>
-        <li><a href="#" class="active"> Dispositivos</a></li>
+        <li><a href="Dispositivos.html" class="active"> Dispositivos</a></li>
         <li><a href="relatorio.html"> Relatórios</a></li>
         <li><a href="configuracao.html"> Configurações</a></li>
       </ul>
@@ -252,7 +164,6 @@
       <div class="header">
         <div class="header-actions-left">
           <button class="btn-toggle-sidebar" id="toggleSidebarBtn">☰</button>
-          <button class="btn btn-principal btn-add-device">+ Adicionar Dispositivo</button>
         </div>
 
         <div class="user">👤 <span id="userNameDisplay">Admin</span></div>
@@ -276,7 +187,7 @@
         </div>
 
         <div class="componente-container devices-container">
-          <h3>Lista de Dispositivos (Grafana)</h3>
+          <h3>Lista de Dispositivos</h3>
           
           <div class="grafana-wrapper">
              <iframe 
@@ -293,46 +204,13 @@
     </main>
   </div>
 
-  <div class="modal-overlay" id="deviceModalOverlay">
-    <div class="modal-content">
-      <span class="close-modal">&times;</span>
-      <form id="addDeviceForm">
-        <h3>Adicionar Novo Dispositivo</h3>
-        <label for="deviceName">Nome:</label>
-        <input type="text" id="deviceName" required>
-        <label for="deviceType">Tipo:</label>
-        <input type="text" id="deviceType" required>
-        <label for="deviceIp">Endereço IP:</label>
-        <input type="text" id="deviceIp" required>
-        <label for="deviceStatus">Status:</label>
-        <select id="deviceStatus">
-          <option value="Online">Online</option>
-          <option value="Offline">Offline</option>
-          <option value="Alerta">Alerta</option>
-        </select>
-        <button type="submit">Salvar Dispositivo</button>
-      </form>
-    </div>
-  </div>
-
 <script type="module">
-    import { create } from './js/services/api.js';
-
     const toggleSidebarBtn = document.getElementById('toggleSidebarBtn');
     const dashboard = document.getElementById('dashboard');
-    
-    const API_ENDPOINT = 'http://localhost:3000/dispositivos'; 
-    const ROTA_API = 'dispositivos';
-    
-    const modalOverlay = document.getElementById('deviceModalOverlay');
-    const addDeviceForm = document.getElementById('addDeviceForm'); 
 
     const totalDevicesEl = document.getElementById('totalDevices');
     const onlineDevicesEl = document.getElementById('onlineDevices');
     const alertDevicesEl = document.getElementById('alertDevices');
-
-    const openModal = () => modalOverlay.classList.add('modal-visible');
-    const closeModal = () => modalOverlay.classList.remove('modal-visible');
 
     function updateCards(dispositivos) {
         const online = dispositivos.filter(d => d.status === 'Online').length;
@@ -341,33 +219,6 @@
         totalDevicesEl.textContent = dispositivos.length;
         onlineDevicesEl.textContent = online;
         alertDevicesEl.textContent = alert;
-    }
-
-    async function loadDevices() {
-        try {
-            const response = await fetch(API_ENDPOINT);
-            if (!response.ok) {
-                throw new Error(`Erro de rede: ${response.status}`);
-            }
-            const dispositivos = await response.json();
-            updateCards(dispositivos); 
-
-        } catch (error) {
-            console.error('Erro ao carregar dados para os cards:', error);
-        }
-    }
-
-    async function createNewDevice(data) {
-        try {
-            await create(ROTA_API, data);
-            await loadDevices(); 
-            closeModal();
-            addDeviceForm.reset();
-            alert(`Dispositivo '${data.nome}' adicionado!`);
-        } catch (error) {
-            console.error('Erro ao adicionar dispositivo:', error);
-            alert('Erro ao adicionar dispositivo.');
-        }
     }
     
     function displayUserName() {
@@ -380,33 +231,12 @@
         localStorage.removeItem('usuarioLogadoNome');
     });
 
-    document.querySelector('.btn-add-device').addEventListener('click', openModal);
-
-    addDeviceForm.addEventListener('submit', function(event) {
-      event.preventDefault(); 
-      const novoDispositivo = {
-        nome: document.getElementById('deviceName').value,
-        tipo: document.getElementById('deviceType').value,
-        ip: document.getElementById('deviceIp').value,
-        status: document.getElementById('deviceStatus').value,
-        ultimaAtualizacao: new Date().toLocaleTimeString('pt-BR') 
-      };
-      createNewDevice(novoDispositivo);
-    });
-
     toggleSidebarBtn.addEventListener('click', () => {
         dashboard.classList.toggle('sidebar-toggled');
     });
 
-    document.querySelector('.close-modal').addEventListener('click', closeModal);
-    modalOverlay.addEventListener('click', (event) => {
-      if (event.target === modalOverlay) {
-        closeModal();
-      }
-    });
-
-    loadDevices();
     displayUserName();
+    
   </script>
 </body>
 </html>

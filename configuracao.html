@@ -38,7 +38,7 @@
     
     h2, h3 { font-weight: 700; margin-top: 0; }
     
-    /* Layout principal - Ajustado para o estilo 'Dispositivos.html' */
+    /* Layout principal*/
     .btn-toggle-sidebar {
         background: none;
         border: none;
@@ -53,9 +53,9 @@
     
     .dashboard { display: flex; height: 100%; flex: 1; } 
 
-    /* Sidebar (Menu principal) - Ajustado para o estilo 'Dispositivos.html' */
+    /* Sidebar */
     .sidebar {
-      width: 220px; /* Largura ajustada */
+      width: 220px;
       background: var(--cor-fundo-sidebar); 
       padding: 20px;
       box-shadow: 2px 0 5px rgba(0,0,0,0.2);
@@ -74,23 +74,22 @@
     }
 
     .sidebar h2 { 
-      font-size: 40px; /* Tamanho ajustado */
+      font-size: 40px;
       text-align: center; 
       margin-bottom: 20px; 
       color: var(--cor-principal);
       text-shadow: 0 0 10px rgba(106, 97, 255, 0.3);
     }
-    .sidebar img { width: 100px; display: block; margin: 0 auto 20px auto; } /* Largura e margem ajustadas */
-
+    .sidebar img { width: 100px; display: block; margin: 0 auto 20px auto; }
     .sidebar ul { list-style: none; }
-    .sidebar ul li { margin: 15px 0; font-size: 20px; padding: 0; } /* Padding zero e margin ajustadas */
+    .sidebar ul li { margin: 15px 0; font-size: 20px; padding: 0; }
     
     .sidebar ul li a {
       color: var(--cor-texto-secundario);
       text-decoration: none;
       font-weight: 500;
       transition: color 0.3s;
-      display: block; /* Garante que o link preencha o li */
+      display: block;
     }
     .sidebar ul li a:hover { color: var(--cor-destaque); text-shadow: 0 0 7px var(--cor-destaque);}
     .sidebar ul li a.active { color: var(--cor-destaque); font-weight: 700; }
@@ -98,15 +97,15 @@
     .sidebar ul li a i { margin-right: 10px; font-size: 1.1rem; }
     
     /* Conteúdo principal */
-    .main { flex: 1; display: flex; flex-direction: column; } /* Novo wrapper principal */
+    .main { flex: 1; display: flex; flex-direction: column; } 
     
-    .main-content { /* Renomeado para content no 'Dispositivos' */
+    .main-content { 
         flex-grow: 1;
-        padding: 30px; /* Padding ajustado para 30px */
+        padding: 30px;
         overflow-y: auto;
     }
 
-    /* Header - Ajustado para o estilo 'Dispositivos.html' */
+    /* Header */
     .header {
       background-color: rgba(18, 18, 20, 0.7);
       backdrop-filter: blur(5px);
@@ -116,23 +115,22 @@
       justify-content: space-between;
       align-items: center;
       border-bottom: 1px solid var(--cor-borda);
-      margin-bottom: 0; /* Removido margem inferior */
-      padding-bottom: 15px; /* Ajustado padding */
+      margin-bottom: 0;
+      padding-bottom: 15px;
     }
     
-    .header .user { color: var(--cor-texto-primario); font-weight: 600;} /* Classe 'user' */
+    .header .user { color: var(--cor-texto-primario); font-weight: 600;}
     .header-actions-left { display: flex; align-items: center; gap: 15px;}
     
-    /* Remoção de estilos de header específicos para 'configuracao.html' que não se aplicam mais */
     
-    /* Container de Configurações - Mantido */
+    /* Container de Configurações */
     .configuracoes-container {
         display: flex;
         background-color: var(--cor-fundo-card);
         padding: 20px;
         border-radius: 12px;
         box-shadow: var(--sombra-suave);
-        min-height: calc(100vh - 150px); /* Ajustado para caber na tela com o novo header/padding */
+        min-height: calc(100vh - 150px);
     }
 
     .config-sidebar {
@@ -263,7 +261,6 @@
         opacity: 0.9;
     }
     
-    /* Toggle Switch Styles */
     .toggle-container {
         display: flex;
         justify-content: space-between;
@@ -321,9 +318,88 @@
     input:checked + .slider:before {
         transform: translateX(18px);
     }
+
+    /* Estilos do Modal */
+    .modal-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.75);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        backdrop-filter: blur(3px);
+    }
+
+    .modal-content {
+        background-color: var(--cor-fundo-card);
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: var(--sombra-suave);
+        width: 90%;
+        max-width: 450px;
+        color: var(--cor-texto-primario);
+        animation: scaleIn 0.3s ease-out;
+    }
+
+    @keyframes scaleIn {
+        from { transform: scale(0.9); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-content h4 {
+        color: var(--cor-destaque);
+        margin-bottom: 15px;
+        border-bottom: 1px solid var(--cor-borda);
+        padding-bottom: 10px;
+        font-size: 1.5rem;
+    }
+    
+    .modal-content p {
+        margin-bottom: 20px;
+        font-size: 0.95rem;
+        color: var(--cor-texto-secundario);
+    }
+
+    .modal-content .form-item {
+        margin-bottom: 20px;
+    }
+
+    .modal-session-timeout .modal-content h4 {
+        color: var(--status-alerta);
+    }
   </style>
 </head>
 <body>
+
+  <div class="modal-backdrop" id="passwordModal">
+    <div class="modal-content">
+      <h4 id="modalTitle">Troca de Senha Obrigatória</h4>
+      <p id="modalMessage">Sua senha expirou. Por motivos de segurança, você deve definir uma nova senha para continuar.</p>
+      
+      <div class="form-item">
+          <label for="modalNovaSenha">Nova Senha:</label>
+          <input type="password" id="modalNovaSenha" placeholder="Digite a nova senha" required>
+      </div>
+      <div class="form-item">
+          <label for="modalConfirmaSenha">Confirme a Nova Senha:</label>
+          <input type="password" id="modalConfirmaSenha" placeholder="Confirme a nova senha" required>
+      </div>
+      <button type="button" class="btn btn-principal w-full" id="btnSalvarModalSenha">Atualizar Senha</button>
+    </div>
+  </div>
+
+  <div class="modal-backdrop modal-session-timeout" id="sessionTimeoutModal">
+    <div class="modal-content">
+      <h4>Aviso de Tempo Limite de Sessão</h4>
+      <p>Sua sessão de login expirou por inatividade. Por favor, faça login novamente para continuar.</p>
+      <button type="button" class="btn btn-principal" id="btnRedirecionarLogin">Fazer Login Novamente</button>
+    </div>
+  </div>
+
 
   <div class="dashboard" id="dashboard">
     <aside class="sidebar">
@@ -473,21 +549,33 @@
                     <h3>Configurações de Segurança</h3>
                     
                     <div class="form-group">
-                        <h4>Autenticação</h4>
-                        <div class="toggle-container">
-                            <label>Habilitar **Autenticação de Dois Fatores (2FA)**</label>
-                            <label class="toggle-switch">
-                                <input type="checkbox" id="twoFactorToggle">
-                                <span class="slider"></span>
-                            </label>
+                        <h4>Política de Senha</h4>
+                        
+                        <div class="form-row">
+                            <div class="form-item">
+                                <label for="passwordExpiryDays">Frequência de Troca de Senha:</label>
+                                <select id="passwordExpiryDays">
+                                    <option value="0">Desativado</option>
+                                    <option value="30">A cada 30 dias</option>
+                                    <option value="60">A cada 60 dias</option>
+                                    <option value="90" selected>A cada 90 dias (Recomendado)</option>
+                                </select>
+                            </div>
+                            <div class="form-item">
+                                <label>Próxima Troca Prevista:</label>
+                                <input type="text" id="nextPasswordChangeDate" value="Aguardando dados..." disabled style="background-color: #383842;">
+                            </div>
                         </div>
-                        <div class="toggle-container" style="border-bottom: none;">
-                            <label>Exigir troca de senha a cada 90 dias</label>
-                            <label class="toggle-switch">
-                                <input type="checkbox" id="passwordExpiryToggle">
-                                <span class="slider"></span>
-                            </label>
+
+                        <div class="form-row" style="margin-top: 20px; border-top: 1px solid var(--cor-borda); padding-top: 20px;">
+                            <div class="form-item" style="flex: none;">
+                                <label>Teste de Expiração:</label>
+                                <button type="button" class="btn btn-secundario" id="btnTestExpiration">
+                                    <i class="fa-solid fa-calendar-check"></i> Testar Expiração Imediata
+                                </button>
+                            </div>
                         </div>
+
                     </div>
 
                     <div class="form-group">
@@ -501,19 +589,18 @@
                                     <option value="15">15 minutos</option>
                                 </select>
                             </div>
-                            <div class="form-item">
-                                <label for="ipRestriction">Restrição de Acesso por IP:</label>
-                                <select id="ipRestriction">
-                                    <option value="none" selected>Nenhuma Restrição</option>
-                                    <option value="whitelist">Lista Branca (Whitelist)</option>
-                                    <option value="vpn">Apenas via VPN da Empresa</option>
-                                </select>
+                        </div>
+                        <div class="form-row" style="margin-top: 20px; border-top: 1px solid var(--cor-borda); padding-top: 20px;">
+                            <div class="form-item" style="flex: none;">
+                                <label>Teste de Sessão:</label>
+                                <button type="button" class="btn btn-secundario" id="btnTestSessionExpiration">
+                                    <i class="fa-solid fa-clock-rotate-left"></i> Testar Expiração da Sessão
+                                </button>
                             </div>
                         </div>
-                        <button class="btn btn-secundario" style="margin-top: 15px;">Ver Histórico de Login</button>
                     </div>
 
-                    <button class="btn btn-principal">Salvar Configurações de Segurança</button>
+                    <button class="btn btn-principal" id="btnSalvarSeguranca">Salvar Configurações de Segurança</button>
                 </div>
             </div>
         </section>
@@ -534,14 +621,43 @@
     const selectEmail = document.getElementById('emailUserSelect');
     const userIdInput = document.getElementById('selectedUserId');
     const nomeDisplay = document.getElementById('userNameDisplay'); 
-    
-    // VARIÁVEIS PARA O TOGGLE DA SIDEBAR (Adicionadas)
     const toggleSidebarBtn = document.getElementById('toggleSidebarBtn');
     const dashboard = document.getElementById('dashboard');
+    const passwordModal = document.getElementById('passwordModal');
+    const modalNovaSenhaInput = document.getElementById('modalNovaSenha');
+    const modalConfirmaSenhaInput = document.getElementById('modalConfirmaSenha');
+    const btnSalvarModalSenha = document.getElementById('btnSalvarModalSenha');
+    const selectPasswordExpiryDays = document.getElementById('passwordExpiryDays');
+    const nextPasswordChangeDateInput = document.getElementById('nextPasswordChangeDate');
+    const btnSalvarSeguranca = document.getElementById('btnSalvarSeguranca');
+    const btnTestExpiration = document.getElementById('btnTestExpiration');
+    const selectSessionTimeout = document.getElementById('sessionTimeout');
+    const sessionTimeoutModal = document.getElementById('sessionTimeoutModal');
+    const btnTestSessionExpiration = document.getElementById('btnTestSessionExpiration');
+    const btnRedirecionarLogin = document.getElementById('btnRedirecionarLogin'); // NOVO: Botão de redirecionamento manual
+    const SEVERIDADE_AVISO = false;
+    const SEVERIDADE_EXPIRADO = true;
 
-    // ===================================
-    // FUNÇÕES DE UTILIDADE E NAVEGAÇÃO
-    // ===================================
+    let currentUserId = null;
+    let sessionInterval = null;
+
+    function formatDate(date) {
+        const d = new Date(date);
+        return d.toLocaleDateString('pt-BR');
+    }
+
+    function redirecionarParaLogin() {
+        localStorage.removeItem('usuarioLogadoNome');
+        localStorage.removeItem('lastActivityTime'); 
+        window.location.href = 'login.html'; 
+    }
+
+    function registrarAtividade() {
+        if (currentUserId) {
+            localStorage.setItem('lastActivityTime', new Date().getTime());
+        }
+    }
+
 
     // Exibe o nome do usuário logado no cabeçalho
     function displayUserName() {
@@ -549,14 +665,11 @@
         nomeDisplay.textContent = userName ? (userName.charAt(0).toUpperCase() + userName.slice(1)) : 'Admin';
     }
 
-    // Gerencia a navegação entre as seções de configuração
     function setupConfigNavigation() {
         const menuItems = document.querySelectorAll('#config-menu li');
         const containers = document.querySelectorAll('.componente-container');
-
-        // Garante que apenas a primeira seção ("Minha Conta") esteja visível ao carregar
         containers.forEach(c => c.style.display = 'none');
-        document.getElementById('usuario').style.display = 'block'; // Mostra "Minha Conta" por padrão
+        document.getElementById('usuario').style.display = 'block';
         
         menuItems.forEach(item => {
             item.addEventListener('click', () => {
@@ -567,21 +680,20 @@
 
                 const targetId = item.getAttribute('data-componente');
                 document.getElementById(targetId).style.display = 'block';
+                
+                if (targetId === 'seguranca') {
+                    carregarConfiguracoesDeSeguranca();
+                }
+                registrarAtividade();
             });
         });
     }
 
-    // Manipula o Logout
     document.getElementById('logoutLinkConfiguracaoHeader').addEventListener('click', function() {
         localStorage.removeItem('usuarioLogadoNome');
-        // Redirecionamento adicional pode ser adicionado aqui, se necessário (ex: window.location.href = 'login.html';)
+        localStorage.removeItem('lastActivityTime'); 
+
     });
-
-    // ===================================
-    // FUNÇÕES DE DADOS (MINHA CONTA)
-    // ===================================
-
-    // Popula dropdowns e pré-preenche campos de contato (Simplificada)
     async function populateUserDropdowns() {
         const loggedInUserNome = localStorage.getItem('usuarioLogadoNome');
 
@@ -593,6 +705,7 @@
             const userLogado = usuarios.find(u => u.nome.toLowerCase() === loggedInUserNome.toLowerCase());
 
             if (userLogado) {
+                currentUserId = userLogado.id;
                 userIdInput.value = userLogado.id;
                 selectNome.innerHTML = `<option value="${userLogado.id}">${userLogado.nome} (Você)</option>`;
                 selectEmail.innerHTML = `<option value="${userLogado.id}">${userLogado.email}</option>`;
@@ -600,6 +713,9 @@
                 const telefone = userLogado.telefoneCompleto ? userLogado.telefoneCompleto.replace(/\+\d+\s*/, '').trim() : '';
                 inputTelefone.value = telefone; 
                 
+                verificarExpiracaoDeSenha(userLogado);
+                iniciarControleDeSessao(); 
+
             } else {
                 console.warn('Usuário logado não encontrado no banco de dados.');
             }
@@ -609,8 +725,9 @@
         }
     }
 
-    // Função para atualizar informações de contato (Simplificada)
+    // Atualizar informações de contato
     async function handleContactUpdate() {
+        registrarAtividade();
         const userId = userIdInput.value;
         const telefoneNumeros = inputTelefone.value.replace(/[^0-9]/g, '');
 
@@ -642,8 +759,9 @@
         }
     }
 
-    // Função para manipular a troca de senha (Simplificada)
+    // Realizar a troca de senha
     async function handlePasswordUpdate() {
+        registrarAtividade();
         const userId = userIdInput.value;
         const senhaAtual = inputSenhaAtual.value;
         const novaSenha = inputNovaSenha.value;
@@ -671,18 +789,14 @@
                 return;
             }
 
-            const resAtualizacao = await fetch(API_URL, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ senha: novaSenha }) 
-            });
+            await atualizarSenhaEDataDaUltimaTroca(userId, novaSenha);
 
-            if (resAtualizacao.ok) {
-                alert(`Senha do usuário ${dadosUsuario.nome} alterada com sucesso!`);
-                inputSenhaAtual.value = '';
-                inputNovaSenha.value = '';
-            } else {
-                alert("Erro ao atualizar a senha.");
+            alert(`Senha do usuário ${dadosUsuario.nome} alterada com sucesso!`);
+            inputSenhaAtual.value = '';
+            inputNovaSenha.value = '';
+            
+            if (document.getElementById('seguranca').style.display === 'block') {
+                carregarConfiguracoesDeSeguranca();
             }
 
         } catch (erro) {
@@ -691,9 +805,264 @@
         }
     }
 
-    // ===================================
-    // ADICIONAR EVENT LISTENERS
-    // ===================================
+    async function atualizarSenhaEDataDaUltimaTroca(userId, newPassword) {
+        const currentDate = new Date().toISOString();
+        
+        const payload = {
+            senha: newPassword,
+            lastPasswordChangeDate: currentDate
+        };
+
+        const resAtualizacao = await fetch(`${API_USUARIOS_URL}/${userId}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload) 
+        });
+
+        if (!resAtualizacao.ok) {
+            throw new Error("Erro ao atualizar a senha e data.");
+        }
+    }
+    async function atualizarDataPrevistaDeTroca(expiryDays = null) {
+        if (!currentUserId) return;
+
+        try {
+            const res = await fetch(`${API_USUARIOS_URL}/${currentUserId}`);
+            if (!res.ok) throw new Error("Falha ao carregar dados do usuário.");
+            
+            const user = await res.json();
+            
+            // Pega os dias de expiração (do parâmetro, do select ou do usuário)
+            const days = expiryDays !== null ? parseInt(expiryDays, 10) : parseInt(selectPasswordExpiryDays.value, 10);
+            
+            // Data de Última Troca
+            const lastChangeDate = user.lastPasswordChangeDate ? new Date(user.lastPasswordChangeDate) : null;
+            
+            // Calcula a Próxima Troca Prevista
+            if (days > 0 && lastChangeDate) {
+                const nextDate = new Date(lastChangeDate);
+                nextDate.setDate(lastChangeDate.getDate() + days);
+                nextPasswordChangeDateInput.value = formatDate(nextDate);
+            } else {
+                nextPasswordChangeDateInput.value = 'Desativado';
+            }
+
+        } catch (error) {
+            console.error('Erro ao calcular a data de troca:', error.message);
+            nextPasswordChangeDateInput.value = 'Erro ao carregar';
+        }
+    }
+
+
+    // Carrega as configurações de segurança do usuário
+    async function carregarConfiguracoesDeSeguranca() {
+        if (!currentUserId) return;
+
+        try {
+            const res = await fetch(`${API_USUARIOS_URL}/${currentUserId}`);
+            if (!res.ok) throw new Error("Falha ao carregar configurações de segurança.");
+            
+            const user = await res.json();
+            const expiryDays = user.passwordExpiryDays || 90;
+            selectPasswordExpiryDays.value = expiryDays;
+            const sessionLimit = localStorage.getItem('sessionTimeoutMinutes') || '30';
+            selectSessionTimeout.value = sessionLimit;
+            atualizarDataPrevistaDeTroca(expiryDays);
+
+        } catch (error) {
+            console.error('Erro ao carregar configurações de segurança:', error.message);
+            nextPasswordChangeDateInput.value = 'Erro ao carregar';
+        }
+    }
+    btnSalvarSeguranca.addEventListener('click', async () => {
+        registrarAtividade();
+        if (!currentUserId) return;
+        
+        const expiryDays = selectPasswordExpiryDays.value;
+        const sessionLimit = selectSessionTimeout.value; 
+        localStorage.setItem('sessionTimeoutMinutes', sessionLimit); 
+
+        try {
+            // Atualiza a senha no servidor json
+            const res = await fetch(`${API_USUARIOS_URL}/${currentUserId}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ passwordExpiryDays: parseInt(expiryDays, 10) }) 
+            });
+
+            if (res.ok) {
+                alert(`Configurações de Segurança salvas com sucesso! Limite de sessão definido para ${sessionLimit} minutos.`);
+                carregarConfiguracoesDeSeguranca();
+                iniciarControleDeSessao();
+            } else {
+                alert("Erro ao salvar configurações.");
+            }
+
+        } catch (error) {
+            console.error('Erro ao salvar segurança:', error.message);
+            alert(`Falha: ${error.message}. Verifique o json-server.`);
+        }
+    });
+
+    async function verificarExpiracaoDeSenha(user) {
+        const expiryDays = user.passwordExpiryDays || 90;
+        const lastChangeDate = user.lastPasswordChangeDate ? new Date(user.lastPasswordChangeDate) : null;
+
+        if (expiryDays === 0) return;
+
+        // Se a data de última troca não existe, define-a como hoje (e força uma troca imediata)
+        if (!lastChangeDate) {
+            showPasswordModal(SEVERIDADE_EXPIRADO); // Força a troca na primeira vez
+            return;
+        }
+
+        const nextExpirationDate = new Date(lastChangeDate);
+        nextExpirationDate.setDate(lastChangeDate.getDate() + parseInt(expiryDays, 10));
+        
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); 
+        nextExpirationDate.setHours(0, 0, 0, 0);
+
+        if (today > nextExpirationDate) {
+            showPasswordModal(SEVERIDADE_EXPIRADO);
+        } else if (today.getTime() === nextExpirationDate.getTime()) {
+            showPasswordModal(SEVERIDADE_AVISO);
+        }
+    }
+    
+    // Exibe o modal de senha
+    function showPasswordModal(isMandatory) {
+        const modalTitle = document.getElementById('modalTitle');
+        const modalMessage = document.getElementById('modalMessage');
+        sessionTimeoutModal.style.display = 'none';
+
+        if (isMandatory) {
+            modalTitle.textContent = "Troca de Senha Obrigatória";
+            modalMessage.textContent = "Sua senha expirou. Por motivos de segurança, você deve definir uma nova senha para continuar.";
+        } else {
+            modalTitle.textContent = "Alerta de Expiração de Senha";
+            modalMessage.textContent = "Sua senha expira hoje! É altamente recomendável alterá-la agora.";
+        }
+        passwordModal.style.display = 'flex';
+    }
+
+    function iniciarControleDeSessao() {
+        if (sessionInterval) {
+            clearInterval(sessionInterval);
+        }
+        if (!localStorage.getItem('lastActivityTime')) {
+             registrarAtividade();
+        }
+        // Checa a sessão a cada 5 segundos
+        sessionInterval = setInterval(verificarExpiracaoDeSessao, 5000); 
+    }
+    
+    // Verificar caso a sessão expirou por inatividade
+    function verificarExpiracaoDeSessao() {
+        if (!currentUserId || sessionTimeoutModal.style.display === 'flex') return;
+
+        const lastActivity = localStorage.getItem('lastActivityTime');
+        const sessionLimitMinutes = parseInt(localStorage.getItem('sessionTimeoutMinutes') || '30', 10);
+        
+        if (!lastActivity) return; // Se não houver registro de atividade, não faz nada
+        const currentTime = new Date().getTime();
+        const elapsedTime = currentTime - parseInt(lastActivity, 10);
+        const limitTime = sessionLimitMinutes * 60 * 1000;
+
+        if (elapsedTime >= limitTime) {
+            // A sessão expirou!
+            clearInterval(sessionInterval); // Para a checagem
+            passwordModal.style.display = 'none'; 
+            // Exibe o modal de sessão
+            sessionTimeoutModal.style.display = 'flex';
+        } 
+    }
+
+    btnTestSessionExpiration.addEventListener('click', () => {
+        registrarAtividade();
+        if (!currentUserId) {
+            alert("Usuário não carregado. Tente recarregar a página.");
+            return;
+        }
+        const pastTime = new Date().getTime() - (1000 * 60 * 1000); 
+        localStorage.setItem('lastActivityTime', pastTime);
+        
+        alert("Simulação de inatividade iniciada. Verificando expiração...");
+        verificarExpiracaoDeSessao();
+    });
+
+    btnSalvarModalSenha.addEventListener('click', async () => {
+        registrarAtividade();
+        const novaSenha = modalNovaSenhaInput.value;
+        const confirmaSenha = modalConfirmaSenhaInput.value;
+        
+        if (novaSenha.length < 4) {
+             alert("A nova senha deve ter no mínimo 4 caracteres.");
+             return;
+        }
+
+        if (novaSenha !== confirmaSenha) {
+            alert("As senhas não coincidem.");
+            return;
+        }
+        
+        try {
+            await atualizarSenhaEDataDaUltimaTroca(currentUserId, novaSenha);
+            
+            alert(`Sua senha foi alterada com sucesso!`);
+            passwordModal.style.display = 'none';
+            
+            // Limpa os campos
+            modalNovaSenhaInput.value = '';
+            modalConfirmaSenhaInput.value = '';
+            
+            if (document.getElementById('seguranca').style.display === 'block') {
+                carregarConfiguracoesDeSeguranca();
+            }
+
+        } catch (erro) {
+            console.error('Erro ao atualizar a senha no modal:', erro.message);
+            alert(`Falha: ${erro.message}. Verifique o json-server.`);
+        }
+    });
+
+    // Botão de Teste de Expiração de Senha
+    btnTestExpiration.addEventListener('click', async () => {
+        registrarAtividade();
+        if (!currentUserId) {
+            alert("Usuário não carregado. Tente recarregar a página.");
+            return;
+        }
+        
+        const pastDate = new Date();
+        pastDate.setDate(pastDate.getDate() - 91);
+
+        try {
+            const res = await fetch(`${API_USUARIOS_URL}/${currentUserId}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    lastPasswordChangeDate: pastDate.toISOString(),
+                    passwordExpiryDays: 90 // Garante que a regra esteja em 90 dias
+                }) 
+            });
+
+            if (res.ok) {
+                alert("Data de última troca atualizada para 91 dias atrás. Verificando expiração...");
+                const resUser = await fetch(`${API_USUARIOS_URL}/${currentUserId}`);
+                const userUpdated = await resUser.json();
+
+                carregarConfiguracoesDeSeguranca();
+                verificarExpiracaoDeSenha(userUpdated);
+            } else {
+                alert("Erro ao simular expiração.");
+            }
+        } catch (error) {
+            console.error('Erro no teste de expiração:', error.message);
+            alert(`Falha: ${error.message}. Verifique o json-server.`);
+        }
+    });
+
     if (btnSenha) {
         btnSenha.addEventListener('click', handlePasswordUpdate);
     }
@@ -702,15 +1071,31 @@
         btnContato.addEventListener('click', handleContactUpdate);
     }
     
-    // Listener para o botão de toggle da sidebar (Adicionado)
     toggleSidebarBtn.addEventListener('click', () => {
         dashboard.classList.toggle('sidebar-toggled');
+        registrarAtividade();
+    });
+    
+    btnRedirecionarLogin.addEventListener('click', () => {
+        redirecionarParaLogin();
     });
 
-    // CHAMADAS DE FUNÇÕES INICIAIS
+    selectPasswordExpiryDays.addEventListener('change', (e) => {
+        atualizarDataPrevistaDeTroca(e.target.value); 
+        registrarAtividade();
+    });
+    
+    document.addEventListener('click', registrarAtividade);
+    document.addEventListener('mousemove', registrarAtividade);
+
+    passwordModal.addEventListener('click', (e) => {
+        if (e.target === passwordModal) {
+        }
+    });
+
     displayUserName();
     setupConfigNavigation();
-    populateUserDropdowns(); 
+    populateUserDropdowns();
 </script>
 </body>
 </html>

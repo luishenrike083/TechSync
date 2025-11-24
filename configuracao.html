@@ -651,7 +651,7 @@
         localStorage.removeItem('lastActivityTime'); 
         window.location.href = 'login.html'; 
     }
-
+    // Marca a atividade do usuário
     function registrarAtividade() {
         if (currentUserId) {
             localStorage.setItem('lastActivityTime', new Date().getTime());
@@ -930,7 +930,7 @@
         }
     }
     
-    // Exibe o modal de senha
+    // Exibe o tela de troca de senha
     function showPasswordModal(isMandatory) {
         const modalTitle = document.getElementById('modalTitle');
         const modalMessage = document.getElementById('modalMessage');
@@ -945,7 +945,7 @@
         }
         passwordModal.style.display = 'flex';
     }
-
+    // Conta a inatividade
     function iniciarControleDeSessao() {
         if (sessionInterval) {
             clearInterval(sessionInterval);

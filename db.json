@@ -13,10 +13,10 @@
       "id": "c381",
       "nome": "hugo",
       "email": "hugo@gmail.com",
-      "senha": "12345",
+      "senha": "1234",
       "telefoneCompleto": "+55 83986519189",
-      "lastPasswordChangeDate": "2025-11-24T03:36:30.084Z",
-      "passwordExpiryDays": 30
+      "lastPasswordChangeDate": "2025-11-24T11:09:41.717Z",
+      "passwordExpiryDays": 90
     },
     {
       "id": "d978",
@@ -28,6 +28,5 @@
       "passwordExpiryDays": 60
     }
   ],
-  "contatos": [],
-  "dispositivos": []
+  "contatos": []
 }

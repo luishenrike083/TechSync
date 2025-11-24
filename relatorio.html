@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TechSync - Relatórios (Dark Mode)</title>
+  <title>TechSync - Relatórios Executivos</title>
   <link rel="icon" href="imagem/logo.png">
+  
   <style>
     :root {
         --cor-principal: #6a61ff; 
@@ -18,9 +19,6 @@
         --status-offline: #ff5555;
         --status-alerta: #f1fa8c;
         --sombra-suave: 0 4px 15px rgba(0, 0, 0, 0.3);
-        --cor-grafico-1: #50fa7b; 
-        --cor-grafico-2: #ff79c6; 
-        --cor-grafico-3: #f1fa8c; 
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -33,9 +31,10 @@
       height: 100vh;
       display: flex;
       flex-direction: column;
+      overflow: hidden; 
     }
     
-    h2, h3 { font-weight: 700; margin-top: 0; }
+    h2, h3, h4 { font-weight: 700; margin-top: 0; }
 
     .btn {
         display: inline-block;
@@ -55,10 +54,9 @@
     .btn-principal:hover {
         background-color: var(--cor-destaque);
         transform: translateY(-2px);
-        box-shadow: 0 0 10px var(--cor-destaque);
     }
 
-    .dashboard { display: flex; height: 100vh; }
+    .dashboard { display: flex; height: 100vh; width: 100%; }
 
     /* Sidebar */
     .sidebar {
@@ -67,17 +65,13 @@
       padding: 20px;
       box-shadow: 2px 0 5px rgba(0,0,0,0.2);
       border-right: 1px solid var(--cor-borda);
-      transition: width 0.3s ease, min-width 0.3s ease, padding 0.3s ease;
+      transition: width 0.3s ease;
       overflow: hidden; 
       white-space: nowrap;
+      flex-shrink: 0;
     }
     
-    .dashboard.sidebar-toggled .sidebar {
-        width: 0;
-        min-width: 0;
-        padding-left: 0;
-        padding-right: 0;
-    }
+    .dashboard.sidebar-toggled .sidebar { width: 0; padding: 0; border: none; }
 
     .btn-toggle-sidebar {
         background: none;
@@ -87,144 +81,94 @@
         cursor: pointer;
         padding: 0 5px;
         margin-right: 10px;
-        transition: color 0.3s;
     }
-    .btn-toggle-sidebar:hover { color: var(--cor-destaque); }
 
-
-    .sidebar h2 { 
-      font-size: 40px; 
-      text-align: center; 
-      margin-bottom: 20px; 
-      color: var(--cor-principal); 
-      -webkit-text-stroke-width: 0; 
-      text-shadow: 0 0 10px rgba(106, 97, 255, 0.3);
-    }
-    .sidebar img { width: 100px; display: block; margin: 0 auto 20px auto; }
-
+    .sidebar h2 { font-size: 30px; text-align: center; margin-bottom: 20px; color: var(--cor-principal); }
+    .sidebar img { width: 80px; display: block; margin: 0 auto 15px auto; }
     .sidebar ul { list-style: none; }
-    .sidebar ul li { margin: 15px 0; font-size: 20px; }
+    .sidebar ul li { margin: 15px 0; font-size: 18px; }
     .sidebar ul li a {
       color: var(--cor-texto-secundario);
       text-decoration: none;
       font-weight: 500;
       transition: color 0.3s;
+      display: block;
     }
-    .sidebar ul li a:hover { color: var(--cor-destaque); text-shadow: 0 0 7px var(--cor-destaque);}
-    .sidebar ul li a.active { color: var(--cor-destaque); font-weight: 700; }
+    .sidebar ul li a:hover, .sidebar ul li a.active { color: var(--cor-destaque); font-weight: 700; }
 
     /* Main */
-    .main { flex: 1; display: flex; flex-direction: column; }
+    .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
 
-    /* Header */
     .header {
-      background-color: rgba(18, 18, 20, 0.7);
-      backdrop-filter: blur(5px); 
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      background-color: rgba(39, 39, 52, 0.95);
       padding: 15px 30px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       border-bottom: 1px solid var(--cor-borda);
+      flex-shrink: 0;
     }
     
-    .header .user { color: var(--cor-texto-primario); font-weight: 600;}
+    .header-actions-left { display: flex; align-items: center; gap: 20px; }
 
-    .search { display: none; }
-
-    .header-actions-left { 
-        display: flex; 
-        align-items: center; 
-        gap: 15px; 
-    }
-
-    .content { padding: 30px; flex: 1; overflow-y: auto; }
+    .content { padding: 30px; flex: 1; overflow-y: auto; overflow-x: hidden; }
 
     .componente-container {
         background-color: var(--cor-fundo-card);
         color: var(--cor-texto-primario);
-        padding: 25px;
+        padding: 20px;
         border-radius: 8px;
-        margin-bottom: 30px;
+        margin-bottom: 25px;
         box-shadow: var(--sombra-suave);
         border: 1px solid var(--cor-borda);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .componente-container:hover {
-        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
-        box-shadow: 0 0 10px var(--cor-destaque);
-        transform: translateY(-5px);
-        cursor: pointer
+        break-inside: avoid; /* Evita quebra no PDF */
     }
     .componente-container h3 { 
         margin-bottom: 15px; 
-        color: var(--cor-principal); 
-        font-size: 1.5rem;
+        color: var(--cor-destaque); 
+        font-size: 1.2rem;
+        border-bottom: 1px solid var(--cor-borda);
+        padding-bottom: 10px;
     }
 
+    /* Cards de Métricas */
     .cards-relatorio {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 20px;
       margin-bottom: 30px;
     }
-    .card-metrica h4 { 
-        font-size: 1rem; 
-        color: var(--cor-texto-secundario); 
-        margin-bottom: 5px; 
-    }
-    .card-metrica p { 
-        font-size: 2rem; 
-        font-weight: bold; 
-        color: var(--cor-texto-primario); 
-    }
-
-    .graficos-container {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 30px;
-    }
-
-    .grafico-placeholder {
-        height: 250px;
-        background-color: #292933;
-        border-radius: 5px;
-        display: flex;
+    .card-metrica {
+        display: flex; 
+        flex-direction: column; 
         justify-content: center;
-        align-items: center;
-        font-size: 1.2rem;
-        color: var(--cor-texto-secundario);
-        border: 1px dashed var(--cor-borda);
+        text-align: center;
+        padding: 20px 15px 20px 15px; 
+        height: 170px;
     }
-    
-    .legenda-item {
-        display: flex;
-        align-items: center;
-        margin-bottom: 8px;
-        font-size: 0.95rem;
-        color: var(--cor-texto-secundario);
-    }
-    .legenda-cor {
-        width: 12px;
-        height: 12px;
-        border-radius: 3px;
-        margin-right: 8px;
-    }
-    
-    /* Regra da tabela */
-    .device-list th, .device-list td {
-        padding: 15px 15px;
-        text-align: left;
-        border-bottom: 1px solid var(--cor-borda);
-        color: var(--cor-texto-primario);
-    }
-    .device-list th {
-        background-color: #292933;
-        font-weight: 600;
-        color: var(--cor-principal);
-    }
-    .device-list tr:hover { background-color: #2a2a35; }
+    .card-metrica h4 { font-size: 0.9rem; color: var(--cor-texto-secundario); margin-bottom: 10px; }
+    .txt-verde { color: var(--status-online); font-weight: bold; font-size: 2rem;}
+    .txt-vermelho { color: var(--status-offline); font-weight: bold; font-size: 2rem;}
+    .txt-roxo { color: var(--cor-principal); font-weight: bold; font-size: 2rem;}
 
+    /* Grid de Gráficos */
+    .graficos-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr; 
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    .grafico-full { grid-column: 1 / -1; } 
+
+    .iframe-container {
+        width: 100%;
+        height: 300px;
+        border-radius: 4px;
+        overflow: hidden;
+        background: #18181b;
+    }
+
+    /* Filtros */
     .filters-container {
         display: flex;
         border: 1px solid var(--cor-borda);
@@ -234,34 +178,67 @@
     .btn-filter {
         background-color: var(--cor-fundo-card);
         color: var(--cor-texto-secundario);
-        padding: 8px 12px;
+        padding: 8px 16px;
         border: none;
         cursor: pointer;
-        transition: background-color 0.2s, color 0.2s;
-        font-size: 0.9rem;
-        font-weight: 500;
         border-right: 1px solid var(--cor-borda);
+        font-weight: 500;
     }
-    .btn-filter:last-child {
-        border-right: none;
-    }
-    .btn-filter:hover {
-        background-color: #383842;
-        color: var(--cor-texto-primario);
-    }
-    .btn-filter.active {
-        background-color: var(--cor-principal);
-        color: #fff;
-        font-weight: 600;
-        box-shadow: 0 0 5px rgba(106, 97, 255, 0.5);
+    .btn-filter:last-child { border-right: none; }
+    .btn-filter:hover { background-color: #383842; color: #fff; }
+    .btn-filter.active { background-color: var(--cor-principal); color: #fff; }
+
+    @media (max-width: 1024px) {
+        .graficos-grid { grid-template-columns: 1fr; }
+        .cards-relatorio { grid-template-columns: 1fr 1fr; }
     }
 
-    #reportTitle {
-        font-size: 1.2rem;
-        color: var(--cor-destaque);
-        margin-right: 20px;
+    /* --- MÁGICA DA IMPRESSÃO (PDF) --- */
+    @media print {
+        /* 1. Esconde tudo o que não é relatório */
+        .sidebar, .btn-toggle-sidebar, .filters-container, #btnGerarPDF, .user {
+            display: none !important;
+        }
+
+        /* 2. Configura a página para aceitar cores de fundo (Dark Mode) */
+        body {
+            background-color: #121214 !important;
+            -webkit-print-color-adjust: exact !important; /* Chrome/Edge */
+            print-color-adjust: exact !important; /* Firefox */
+            color: #e1e1e6 !important;
+            overflow: visible !important;
+            height: auto !important;
+        }
+
+        /* 3. Reseta layouts flex/grid para bloco simples na impressão */
+        .dashboard, .main, .content {
+            display: block !important;
+            height: auto !important;
+            width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            overflow: visible !important;
+        }
+
+        .header {
+            background: none !important;
+            border: none !important;
+            padding-bottom: 20px;
+            justify-content: center;
+        }
+        
+        /* 4. Garante que os Gráficos (Iframes) apareçam */
+        .iframe-container, .componente-container {
+            background-color: #20202a !important;
+            border: 1px solid #383842 !important;
+            box-shadow: none !important;
+        }
+        
+        iframe {
+            visibility: visible !important;
+            display: block !important;
+        }
     }
-    
   </style>
 </head>
 <body>
@@ -282,244 +259,170 @@
 
     <main class="main">
       <div class="header">
-        
         <div class="header-actions-left">
           <button class="btn-toggle-sidebar" id="toggleSidebarBtn">☰</button>
           
-          <h3 id="reportTitle">Relatórios: Mês (Ativo)</h3>
-
-          <div class="filters-container" id="filtersContainer">
-              <button class="btn-filter active" data-periodo="Mês">1 Mês</button>
-              <button class="btn-filter" data-periodo="Semana">1 Semana</button>
-              <button class="btn-filter" data-periodo="Dia">1 Dia</button>
-              <button class="btn-filter" data-periodo="Ano">1 Ano</button>
+          <div style="display: flex; flex-direction: column;">
+              <h3 style="margin: 0; font-size: 1.5rem; color: var(--cor-texto-primario);">Relatórios de Performance</h3>
+              <small style="color: var(--cor-texto-secundario);">Período selecionado: <span id="lblPeriodo">30 dias</span></small>
           </div>
-          <button class="btn btn-principal" id="btnGerarPDF">Gerar Relatório PDF</button>
         </div>
 
-        <div class="user">👤 <span id="userNameDisplay"></span></div>
+        <div class="header-actions-left">
+            <div class="filters-container">
+                <button class="btn-filter" data-range="now-24h">24h</button>
+                <button class="btn-filter" data-range="now-7d">7 Dias</button>
+                <button class="btn-filter active" data-range="now-30d">30 Dias</button>
+            </div>
+            
+            <button class="btn btn-principal" id="btnGerarPDF">🖨️ Salvar como PDF</button>
+
+            <div class="user">👤 <span id="userNameDisplay">Admin</span></div>
+        </div>
       </div>
 
-      <div class="content">
+      <div class="content" id="relatorioContent">
+        
         <div class="cards-relatorio">
+          
           <div class="card-metrica componente-container">
-            <h4>Dispositivos Online (média)</h4>
-            <p id="metricOnline">95.4%</p>
+            <h4 style="margin-bottom: 0;">Disponibilidade (SLA)</h4>
+            <iframe 
+                src="http://192.168.56.102:3000/d-solo/adtrlgh/sla-zabbix?orgId=1&timezone=browser&theme=dark&panelId=panel-1&__feature.dashboardSceneSolo=true&kiosk&from=now-30d&to=now" 
+                width="100%" height="100%" frameborder="0" style="pointer-events: none;">
+            </iframe>
           </div>
+
           <div class="card-metrica componente-container">
-            <h4>Alertas Críticos (24h)</h4>
-            <p id="metricAlerts" style="color: var(--status-alerta);">12</p>
+            <h4 style="margin-bottom: 0;">Total de Incidentes</h4>
+            <iframe 
+                src="http://192.168.56.102:3000/d-solo/adxmq9n/count-problems?orgId=1&timezone=browser&theme=dark&panelId=panel-1&__feature.dashboardSceneSolo=true&kiosk&from=now-30d&to=now" 
+                width="100%" height="100%" frameborder="0" style="pointer-events: none;">
+            </iframe>
           </div>
+
           <div class="card-metrica componente-container">
-            <h4>Tráfego de Dados (GB)</h4>
-            <p id="metricTraffic">458.2</p>
+            <h4 style="margin-bottom: 0;">Tráfego Total</h4>
+            <iframe 
+                src="http://192.168.56.102:3000/d-solo/adl7pm4/taxa-de-download?orgId=1&timezone=browser&theme=dark&panelId=panel-1&__feature.dashboardSceneSolo=true&kiosk&from=now-30d&to=now" 
+                width="100%" height="100%" frameborder="0" style="pointer-events: none;">
+            </iframe>
           </div>
+
           <div class="card-metrica componente-container">
-            <h4>Tempo Médio de Atividade (h)</h4>
-            <p id="metricActivity">18.5</p>
+            <h4 style="margin-bottom: 0;">Uptime Médio</h4>
+            <iframe 
+                src="http://192.168.56.102:3000/d-solo/adc8mdx/up-time?orgId=1&timezone=browser&panelId=panel-1&__feature.dashboardSceneSolo=true"
+                width="100%" height="100%" frameborder="0">
+            </iframe>
           </div>
+
         </div>
 
-        <div class="graficos-container">
+        <div class="graficos-grid">
+            
             <div class="componente-container">
-                <h3>Dispositivos por Status</h3>
-                <div class="grafico-placeholder">
-                    Gráfico de Status (Filtro: <span class="active-filter-periodo">Mês</span>)
-                </div>
-                <div style="margin-top: 15px;">
-                    <div class="legenda-item"><div class="legenda-cor" style="background-color: var(--cor-grafico-1);"></div> Online</div>
-                    <div class="legenda-item"><div class="legenda-cor" style="background-color: var(--cor-destaque);"></div> Alerta</div>
-                    <div class="legenda-item"><div class="legenda-cor" style="background-color: var(--status-offline);"></div> Offline</div>
+                <h3>📈 Tendência de Disponibilidade</h3>
+                <div class="iframe-container">
+                    <iframe 
+                        id="graficoSLA"
+                        src="http://192.168.56.102:3000/d-solo/ad28q68/sla-mensal?orgId=1&theme=dark&panelId=1&kiosk&from=now-30d&to=now" 
+                        width="100%" height="100%" frameborder="0">
+                    </iframe>
                 </div>
             </div>
 
             <div class="componente-container">
-                <h3>Tráfego de Rede</h3>
-                <div class="grafico-placeholder">
-                    Gráfico de Linhas (Filtro: <span class="active-filter-periodo">Mês</span>)
+                <h3>🚨 Top Alertas por Dispositivo</h3>
+                <div class="iframe-container">
+                <iframe 
+                    src="http://192.168.56.102:3000/d-solo/ad84kr5/problemas-recentes?orgId=1&timezone=browser&theme=dark&panelId=panel-1&__feature.dashboardSceneSolo=true&kiosk&from=now-30d&to=now&refresh=1m" 
+                    width="100%" height="100%" frameborder="0">
+                </iframe>
                 </div>
             </div>
 
-            <div class="componente-container">
-                <h3>Top 5 Dispositivos por Uso</h3>
-                <div class="grafico-placeholder">
-                    Gráfico de Barras (Filtro: <span class="active-filter-periodo">Mês</span>)
+            <div class="componente-container grafico-full">
+                <h3>🌐 Histórico de Consumo de Rede</h3>
+                <div class="iframe-container">
+                    <iframe 
+                        id="graficoRede"
+                        src="http://192.168.56.102:3000/d-solo/adqjrmm/uso-de-rede?orgId=1&theme=dark&panelId=1&kiosk&from=now-30d&to=now" 
+                        width="100%" height="100%" frameborder="0">
+                    </iframe>
                 </div>
+            </div>
+
+        </div>
+
+        <div class="componente-container">
+            <h3>📜 Histórico de Ocorrências</h3>
+            <div class="iframe-container" style="height: 400px;">
+                <iframe 
+                    id="graficoHistorico" 
+                    src="http://192.168.56.102:3000/d-solo/advz6tg/histrico-de-problemas?orgId=1&timezone=browser&theme=dark&panelId=panel-1&__feature.dashboardSceneSolo=true&kiosk&from=now-30d&to=now&refresh=1m" 
+                    width="100%" height="100%" frameborder="0">
+                </iframe>
             </div>
         </div>
 
-        <div class="devices componente-container">
-            <h3>Relatório de Ocorrências Críticas</h3>
-            <p>Detalhes sobre os alertas de segurança e falhas de conexão.</p>
-            <table class="device-list">
-                <thead>
-                  <tr>
-                    <th>Data/Hora</th>
-                    <th>Dispositivo</th>
-                    <th>Tipo de Alerta</th>
-                    <th>Severidade</th>
-                    <th>Ação</th>
-                  </tr>
-                </thead>
-                <tbody id="ocorrenciasTableBody"> 
-                    <tr>
-                        <td>2025-11-15 14:30</td>
-                        <td>Servidor Principal</td>
-                        <td style="color: var(--status-alerta);">Alta Latência</td>
-                        <td>Crítica</td>
-                        <td>Reinício Agendado</td>
-                    </tr>
-                    <tr>
-                        <td>2025-11-14 09:15</td>
-                        <td>Roteador Sala A</td>
-                        <td style="color: var(--status-offline);">Conexão Perdida</td>
-                        <td>Alta</td>
-                        <td>Verificação Manual</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
       </div>
     </main>
   </div>
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" 
-          integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" 
-          crossorigin="anonymous" 
-          referrerpolicy="no-referrer">
-  </script>
-
-  <script type="module">
-    const botaoToggleSidebar = document.getElementById('toggleSidebarBtn');
-    const painelDashboard = document.getElementById('dashboard');
-    const botaoGerarPDF = document.getElementById('btnGerarPDF'); 
-    
+  <script>
+    // --- Lógica dos Filtros ---
     const botoesFiltro = document.querySelectorAll('.btn-filter');
-    const tituloRelatorio = document.getElementById('reportTitle');
-    const elementosPeriodoAtivo = document.querySelectorAll('.active-filter-periodo');
-    
-    let periodoAtual = 'Mês';
+    const labelPeriodo = document.getElementById('lblPeriodo');
+    const iframes = document.querySelectorAll('iframe'); 
 
-
-    function displayUserName() {
-        const nomeUsuario = localStorage.getItem('usuarioLogadoNome');
-        const displayNome = document.getElementById('userNameDisplay');
-
-        if (nomeUsuario) {
-            displayNome.textContent = nomeUsuario.charAt(0).toUpperCase() + nomeUsuario.slice(1);
-        } else {
-            displayNome.textContent = 'Admin'; 
-        }
-    }
-
-    // Simulação
-    function carregarDadosRelatorio() {
-        console.log(`Carregando dados de relatórios para o período: ${periodoAtual}`);
-        
-        let metricas = {};
-        let ocorrenciasHTML = '';
-
-        switch(periodoAtual) {
-            case 'Dia':
-                metricas = { online: '98.1%', alerts: '3', traffic: '15.7', activity: '0.8' };
-                ocorrenciasHTML = `
-                    <tr><td>2025-11-20 09:00</td><td>Switch Core</td><td style="color: var(--status-alerta);">Uso de CPU Alto</td><td>Média</td><td>Monitoramento Ativado</td></tr>
-                `;
-                break;
-            case 'Semana':
-                metricas = { online: '96.5%', alerts: '25', traffic: '105.1', activity: '5.4' };
-                ocorrenciasHTML = `
-                    <tr><td>2025-11-18 10:45</td><td>Servidor Secundário</td><td style="color: var(--status-offline);">Falha de Disco</td><td>Crítica</td><td>Substituição Necessária</td></tr>
-                    <tr><td>2025-11-16 16:20</td><td>Ponto de Acesso 2B</td><td style="color: var(--status-alerta);">Desconexões Altas</td><td>Média</td><td>Reinício Remoto</td></tr>
-                `;
-                break;
-            case 'Ano':
-                metricas = { online: '92.3%', alerts: '180', traffic: '5120.9', activity: '210.3' };
-                ocorrenciasHTML = `
-                    <tr><td>2025-09-01 11:00</td><td>Firewall Central</td><td style="color: var(--status-alerta);">Tentativa de Intrusão</td><td>Crítica</td><td>Bloqueio IP</td></tr>
-                    <tr><td>2025-03-20 08:30</td><td>Impressora Financeiro</td><td style="color: var(--status-offline);">Offline Prolongado</td><td>Baixa</td><td>Troca de Cabo</td></tr>
-                `;
-                break;
-            case 'Mês':
-            default:
-                metricas = { online: '95.4%', alerts: '12', traffic: '458.2', activity: '18.5' };
-                ocorrenciasHTML = `
-                    <tr><td>2025-11-15 14:30</td><td>Servidor Principal</td><td style="color: var(--status-alerta);">Alta Latência</td><td>Crítica</td><td>Reinício Agendado</td></tr>
-                    <tr><td>2025-11-14 09:15</td><td>Roteador Sala A</td><td style="color: var(--status-offline);">Conexão Perdida</td><td>Alta</td><td>Verificação Manual</td></tr>
-                `;
-                break;
-        }
-
-        // Atualiza Cards e Tabela
-        document.getElementById('metricOnline').textContent = metricas.online;
-        document.getElementById('metricAlerts').textContent = metricas.alerts;
-        document.getElementById('metricTraffic').textContent = metricas.traffic;
-        document.getElementById('metricActivity').textContent = metricas.activity;
-        document.getElementById('ocorrenciasTableBody').innerHTML = ocorrenciasHTML;
-        elementosPeriodoAtivo.forEach(el => el.textContent = periodoAtual);
-    }
-
-    // Filtrar Informações
-    function filtrarRelatorio(novoPeriodo) {
-        botoesFiltro.forEach(btn => {
-            btn.classList.remove('active');
-            if (btn.getAttribute('data-periodo') === novoPeriodo) {
-                btn.classList.add('active');
-            }
+    function atualizarRelatorios(periodoRange, nomeLegivel) {
+        labelPeriodo.textContent = nomeLegivel;
+        iframes.forEach(iframe => {
+            let url = new URL(iframe.src);
+            url.searchParams.set('from', periodoRange);
+            url.searchParams.set('to', 'now');
+            iframe.src = url.toString();
         });
-
-        periodoAtual = novoPeriodo;
-        tituloRelatorio.textContent = `Relatórios: ${periodoAtual} (Ativo)`;
-        carregarDadosRelatorio();
-    }
-    
-    // Gerar Relatório
-    function gerarRelatorioPDF() {
-        const elementoAlvo = document.querySelector('.content'); 
-        
-        // Usa o período atual no nome do arquivo
-        const nomeArquivo = `Relatorio-TechSync-Filtro-${periodoAtual}.pdf`;
-
-        const opcoesPDF = {
-            margin: 0.5,
-            filename: nomeArquivo,
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2 },
-            jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-        };
-
-        if (typeof html2pdf !== 'undefined') {
-            console.log(`Iniciando geração do PDF para o período ${periodoAtual}: ${nomeArquivo}`);
-            html2pdf().set(opcoesPDF).from(elementoAlvo).save();
-        } else {
-            alert('A biblioteca de PDF ainda não foi carregada. Tente novamente em um instante.');
-            console.error('html2pdf não definida.');
-        }
     }
 
-    document.getElementById('logoutLinkRelatorio').addEventListener('click', function() {
-        localStorage.removeItem('usuarioLogadoNome');
+    botoesFiltro.forEach(btn => {
+        btn.addEventListener('click', () => {
+            botoesFiltro.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const range = btn.getAttribute('data-range');
+            const texto = btn.textContent;
+            atualizarRelatorios(range, texto);
+        });
     });
 
-    if (botaoToggleSidebar && painelDashboard) {
-        botaoToggleSidebar.addEventListener('click', () => {
-            painelDashboard.classList.toggle('sidebar-toggled');
-        });
+    // --- Função de Impressão Nativa ---
+    function gerarRelatorioPDF() {
+        window.print(); 
     }
 
+    const botaoGerarPDF = document.getElementById('btnGerarPDF');
     if (botaoGerarPDF) {
         botaoGerarPDF.addEventListener('click', gerarRelatorioPDF);
     }
-    
-    botoesFiltro.forEach(button => {
-        button.addEventListener('click', (event) => {
-            const periodoSelecionado = event.target.getAttribute('data-periodo');
-            filtrarRelatorio(periodoSelecionado);
+
+    // --- Sidebar e Login ---
+    const toggleBtn = document.getElementById('toggleSidebarBtn');
+    const dashboard = document.getElementById('dashboard');
+
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => {
+            dashboard.classList.toggle('sidebar-toggled');
         });
+    }
+
+    const userName = localStorage.getItem('usuarioLogadoNome') || 'Admin';
+    document.getElementById('userNameDisplay').textContent = userName.charAt(0).toUpperCase() + userName.slice(1);
+
+    document.getElementById('logoutLinkRelatorio').addEventListener('click', () => {
+        localStorage.removeItem('usuarioLogadoNome');
     });
 
-    displayUserName();
-    carregarDadosRelatorio(); 
   </script>
 
 </body>

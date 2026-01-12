@@ -88,7 +88,7 @@
 <body>
   <div class="dashboard" id="dashboard">
     <aside class="sidebar">
-      <a href="index.html" id="logoutLink" style="text-decoration:none; display:block;">
+      <a href="#" id="logoutLink" style="text-decoration:none; display:block;">
         <img src="imagem/logo.png" alt="TechSync">
         <h2>TechSync</h2>
       </a>
@@ -113,19 +113,19 @@
         <div class="charts-grid">
             <div class="chart-card">
                 <h3>Uso da Rede</h3>
-                <iframe src="http://192.168.56.102:3000/d-solo/adqjrmm/uso-de-rede?orgId=1&timezone=browser&theme=dark&panelId=panel-1&__feature.dashboardSceneSolo=true&from=now-1h&to=now"></iframe>          
+                <iframe src="http://192.168.56.2:3001/d-solo/adqjrmm/uso-de-rede?orgId=1&timezone=browser&theme=dark&panelId=panel-1&__feature.dashboardSceneSolo=true&from=now-1h&to=now"></iframe>          
             </div>
             <div class="chart-card">  
               <h3>Latência da Rede</h3>
-                <iframe src="http://192.168.56.102:3000/d-solo/adlm6lm/latncia?orgId=1&timezone=browser&showCategory=Graph%20styles&theme=dark&panelId=panel-1&__feature.dashboardSceneSolo=true&from=now-1h&to=now"></iframe>
+                <iframe src="http://192.168.56.2:3001/d-solo/adlm6lm/latncia?orgId=1&timezone=browser&showCategory=Graph%20styles&theme=dark&panelId=panel-1&__feature.dashboardSceneSolo=true&from=now-1h&to=now"></iframe>
             </div>
             <div class="chart-card chart-full">
                 <h3>Uso do CPU</h3>
-                 <iframe src="http://192.168.56.102:3000/d-solo/admnz6c/uso-do-cpu?orgId=1&timezone=browser&theme=dark&panelId=panel-1&__feature.dashboardSceneSolo=true&refresh=2m"></iframe>
+                 <iframe src="http://192.168.56.2:3001/d-solo/admnz6c/uso-do-cpu?orgId=1&timezone=browser&theme=dark&panelId=panel-1&__feature.dashboardSceneSolo=true&refresh=2m"></iframe>
             </div>
             <div class="chart-card chart-full">
               <h3>Incidentes</h3>
-              <iframe src="http://192.168.56.102:3000/d-solo/ad84kr5/problemas-recentes?orgId=1&timezone=browser&theme=dark&panelId=panel-1&__feature.dashboardSceneSolo=true&kiosk&from=now-30d&to=now&refresh=1m"></iframe>
+              <iframe src="http://192.168.56.2:3001/d-solo/ad84kr5/problemas-recentes?orgId=1&timezone=browser&theme=dark&panelId=panel-1&__feature.dashboardSceneSolo=true&kiosk&from=now-30d&to=now&refresh=1m"></iframe>
             </div>
         </div>
       </div>
@@ -133,11 +133,28 @@
   </div>
   
   <script>
+    // 1. Verificação de Segurança (Auth Guard)
+    // Se o usuário tentar entrar direto no dashboard sem logar, redireciona para o login
     const user = localStorage.getItem('usuarioLogadoNome');
-    document.getElementById('userName').textContent = user ? (user.charAt(0).toUpperCase() + user.slice(1)) : 'Admin';
+    
+    if (!user) {
+        window.location.href = 'login.html';
+    } else {
+        // Formata o nome para exibição (Primeira letra maiúscula)
+        document.getElementById('userName').textContent = user.charAt(0).toUpperCase() + user.slice(1);
+    }
 
-    document.getElementById('logoutLink').onclick = () => localStorage.removeItem('usuarioLogadoNome');
-    document.getElementById('toggleBtn').onclick = () => document.getElementById('dashboard').classList.toggle('sidebar-toggled');
+    // 2. Lógica de Logout
+    document.getElementById('logoutLink').onclick = (e) => {
+        e.preventDefault();
+        localStorage.removeItem('usuarioLogadoNome'); // Limpa a sessão
+        window.location.href = 'index.html'; // Redireciona para a home
+    };
+
+    // 3. Toggle da Sidebar
+    document.getElementById('toggleBtn').onclick = () => {
+        document.getElementById('dashboard').classList.toggle('sidebar-toggled');
+    };
   </script>
 </body>
 </html>

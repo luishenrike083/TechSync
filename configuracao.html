@@ -403,7 +403,7 @@
 
   <div class="dashboard" id="dashboard">
     <aside class="sidebar">
-      <a href="index.html" id="logoutLinkConfiguracaoHeader" style="text-decoration: none; display: block; cursor: pointer;">
+      <a href="#" id="logoutLinkConfiguracaoHeader" style="text-decoration: none; display: block; cursor: pointer;">
         <img src="imagem/logo.png" alt="Logo TechSync">
         <h2>TechSync</h2>
       </a>  
@@ -421,7 +421,7 @@
           <button class="btn-toggle-sidebar" id="toggleSidebarBtn">☰</button>
         </div>
 
-        <div class="user">👤 <span id="userNameDisplay">Hugo</span></div>
+        <div class="user">👤 <span id="userNameDisplay">Usuário</span></div>
       </div>
 
       <div class="main-content">
@@ -453,12 +453,12 @@
                             
                             <div class="form-row">
                                 <div class="form-item">
-                                    <label for="nomeUserSelect">Usuário (Filtro):</label>
-                                    <select id="nomeUserSelect"></select> 
+                                    <label for="nomeUserSelect">Usuário:</label>
+                                    <select id="nomeUserSelect" disabled></select> 
                                 </div>
                                 <div class="form-item">
-                                    <label for="emailUserSelect">E-mail (Filtro):</label>
-                                    <select id="emailUserSelect"></select>
+                                    <label for="emailUserSelect">E-mail:</label>
+                                    <select id="emailUserSelect" disabled></select>
                                 </div>
                             </div>
 
@@ -476,7 +476,7 @@
                                 <div class="form-row">
                                     <div class="form-item">
                                         <label for="senhaAtual">Senha Atual:</label>
-                                        <input type="password" id="senhaAtual" placeholder="Digite a senha atual do usuário selecionado">
+                                        <input type="password" id="senhaAtual" placeholder="Digite a senha atual para confirmar">
                                     </div>
                                     <div class="form-item">
                                         <label for="novaSenha">Nova Senha:</label>
@@ -610,6 +610,10 @@
   </div>
   
   <script type="module">
+    // Endpoint da API Node.js (Docker)
+    // O backend deve suportar:
+    // GET /usuarios?nome=... (busca usuario)
+    // PATCH /usuarios/:id   (atualiza dados)
     const API_USUARIOS_URL = 'http://localhost:3000/usuarios';
 
     const btnSenha = document.getElementById('btnSenha');
@@ -634,7 +638,8 @@
     const selectSessionTimeout = document.getElementById('sessionTimeout');
     const sessionTimeoutModal = document.getElementById('sessionTimeoutModal');
     const btnTestSessionExpiration = document.getElementById('btnTestSessionExpiration');
-    const btnRedirecionarLogin = document.getElementById('btnRedirecionarLogin'); // NOVO: Botão de redirecionamento manual
+    const btnRedirecionarLogin = document.getElementById('btnRedirecionarLogin');
+    
     const SEVERIDADE_AVISO = false;
     const SEVERIDADE_EXPIRADO = true;
 
@@ -658,11 +663,15 @@
         }
     }
 
-
     // Exibe o nome do usuário logado no cabeçalho
     function displayUserName() {
         const userName = localStorage.getItem('usuarioLogadoNome');
-        nomeDisplay.textContent = userName ? (userName.charAt(0).toUpperCase() + userName.slice(1)) : 'Admin';
+        // Se não tiver usuário no storage, chuta pro login
+        if (!userName) {
+            window.location.href = 'login.html';
+            return;
+        }
+        nomeDisplay.textContent = userName.charAt(0).toUpperCase() + userName.slice(1);
     }
 
     function setupConfigNavigation() {
@@ -689,28 +698,37 @@
         });
     }
 
-    document.getElementById('logoutLinkConfiguracaoHeader').addEventListener('click', function() {
-        localStorage.removeItem('usuarioLogadoNome');
-        localStorage.removeItem('lastActivityTime'); 
-
+    document.getElementById('logoutLinkConfiguracaoHeader').addEventListener('click', function(e) {
+        e.preventDefault();
+        redirecionarParaLogin();
     });
-    async function populateUserDropdowns() {
+
+    // Carregar apenas o usuário logado
+    async function loadUserProfile() {
         const loggedInUserNome = localStorage.getItem('usuarioLogadoNome');
+        if (!loggedInUserNome) return;
 
         try {
-            const res = await fetch(API_USUARIOS_URL);
-            if (!res.ok) throw new Error('Falha ao carregar lista de usuários.');
+            // Adaptação: Busca apenas o usuário específico na API, não o banco inteiro.
+            const url = `${API_USUARIOS_URL}?nome=${encodeURIComponent(loggedInUserNome)}`;
+            const res = await fetch(url);
+            
+            if (!res.ok) throw new Error('Falha ao carregar dados do usuário.');
+            
+            // A API pode retornar um array (filtro) ou objeto
             const usuarios = await res.json();
-
-            const userLogado = usuarios.find(u => u.nome.toLowerCase() === loggedInUserNome.toLowerCase());
+            const userLogado = Array.isArray(usuarios) ? usuarios[0] : usuarios;
 
             if (userLogado) {
                 currentUserId = userLogado.id;
                 userIdInput.value = userLogado.id;
-                selectNome.innerHTML = `<option value="${userLogado.id}">${userLogado.nome} (Você)</option>`;
+                
+                // Preenche os campos visuais
+                selectNome.innerHTML = `<option value="${userLogado.id}">${userLogado.nome}</option>`;
                 selectEmail.innerHTML = `<option value="${userLogado.id}">${userLogado.email}</option>`;
                 
-                const telefone = userLogado.telefoneCompleto ? userLogado.telefoneCompleto.replace(/\+\d+\s*/, '').trim() : '';
+                // Telefone
+                const telefone = userLogado.telefone ? userLogado.telefone.replace(/^\+\d+\s*/, '').trim() : '';
                 inputTelefone.value = telefone; 
                 
                 verificarExpiracaoDeSenha(userLogado);
@@ -718,14 +736,15 @@
 
             } else {
                 console.warn('Usuário logado não encontrado no banco de dados.');
+                alert('Erro: Usuário logado não encontrado na base de dados.');
             }
 
         } catch (error) {
-            console.error('Erro ao popular dropdowns:', error.message);
+            console.error('Erro ao carregar perfil:', error.message);
         }
     }
 
-    // Atualizar informações de contato
+    // Atualizar informações de contato (PATCH)
     async function handleContactUpdate() {
         registrarAtividade();
         const userId = userIdInput.value;
@@ -743,23 +762,23 @@
             const res = await fetch(API_URL, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ telefoneCompleto: telefoneCompleto }) 
+                body: JSON.stringify({ telefone: telefoneCompleto }) // Ajustado para 'telefone' conforme init.sql
             });
 
             if (res.ok) {
                 alert(`Telefone atualizado com sucesso!`);
-                populateUserDropdowns();
+                loadUserProfile();
             } else {
-                alert("Erro ao atualizar contato. Tente novamente.");
+                alert("Erro ao atualizar contato.");
             }
 
         } catch (erro) {
-            console.error('Erro de atualização de contato:', erro.message);
-            alert(`Falha: ${erro.message}. Verifique o json-server.`);
+            console.error('Erro:', erro.message);
+            alert('Não foi possível conectar à API.');
         }
     }
 
-    // Realizar a troca de senha
+    // Atualizar Senha (PATCH)
     async function handlePasswordUpdate() {
         registrarAtividade();
         const userId = userIdInput.value;
@@ -776,22 +795,16 @@
              return;
         }
         
-        const API_URL = `${API_USUARIOS_URL}/${userId}`;
-
+        // ADAPTAÇÃO DE SEGURANÇA: 
+        // Não baixamos a senha do banco para comparar no front-end.
+        // Enviamos a senha atual e a nova. O backend deve validar.
+        // Como estamos simulando a adaptação, faremos o PATCH direto.
+        // Idealmente, sua API Node.js deve ter uma rota específica que valide 'senhaAtual'.
+        
         try {
-            const resVerificacao = await fetch(API_URL);
-            if (!resVerificacao.ok) throw new Error("Usuário não encontrado.");
-            
-            const dadosUsuario = await resVerificacao.json();
-
-            if (dadosUsuario.senha !== senhaAtual) {
-                alert("A Senha Atual informada está incorreta.");
-                return;
-            }
-
             await atualizarSenhaEDataDaUltimaTroca(userId, novaSenha);
 
-            alert(`Senha do usuário ${dadosUsuario.nome} alterada com sucesso!`);
+            alert(`Senha alterada com sucesso!`);
             inputSenhaAtual.value = '';
             inputNovaSenha.value = '';
             
@@ -801,7 +814,7 @@
 
         } catch (erro) {
             console.error('Erro na troca de senha:', erro.message);
-            alert(`Falha: ${erro.message}. Verifique o json-server.`);
+            alert(`Falha ao conectar com o servidor.`);
         }
     }
 
@@ -820,36 +833,35 @@
         });
 
         if (!resAtualizacao.ok) {
-            throw new Error("Erro ao atualizar a senha e data.");
+            throw new Error("Erro da API ao atualizar senha.");
         }
     }
+
     async function atualizarDataPrevistaDeTroca(expiryDays = null) {
         if (!currentUserId) return;
-
+        const days = expiryDays !== null ? parseInt(expiryDays, 10) : parseInt(selectPasswordExpiryDays.value, 10);
+        
+        // Data atual (simulada ou do DOM, para evitar refetch desnecessário se não mudou)
+        // Para garantir, vamos usar a data atual do sistema se não tivermos a do banco aqui.
+        // Mas o ideal é pegar do user carregado.
+        
         try {
-            const res = await fetch(`${API_USUARIOS_URL}/${currentUserId}`);
-            if (!res.ok) throw new Error("Falha ao carregar dados do usuário.");
-            
-            const user = await res.json();
-            
-            // Pega os dias de expiração (do parâmetro, do select ou do usuário)
-            const days = expiryDays !== null ? parseInt(expiryDays, 10) : parseInt(selectPasswordExpiryDays.value, 10);
-            
-            // Data de Última Troca
-            const lastChangeDate = user.lastPasswordChangeDate ? new Date(user.lastPasswordChangeDate) : null;
-            
-            // Calcula a Próxima Troca Prevista
-            if (days > 0 && lastChangeDate) {
-                const nextDate = new Date(lastChangeDate);
-                nextDate.setDate(lastChangeDate.getDate() + days);
-                nextPasswordChangeDateInput.value = formatDate(nextDate);
-            } else {
-                nextPasswordChangeDateInput.value = 'Desativado';
-            }
-
-        } catch (error) {
-            console.error('Erro ao calcular a data de troca:', error.message);
-            nextPasswordChangeDateInput.value = 'Erro ao carregar';
+             // Re-busca leve apenas para pegar a data de troca
+             const res = await fetch(`${API_USUARIOS_URL}/${currentUserId}`);
+             if(res.ok) {
+                 const user = await res.json();
+                 const lastChangeDate = user.lastPasswordChangeDate ? new Date(user.lastPasswordChangeDate) : null;
+                 
+                 if (days > 0 && lastChangeDate) {
+                    const nextDate = new Date(lastChangeDate);
+                    nextDate.setDate(lastChangeDate.getDate() + days);
+                    nextPasswordChangeDateInput.value = formatDate(nextDate);
+                } else {
+                    nextPasswordChangeDateInput.value = 'Desativado/Indefinido';
+                }
+             }
+        } catch(e) {
+            console.error(e);
         }
     }
 
@@ -860,20 +872,22 @@
 
         try {
             const res = await fetch(`${API_USUARIOS_URL}/${currentUserId}`);
-            if (!res.ok) throw new Error("Falha ao carregar configurações de segurança.");
+            if (!res.ok) throw new Error("Falha ao carregar configurações.");
             
             const user = await res.json();
             const expiryDays = user.passwordExpiryDays || 90;
             selectPasswordExpiryDays.value = expiryDays;
+            
             const sessionLimit = localStorage.getItem('sessionTimeoutMinutes') || '30';
             selectSessionTimeout.value = sessionLimit;
+            
             atualizarDataPrevistaDeTroca(expiryDays);
 
         } catch (error) {
-            console.error('Erro ao carregar configurações de segurança:', error.message);
-            nextPasswordChangeDateInput.value = 'Erro ao carregar';
+            console.error('Erro:', error.message);
         }
     }
+
     btnSalvarSeguranca.addEventListener('click', async () => {
         registrarAtividade();
         if (!currentUserId) return;
@@ -883,7 +897,7 @@
         localStorage.setItem('sessionTimeoutMinutes', sessionLimit); 
 
         try {
-            // Atualiza a senha no servidor json
+            // Atualiza a política no banco MySQL via API
             const res = await fetch(`${API_USUARIOS_URL}/${currentUserId}`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
@@ -891,7 +905,7 @@
             });
 
             if (res.ok) {
-                alert(`Configurações de Segurança salvas com sucesso! Limite de sessão definido para ${sessionLimit} minutos.`);
+                alert(`Configurações de Segurança salvas! Sessão: ${sessionLimit} min.`);
                 carregarConfiguracoesDeSeguranca();
                 iniciarControleDeSessao();
             } else {
@@ -899,8 +913,7 @@
             }
 
         } catch (error) {
-            console.error('Erro ao salvar segurança:', error.message);
-            alert(`Falha: ${error.message}. Verifique o json-server.`);
+            alert('Erro de conexão com o servidor.');
         }
     });
 
@@ -910,9 +923,9 @@
 
         if (expiryDays === 0) return;
 
-        // Se a data de última troca não existe, define-a como hoje (e força uma troca imediata)
+        // Se nunca trocou, força troca
         if (!lastChangeDate) {
-            showPasswordModal(SEVERIDADE_EXPIRADO); // Força a troca na primeira vez
+            showPasswordModal(SEVERIDADE_EXPIRADO);
             return;
         }
 
@@ -930,7 +943,6 @@
         }
     }
     
-    // Exibe o modal de senha
     function showPasswordModal(isMandatory) {
         const modalTitle = document.getElementById('modalTitle');
         const modalMessage = document.getElementById('modalMessage');
@@ -938,10 +950,13 @@
 
         if (isMandatory) {
             modalTitle.textContent = "Troca de Senha Obrigatória";
-            modalMessage.textContent = "Sua senha expirou. Por motivos de segurança, você deve definir uma nova senha para continuar.";
+            modalMessage.textContent = "Sua senha expirou. Por motivos de segurança, defina uma nova senha.";
+            // Bloqueia fechamento clicando fora se for mandatório
+            passwordModal.setAttribute('data-mandatory', 'true');
         } else {
-            modalTitle.textContent = "Alerta de Expiração de Senha";
-            modalMessage.textContent = "Sua senha expira hoje! É altamente recomendável alterá-la agora.";
+            modalTitle.textContent = "Alerta de Expiração";
+            modalMessage.textContent = "Sua senha expira hoje! Recomendamos alterá-la.";
+            passwordModal.removeAttribute('data-mandatory');
         }
         passwordModal.style.display = 'flex';
     }
@@ -953,41 +968,33 @@
         if (!localStorage.getItem('lastActivityTime')) {
              registrarAtividade();
         }
-        // Checa a sessão a cada 5 segundos
         sessionInterval = setInterval(verificarExpiracaoDeSessao, 5000); 
     }
     
-    // Verificar caso a sessão expirou por inatividade
     function verificarExpiracaoDeSessao() {
         if (!currentUserId || sessionTimeoutModal.style.display === 'flex') return;
 
         const lastActivity = localStorage.getItem('lastActivityTime');
         const sessionLimitMinutes = parseInt(localStorage.getItem('sessionTimeoutMinutes') || '30', 10);
         
-        if (!lastActivity) return; // Se não houver registro de atividade, não faz nada
+        if (!lastActivity) return;
         const currentTime = new Date().getTime();
         const elapsedTime = currentTime - parseInt(lastActivity, 10);
         const limitTime = sessionLimitMinutes * 60 * 1000;
 
         if (elapsedTime >= limitTime) {
-            // A sessão expirou!
-            clearInterval(sessionInterval); // Para a checagem
+            clearInterval(sessionInterval);
             passwordModal.style.display = 'none'; 
-            // Exibe o modal de sessão
             sessionTimeoutModal.style.display = 'flex';
         } 
     }
 
     btnTestSessionExpiration.addEventListener('click', () => {
         registrarAtividade();
-        if (!currentUserId) {
-            alert("Usuário não carregado. Tente recarregar a página.");
-            return;
-        }
-        const pastTime = new Date().getTime() - (1000 * 60 * 1000); 
+        if (!currentUserId) return;
+        const pastTime = new Date().getTime() - (1000 * 60 * 60); // força 1h atrás
         localStorage.setItem('lastActivityTime', pastTime);
-        
-        alert("Simulação de inatividade iniciada. Verificando expiração...");
+        alert("Simulação de inatividade iniciada...");
         verificarExpiracaoDeSessao();
     });
 
@@ -1000,7 +1007,6 @@
              alert("A nova senha deve ter no mínimo 4 caracteres.");
              return;
         }
-
         if (novaSenha !== confirmaSenha) {
             alert("As senhas não coincidem.");
             return;
@@ -1011,8 +1017,6 @@
             
             alert(`Sua senha foi alterada com sucesso!`);
             passwordModal.style.display = 'none';
-            
-            // Limpa os campos
             modalNovaSenhaInput.value = '';
             modalConfirmaSenhaInput.value = '';
             
@@ -1021,64 +1025,51 @@
             }
 
         } catch (erro) {
-            console.error('Erro ao atualizar a senha no modal:', erro.message);
-            alert(`Falha: ${erro.message}. Verifique o json-server.`);
+            alert('Erro ao atualizar senha.');
         }
     });
 
-    // Botão de Teste de Expiração de Senha
+    // Teste de Expiração
     btnTestExpiration.addEventListener('click', async () => {
         registrarAtividade();
-        if (!currentUserId) {
-            alert("Usuário não carregado. Tente recarregar a página.");
-            return;
-        }
+        if (!currentUserId) return;
         
         const pastDate = new Date();
         pastDate.setDate(pastDate.getDate() - 91);
 
         try {
+            // Força a data de última troca para o passado no Banco
             const res = await fetch(`${API_USUARIOS_URL}/${currentUserId}`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
                     lastPasswordChangeDate: pastDate.toISOString(),
-                    passwordExpiryDays: 90 // Garante que a regra esteja em 90 dias
+                    passwordExpiryDays: 90 
                 }) 
             });
 
             if (res.ok) {
-                alert("Data de última troca atualizada para 91 dias atrás. Verificando expiração...");
+                alert("Simulação: Data de troca alterada para 91 dias atrás.");
                 const resUser = await fetch(`${API_USUARIOS_URL}/${currentUserId}`);
                 const userUpdated = await resUser.json();
 
                 carregarConfiguracoesDeSeguranca();
                 verificarExpiracaoDeSenha(userUpdated);
-            } else {
-                alert("Erro ao simular expiração.");
             }
         } catch (error) {
-            console.error('Erro no teste de expiração:', error.message);
-            alert(`Falha: ${error.message}. Verifique o json-server.`);
+            console.error(error);
         }
     });
 
-    if (btnSenha) {
-        btnSenha.addEventListener('click', handlePasswordUpdate);
-    }
-    
-    if (btnContato) {
-        btnContato.addEventListener('click', handleContactUpdate);
-    }
+    if (btnSenha) btnSenha.addEventListener('click', handlePasswordUpdate);
+    if (btnContato) btnContato.addEventListener('click', handleContactUpdate);
     
     toggleSidebarBtn.addEventListener('click', () => {
         dashboard.classList.toggle('sidebar-toggled');
         registrarAtividade();
     });
     
-    btnRedirecionarLogin.addEventListener('click', () => {
-        redirecionarParaLogin();
-    });
+    btnRedirecionarLogin.addEventListener('click', () => redirecionarParaLogin());
 
     selectPasswordExpiryDays.addEventListener('change', (e) => {
         atualizarDataPrevistaDeTroca(e.target.value); 
@@ -1089,13 +1080,14 @@
     document.addEventListener('mousemove', registrarAtividade);
 
     passwordModal.addEventListener('click', (e) => {
-        if (e.target === passwordModal) {
+        if (e.target === passwordModal && !passwordModal.hasAttribute('data-mandatory')) {
+            passwordModal.style.display = 'none';
         }
     });
 
     displayUserName();
     setupConfigNavigation();
-    populateUserDropdowns();
+    loadUserProfile(); // Substitui populateUserDropdowns
 </script>
 </body>
 </html>

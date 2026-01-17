@@ -1,0 +1,8 @@
+node_modules/
+.DS_Store
+.env
+
+# Ignorar dados locais (volumes)
+mysql_data/
+zabbix_data/
+grafana_data/

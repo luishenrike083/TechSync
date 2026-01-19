@@ -682,36 +682,50 @@
     </footer>
     
     <script type="module">
-      import { create } from './js/services/api.js';
+      // Aponta para a nova rota POST no servidor Node.js/MySQL
+      const API_CONTACT_URL = 'http://localhost:3000/contact';
+      
       const formContato = document.querySelector('#contato form');
 
       formContato.addEventListener('submit', async (event) => {
         event.preventDefault();
 
+        // Captura os dados do formulário
         const nome = formContato.querySelector('#nome').value;
         const email = formContato.querySelector('#email').value;
         const codigo = formContato.querySelector('#codigo').value;
-        const telefone = formContato.querySelector('#telefone').value;
+        const telefoneNumero = formContato.querySelector('#telefone').value;
         const mensagem = formContato.querySelector('#mensagem').value;
 
-
-        const novaMensagem = {
+        // Monta o objeto JSON
+        const contatoData = {
           nome: nome,
           email: email,
-          telefoneCompleto: `${codigo} ${telefone}`,
+          telefone: `${codigo} ${telefoneNumero}`, // Formata o telefone
           mensagem: mensagem
         };
 
         try {
+          const response = await fetch(API_CONTACT_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(contatoData)
+          });
 
-          await create('contatos', novaMensagem);
-          
-          alert('Mensagem enviada com sucesso!');
-          formContato.reset();
+          const result = await response.json();
+
+          if (response.ok && result.success) {
+            alert('Mensagem enviada com sucesso! Entraremos em contato em breve.');
+            formContato.reset();
+          } else {
+            alert('Erro ao enviar mensagem: ' + (result.message || 'Erro desconhecido.'));
+          }
 
         } catch (error) {
-          console.error('Erro ao enviar mensagem:', error);
-          alert('Erro ao enviar mensagem. Verifique se o json-server está rodando.');
+          console.error('Erro de conexão:', error);
+          alert('Não foi possível conectar ao servidor. Verifique se o Docker está rodando.');
         }
       });
     </script>

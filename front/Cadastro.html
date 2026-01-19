@@ -145,7 +145,7 @@
     <div class="cadastro-box">
       <img src="imagem/logo.png" alt="Logo TechSync">
       <h1>Cadastre-se</h1>
-      <form>
+      <form id="cadastroForm">
         <div>
           <label for="nome">Nome</label>
           <input type="text" id="nome" name="nome" placeholder="Seu nome completo" required>
@@ -185,9 +185,10 @@
   </div>
 
 <script type="module">
-  import { create } from './js/services/api.js';
+  // URL da API Node.js rodando no Docker
+  const API_REGISTER_URL = 'http://localhost:3000/register';
 
-  const form = document.querySelector('form');
+  const form = document.getElementById('cadastroForm');
 
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -196,24 +197,40 @@
     const email = document.getElementById('email').value;
     const senha = document.getElementById('senha').value;
     const codigo = document.getElementById('codigo').value;
-    const telefone = document.getElementById('telefone').value;
+    const telefoneNumero = document.getElementById('telefone').value;
 
+    // Constrói o objeto para enviar ao MySQL
     const novoUsuario = {
       nome: nome,
       email: email,
       senha: senha,
-      telefoneCompleto: `${codigo} ${telefone}`
+      telefone: `${codigo} ${telefoneNumero}` // Junta DDI + Número
     };
 
     try {
-      await create('usuarios', novoUsuario);
-      
-      alert('Cadastro realizado com sucesso!');
-      form.reset();
+      const response = await fetch(API_REGISTER_URL, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(novoUsuario)
+      });
+
+      const resultado = await response.json();
+
+      if (response.ok && resultado.success) {
+          alert('Cadastro realizado com sucesso! Você será redirecionado para o login.');
+          form.reset();
+          // Redireciona para o login após o sucesso
+          window.location.href = 'login.html';
+      } else {
+          // Exibe erro específico (ex: "Email já cadastrado")
+          alert(resultado.message || 'Erro ao realizar cadastro.');
+      }
 
     } catch (error) {
       console.error('Erro no cadastro:', error);
-      alert('Erro ao realizar cadastro. Verifique se o json-server está rodando.');
+      alert('Não foi possível conectar ao servidor. Verifique se os containers Docker estão rodando.');
     }
   });
 </script>

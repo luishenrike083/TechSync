@@ -1,0 +1,11 @@
+apiVersion: 1
+
+providers:
+  - name: 'Dashboards do TechSync'
+    orgId: 1
+    folder: ''
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 10 # Atualiza se você substituir o arquivo JSON
+    options:
+      path: /etc/grafana/provisioning/dashboards

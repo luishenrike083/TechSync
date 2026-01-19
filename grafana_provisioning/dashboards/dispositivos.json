@@ -1,0 +1,239 @@
+{
+  "apiVersion": "dashboard.grafana.app/v1beta1",
+  "kind": "Dashboard",
+  "metadata": {
+    "name": "adljsxw",
+    "namespace": "default",
+    "uid": "fy9fn5T9hSirPXnyV08zXJAlXkEwLXZLAXbZ3bD9ys0X",
+    "resourceVersion": "9",
+    "generation": 9,
+    "creationTimestamp": "2025-11-21T02:45:46Z",
+    "labels": {
+      "grafana.app/deprecatedInternalID": "4"
+    },
+    "annotations": {
+      "grafana.app/createdBy": "user:ff484mkzioutcd",
+      "grafana.app/updatedBy": "user:ff484mkzioutcd",
+      "grafana.app/updatedTimestamp": "2025-11-24T04:16:59Z"
+    }
+  },
+  "spec": {
+    "annotations": {
+      "list": [
+        {
+          "builtIn": 1,
+          "datasource": {
+            "type": "grafana",
+            "uid": "-- Grafana --"
+          },
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "type": "dashboard"
+        }
+      ]
+    },
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "graphTooltip": 0,
+    "id": 4,
+    "links": [],
+    "panels": [
+      {
+        "datasource": {
+          "type": "alexanderzobnin-zabbix-datasource",
+          "uid": "ff486tfoukdmoa"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "custom": {
+              "align": "auto",
+              "cellOptions": {
+                "type": "color-text"
+              },
+              "filterable": false,
+              "footer": {
+                "reducers": []
+              },
+              "inspect": false,
+              "wrapHeaderText": false,
+              "wrapText": false
+            },
+            "mappings": [
+              {
+                "options": {
+                  "0": {
+                    "color": "red",
+                    "index": 1,
+                    "text": "OFFLINE"
+                  },
+                  "1": {
+                    "color": "purple",
+                    "index": 0,
+                    "text": "ONLINE"
+                  }
+                },
+                "type": "value"
+              },
+              {
+                "options": {
+                  "pattern": "(.*): .*",
+                  "result": {
+                    "index": 2,
+                    "text": "$1"
+                  }
+                },
+                "type": "regex"
+              },
+              {
+                "options": {
+                  "match": "nan",
+                  "result": {
+                    "color": "red",
+                    "index": 3,
+                    "text": "ERROR"
+                  }
+                },
+                "type": "special"
+              }
+            ],
+            "max": 1,
+            "min": 0,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "text",
+                  "value": 0
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 24,
+          "x": 0,
+          "y": 0
+        },
+        "id": 1,
+        "options": {
+          "cellHeight": "md",
+          "showHeader": true,
+          "sortBy": [
+            {
+              "desc": true,
+              "displayName": "Dispositivo"
+            }
+          ]
+        },
+        "pluginVersion": "12.2.1",
+        "targets": [
+          {
+            "application": {
+              "filter": ""
+            },
+            "countTriggersBy": "",
+            "datasource": {
+              "type": "alexanderzobnin-zabbix-datasource",
+              "uid": "ff486tfoukdmoa"
+            },
+            "evaltype": "0",
+            "functions": [],
+            "group": {
+              "filter": "Hosts"
+            },
+            "hide": false,
+            "host": {
+              "filter": "/.*/"
+            },
+            "item": {
+              "filter": "ICMP ping"
+            },
+            "itemTag": {
+              "filter": ""
+            },
+            "macro": {
+              "filter": ""
+            },
+            "options": {
+              "count": false,
+              "disableDataAlignment": false,
+              "showDisabledItems": false,
+              "skipEmptyValues": false,
+              "useTrends": "default",
+              "useZabbixValueMapping": false
+            },
+            "proxy": {
+              "filter": ""
+            },
+            "queryType": "0",
+            "refId": "B",
+            "resultFormat": "time_series",
+            "schema": 12,
+            "table": {
+              "skipEmptyValues": false
+            },
+            "tags": {
+              "filter": ""
+            },
+            "textFilter": "",
+            "trigger": {
+              "filter": ""
+            }
+          }
+        ],
+        "title": "",
+        "transformations": [
+          {
+            "id": "reduce",
+            "options": {
+              "labelsToFields": false,
+              "reducers": [
+                "last"
+              ]
+            }
+          },
+          {
+            "id": "organize",
+            "options": {
+              "excludeByName": {
+                "Field": false
+              },
+              "includeByName": {},
+              "indexByName": {},
+              "orderByMode": "manual",
+              "renameByName": {
+                "Field": "Dispositivo",
+                "Last": "Status"
+              }
+            }
+          }
+        ],
+        "transparent": true,
+        "type": "table"
+      }
+    ],
+    "preload": false,
+    "schemaVersion": 42,
+    "tags": [],
+    "templating": {
+      "list": []
+    },
+    "time": {
+      "from": "now-6h",
+      "to": "now"
+    },
+    "timepicker": {},
+    "timezone": "browser",
+    "title": "Lista de dispositivos",
+    "uid": "adljsxw",
+    "version": 9
+  },
+  "status": {}
+}

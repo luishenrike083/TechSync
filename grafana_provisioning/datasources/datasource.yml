@@ -1,0 +1,14 @@
+apiVersion: 1
+
+datasources:
+  - name: Zabbix
+    type: alexanderzobnin-zabbix-datasource
+    access: proxy
+    url: http://zabbix:80/api_jsonrpc.php  # Conecta no container 'zabbix'
+    isDefault: true
+    jsonData:
+      dbConnectionEnable: false
+      tlsSkipVerify: true  # Importante para ambiente local sem HTTPS
+    secureJsonData:
+      username: Admin      # Usuário padrão do Zabbix
+      password: zabbix     # Senha padrão do Zabbix

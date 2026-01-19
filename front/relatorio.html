@@ -117,7 +117,7 @@
 <body>
   <div class="dashboard" id="dashboard">
     <aside class="sidebar">
-      <a href="index.html" id="logoutLink" style="text-decoration:none; display:block;">
+      <a href="#" id="logoutLink" style="text-decoration:none; display:block;">
         <img src="imagem/logo.png" alt="TechSync">
         <h2>TechSync</h2>
       </a>  
@@ -154,19 +154,19 @@
         <div class="grid-metrics">
           <div class="card-container metric-item">
             <h4>Disponibilidade (SLA)</h4>
-            <iframe src="http://192.168.56.102:3000/d-solo/adtrlgh/sla-zabbix?orgId=1&theme=dark&panelId=panel-1&__feature.dashboardSceneSolo=true&kiosk&from=now-30d&to=now" style="pointer-events: none;"></iframe>
+            <iframe src="http://192.168.56.2:3001/d-solo/adtrlgh/sla-zabbix?orgId=1&theme=dark&panelId=panel-1&__feature.dashboardSceneSolo=true&kiosk&from=now-30d&to=now" style="pointer-events: none;"></iframe>
           </div>
           <div class="card-container metric-item">
             <h4>Total de Incidentes</h4>
-            <iframe src="http://192.168.56.102:3000/d-solo/adxmq9n/count-problems?orgId=1&theme=dark&panelId=panel-1&__feature.dashboardSceneSolo=true&kiosk&from=now-30d&to=now" style="pointer-events: none;"></iframe>
+            <iframe src="http://192.168.56.2:3001/d-solo/adxmq9n/count-problems?orgId=1&theme=dark&panelId=panel-1&__feature.dashboardSceneSolo=true&kiosk&from=now-30d&to=now" style="pointer-events: none;"></iframe>
           </div>
           <div class="card-container metric-item">
             <h4>Tráfego Total</h4>
-            <iframe src="http://192.168.56.102:3000/d-solo/adl7pm4/taxa-de-download?orgId=1&theme=dark&panelId=panel-1&__feature.dashboardSceneSolo=true&kiosk&from=now-30d&to=now" style="pointer-events: none;"></iframe>
+            <iframe src="http://192.168.56.2:3001/d-solo/adl7pm4/taxa-de-download?orgId=1&theme=dark&panelId=panel-1&__feature.dashboardSceneSolo=true&kiosk&from=now-30d&to=now" style="pointer-events: none;"></iframe>
           </div>
           <div class="card-container metric-item">
             <h4>Uptime Médio</h4>
-            <iframe src="http://192.168.56.102:3000/d-solo/adc8mdx/up-time?orgId=1&panelId=panel-1&__feature.dashboardSceneSolo=true"></iframe>
+            <iframe src="http://192.168.56.2:3001/d-solo/adc8mdx/up-time?orgId=1&panelId=panel-1&__feature.dashboardSceneSolo=true"></iframe>
           </div>
         </div>
 
@@ -174,19 +174,19 @@
             <div class="card-container">
                 <h3>Tendência de Disponibilidade</h3>
                 <div class="iframe-box">
-                    <iframe src="http://192.168.56.102:3000/d-solo/ad28q68/sla-mensal?orgId=1&theme=dark&panelId=1&kiosk&from=now-30d&to=now"></iframe>
+                    <iframe src="http://192.168.56.2:3001/d-solo/ad28q68/sla-mensal?orgId=1&theme=dark&panelId=1&kiosk&from=now-30d&to=now"></iframe>
                 </div>
             </div>
             <div class="card-container">
                 <h3>Top Alertas</h3>
                 <div class="iframe-box">
-                    <iframe src="http://192.168.56.102:3000/d-solo/ad84kr5/problemas-recentes?orgId=1&theme=dark&panelId=panel-1&__feature.dashboardSceneSolo=true&kiosk&from=now-30d&to=now&refresh=1m"></iframe>
+                    <iframe src="http://192.168.56.2:3001/d-solo/ad84kr5/problemas-recentes?orgId=1&theme=dark&panelId=panel-1&__feature.dashboardSceneSolo=true&kiosk&from=now-30d&to=now&refresh=1m"></iframe>
                 </div>
             </div>
             <div class="card-container full-width">
                 <h3>Histórico de Rede</h3>
                 <div class="iframe-box">
-                    <iframe src="http://192.168.56.102:3000/d-solo/adqjrmm/uso-de-rede?orgId=1&theme=dark&panelId=1&kiosk&from=now-30d&to=now"></iframe>
+                    <iframe src="http://192.168.56.2:3001/d-solo/adqjrmm/uso-de-rede?orgId=1&theme=dark&panelId=1&kiosk&from=now-30d&to=now"></iframe>
                 </div>
             </div>
         </div>
@@ -194,7 +194,7 @@
         <div class="card-container">
             <h3>Histórico de Ocorrências</h3>
             <div class="iframe-box" style="height: 400px;">
-                <iframe src="http://192.168.56.102:3000/d-solo/advz6tg/histrico-de-problemas?orgId=1&theme=dark&panelId=panel-1&__feature.dashboardSceneSolo=true&kiosk&from=now-30d&to=now&refresh=1m"></iframe>
+                <iframe src="http://192.168.56.2:3001/d-solo/advz6tg/histrico-de-problemas?orgId=1&theme=dark&panelId=panel-1&__feature.dashboardSceneSolo=true&kiosk&from=now-30d&to=now&refresh=1m"></iframe>
             </div>
         </div>
       </div>
@@ -202,7 +202,15 @@
   </div>
   
   <script>
-    // Filtros
+    // 1. Verificação de Segurança (Auth Guard)
+    const user = localStorage.getItem('usuarioLogadoNome');
+    if (!user) {
+        window.location.href = 'login.html';
+    } else {
+        document.getElementById('userName').textContent = user.charAt(0).toUpperCase() + user.slice(1);
+    }
+
+    // 2. Filtros de Período
     const btns = document.querySelectorAll('.btn-filter');
     const label = document.getElementById('lblPeriodo');
     const frames = document.querySelectorAll('iframe'); 
@@ -215,20 +223,27 @@
             
             const range = btn.dataset.range;
             frames.forEach(f => {
-                let url = new URL(f.src);
-                url.searchParams.set('from', range);
-                f.src = url.toString();
+                try {
+                    let url = new URL(f.src);
+                    url.searchParams.set('from', range);
+                    f.src = url.toString();
+                } catch(e) {
+                    console.error("Erro ao atualizar iframe", e);
+                }
             });
         };
     });
 
-    // Ações Gerais
+    // 3. Ações Gerais
     document.getElementById('btnPDF').onclick = () => window.print();
     document.getElementById('toggleBtn').onclick = () => document.getElementById('dashboard').classList.toggle('sidebar-toggled');
-    document.getElementById('logoutLink').onclick = () => localStorage.removeItem('usuarioLogadoNome');
-
-    const user = localStorage.getItem('usuarioLogadoNome');
-    document.getElementById('userName').textContent = user ? (user.charAt(0).toUpperCase() + user.slice(1)) : 'Admin';
+    
+    // 4. Logout com Redirecionamento
+    document.getElementById('logoutLink').onclick = (e) => {
+        e.preventDefault();
+        localStorage.removeItem('usuarioLogadoNome');
+        window.location.href = 'index.html';
+    };
   </script>
 </body>
 </html>

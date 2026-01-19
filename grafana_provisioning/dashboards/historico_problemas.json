@@ -1,0 +1,212 @@
+{
+  "apiVersion": "dashboard.grafana.app/v1beta1",
+  "kind": "Dashboard",
+  "metadata": {
+    "name": "advz6tg",
+    "namespace": "default",
+    "uid": "Xb6WO2XPhIIEZJdvu3JUgCRrdmqOuFZZcP7sXEOZn1cX",
+    "resourceVersion": "6",
+    "generation": 6,
+    "creationTimestamp": "2025-11-23T00:15:10Z",
+    "labels": {
+      "grafana.app/deprecatedInternalID": "8"
+    },
+    "annotations": {
+      "grafana.app/createdBy": "user:ff484mkzioutcd",
+      "grafana.app/updatedBy": "user:ff484mkzioutcd",
+      "grafana.app/updatedTimestamp": "2025-11-24T02:00:52Z"
+    }
+  },
+  "spec": {
+    "annotations": {
+      "list": [
+        {
+          "builtIn": 1,
+          "datasource": {
+            "type": "grafana",
+            "uid": "-- Grafana --"
+          },
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "type": "dashboard"
+        }
+      ]
+    },
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "graphTooltip": 0,
+    "id": 8,
+    "links": [],
+    "panels": [
+      {
+        "datasource": {
+          "type": "alexanderzobnin-zabbix-datasource",
+          "uid": "ff486tfoukdmoa"
+        },
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 11,
+          "w": 24,
+          "x": 0,
+          "y": 0
+        },
+        "id": 1,
+        "options": {
+          "ackEventColor": "rgb(56, 219, 156)",
+          "ackField": true,
+          "ageField": false,
+          "allowDangerousHTML": true,
+          "customLastChangeFormat": true,
+          "descriptionAtNewLine": false,
+          "descriptionField": true,
+          "fontSize": "90%",
+          "highlightBackground": true,
+          "highlightNewEvents": true,
+          "highlightNewerThan": "1h",
+          "hostField": true,
+          "hostGroups": false,
+          "hostProxy": false,
+          "hostTechNameField": false,
+          "lastChangeFormat": "HH:MM:SS D/M/YY",
+          "layout": "list",
+          "markAckEvents": true,
+          "okEventColor": "light-green",
+          "opdataField": false,
+          "pageSize": 10,
+          "problemTimeline": true,
+          "severityField": true,
+          "showDatasourceName": false,
+          "showTags": false,
+          "sortProblems": "lastchange",
+          "statusField": true,
+          "statusIcon": true,
+          "triggerSeverity": [
+            {
+              "color": "#ccccdc",
+              "priority": 0,
+              "severity": "Not classified",
+              "show": false
+            },
+            {
+              "color": "#DEB6F2",
+              "priority": 1,
+              "severity": "Information",
+              "show": true
+            },
+            {
+              "color": "#CA95E5",
+              "priority": 2,
+              "severity": "Warning",
+              "show": true
+            },
+            {
+              "color": "#B877D9",
+              "priority": 3,
+              "severity": "Average",
+              "show": true
+            },
+            {
+              "color": "#A352CC",
+              "priority": 4,
+              "severity": "High",
+              "show": true
+            },
+            {
+              "color": "#8F3BB8",
+              "priority": 5,
+              "severity": "Disaster",
+              "show": true
+            }
+          ]
+        },
+        "pluginVersion": "6.0.3",
+        "targets": [
+          {
+            "application": {
+              "filter": ""
+            },
+            "countTriggersBy": "",
+            "datasource": {
+              "type": "alexanderzobnin-zabbix-datasource",
+              "uid": "ff486tfoukdmoa"
+            },
+            "evaltype": "0",
+            "functions": [],
+            "group": {
+              "filter": "Hosts"
+            },
+            "host": {
+              "filter": "/.*/"
+            },
+            "item": {
+              "filter": ""
+            },
+            "itemTag": {
+              "filter": ""
+            },
+            "macro": {
+              "filter": ""
+            },
+            "options": {
+              "acknowledged": 2,
+              "count": false,
+              "disableDataAlignment": false,
+              "hostProxy": false,
+              "hostsInMaintenance": false,
+              "limit": 1001,
+              "minSeverity": 0,
+              "showDisabledItems": false,
+              "skipEmptyValues": false,
+              "sortProblems": "default",
+              "useTimeRange": false,
+              "useTrends": "default",
+              "useZabbixValueMapping": false
+            },
+            "proxy": {
+              "filter": ""
+            },
+            "queryType": "5",
+            "refId": "A",
+            "resultFormat": "time_series",
+            "schema": 12,
+            "showProblems": "history",
+            "table": {
+              "skipEmptyValues": false
+            },
+            "tags": {
+              "filter": ""
+            },
+            "textFilter": "",
+            "trigger": {
+              "filter": ""
+            }
+          }
+        ],
+        "title": "",
+        "transparent": true,
+        "type": "alexanderzobnin-zabbix-triggers-panel"
+      }
+    ],
+    "preload": false,
+    "schemaVersion": 42,
+    "tags": [],
+    "templating": {
+      "list": []
+    },
+    "time": {
+      "from": "now-6h",
+      "to": "now"
+    },
+    "timepicker": {},
+    "timezone": "browser",
+    "title": "histórico de problemas",
+    "uid": "advz6tg",
+    "version": 6
+  },
+  "status": {}
+}

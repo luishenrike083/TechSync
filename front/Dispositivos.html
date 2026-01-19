@@ -83,7 +83,7 @@
 <body>
   <div class="dashboard" id="dashboard">
     <aside class="sidebar">
-      <a href="index.html" id="logoutLink" style="text-decoration:none; display:block;">
+      <a href="#" id="logoutLink" style="text-decoration:none; display:block;">
         <img src="imagem/logo.png" alt="TechSync">
         <h2>TechSync</h2>
       </a>  
@@ -107,7 +107,7 @@
         <div class="cards-grid">
           <div class="card-container stat-card">
             <h3>Total de Dispositivos</h3>
-            <iframe src="http://192.168.56.102:3000/d-solo/addvg2z/num-dispositivo?orgId=1&timezone=browser&theme=dark&panelId=panel-1&__feature.dashboardSceneSolo=true" width="100%" height="100%" frameborder="0"></iframe>
+            <iframe src="http://192.168.56.2:3001/d-solo/addvg2z/num-dispositivo?orgId=1&timezone=browser&theme=dark&panelId=panel-1&__feature.dashboardSceneSolo=true" width="100%" height="100%" frameborder="0"></iframe>
           </div>
           <div class="card-container stat-card">
             <h3>Online Agora</h3>
@@ -122,7 +122,7 @@
         <div class="card-container lista-container">
           <h3>Lista de Dispositivos</h3>
           <div class="grafana-wrapper">
-             <iframe src="http://192.168.56.102:3000/d-solo/adljsxw/lista-de-dispositivos?orgId=1&timezone=browser&theme=dark&panelId=panel-1&__feature.dashboardSceneSolo=true&refresh=30s"></iframe>
+             <iframe src="http://192.168.56.2:3001/d-solo/adljsxw/lista-de-dispositivos?orgId=1&timezone=browser&theme=dark&panelId=panel-1&__feature.dashboardSceneSolo=true&refresh=30s"></iframe>
           </div>
         </div>
       </div>
@@ -130,18 +130,23 @@
   </div>
 
   <script>
+    // 1. Verificação de Autenticação
     const user = localStorage.getItem('usuarioLogadoNome');
-    document.getElementById('userName').textContent = user ? (user.charAt(0).toUpperCase() + user.slice(1)) : 'Admin';
-
-    document.getElementById('logoutLink').onclick = () => localStorage.removeItem('usuarioLogadoNome');
-    document.getElementById('toggleBtn').onclick = () => document.getElementById('dashboard').classList.toggle('sidebar-toggled');
-
-    // Função mantida para uso futuro quando houver integração com API
-    function updateCards(dispositivos) {
-        document.getElementById('totalDevices').textContent = dispositivos.length;
-        document.getElementById('onlineDevices').textContent = dispositivos.filter(d => d.status === 'Online').length;
-        document.getElementById('alertDevices').textContent = dispositivos.filter(d => d.status === 'Alerta').length;
+    if (!user) {
+        window.location.href = 'login.html';
+    } else {
+        document.getElementById('userName').textContent = user.charAt(0).toUpperCase() + user.slice(1);
     }
+
+    // 2. Logout
+    document.getElementById('logoutLink').onclick = (e) => {
+        e.preventDefault();
+        localStorage.removeItem('usuarioLogadoNome');
+        window.location.href = 'index.html';
+    };
+
+    // 3. Toggle Sidebar
+    document.getElementById('toggleBtn').onclick = () => document.getElementById('dashboard').classList.toggle('sidebar-toggled');
   </script>
 </body>
 </html>

@@ -122,7 +122,9 @@
     </div>
 
     <script type="module">
-        const API_USUARIOS_URL = 'http://localhost:3000/usuarios';
+        // Aponta para o backend Node.js rodando no Docker (porta 3000)
+        // A rota agora é específica para autenticação: /login
+        const API_LOGIN_URL = 'http://localhost:3000/login';
 
         document.getElementById('loginForm').addEventListener('submit', async function(event) {
             event.preventDefault();
@@ -131,24 +133,37 @@
             const senha = document.getElementById('senha').value;
 
             try {
-                // Busca todos os usuários
-                const response = await fetch(API_USUARIOS_URL);
-                if (!response.ok) {
-                    throw new Error('Erro ao buscar usuários na API.');
-                }
-                const usuarios = await response.json();
-                const usuarioEncontrado = usuarios.find(u => u.email === email && u.senha === senha);
+                // MUDANÇA CRÍTICA: Uso de POST e envio de JSON no corpo (Body)
+                // Isso esconde a senha da URL e envia para a API processar com o MySQL
+                const response = await fetch(API_LOGIN_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        email: email, 
+                        senha: senha 
+                    })
+                });
 
-                if (usuarioEncontrado) {
-                    localStorage.setItem('usuarioLogadoNome', usuarioEncontrado.nome);
+                // A API agora retorna um objeto JSON com o status da operação
+                const resultado = await response.json();
+
+                if (response.ok && resultado.success) {
+                    // Login bem sucedido
+                    // Salva o nome retornado pelo banco de dados
+                    localStorage.setItem('usuarioLogadoNome', resultado.nome);
+                    
+                    // Redireciona para o dashboard
                     window.location.href = 'Dispositivos.html';
                 } else {
-                    alert('Credenciais inválidas. Verifique seu usuário (email) e senha.');
+                    // Exibe a mensagem de erro vinda da API (ex: "Email ou senha incorretos")
+                    alert(resultado.message || 'Falha ao realizar login. Verifique suas credenciais.');
                 }
 
             } catch (error) {
-                console.error('Erro de login:', error);
-                alert('Não foi possível conectar ao servidor de usuários. Verifique se o json-server está rodando.');
+                console.error('Erro técnico:', error);
+                alert('Não foi possível conectar ao servidor TechSync. Verifique se os containers Docker estão rodando.');
             }
         });
     </script>

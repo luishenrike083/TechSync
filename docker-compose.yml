@@ -1,40 +1,38 @@
 services:
   # ==========================================
-  # 1. FRONTEND (Seu Site HTML/CSS/JS)
+  # 1. FRONTEND
   # ==========================================
   frontend:
     image: nginx:alpine
     container_name: techsync-front
     restart: always
     ports:
-      - "80:80"  # Acessível em http://localhost
+      - "8000:80"
     volumes:
-      # Mapeia sua pasta local 'front' para onde o Nginx serve os arquivos
       - ./front:/usr/share/nginx/html
     networks:
       - techsync-net
 
   # ==========================================
-  # 2. BACKEND (Sua API Node.js)
+  # 2. BACKEND
   # ==========================================
   backend:
-    build: ./back  # Lê o Dockerfile dentro da pasta back
+    build: ./back
     container_name: techsync-back
     restart: always
     ports:
-      - "3000:3000" # API acessível em http://localhost:3000
+      - "3000:3000"
     depends_on:
       - db-mysql
     environment:
-      - DB_HOST=db-mysql
-      - DB_USER=techsync
-      - DB_PASS=senha_forte
-      - DB_NAME=techsync_db
+      # O Prisma precisa desta variavel exata.
+      # Nota: Dentro do Docker, o host é 'db-mysql', não 'localhost'
+      - DATABASE_URL=mysql://techsync:senha_forte@db-mysql:3306/techsync_db
     networks:
       - techsync-net
 
   # ==========================================
-  # 3. BANCO DE DADOS (Aplicação)
+  # 3. BANCO DE DADOS
   # ==========================================
   db-mysql:
     image: mysql:8.0
@@ -45,10 +43,11 @@ services:
       MYSQL_USER: techsync
       MYSQL_PASSWORD: senha_forte
       MYSQL_ROOT_PASSWORD: root_pwd
+    ports:
+      # IMPORTANTE: Expõe a porta para você rodar 'npx prisma migrate' do seu terminal
+      - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-      # OBS: Não usamos mais o init.sql aqui, pois o Node.js
-      # vai rodar as Migrations e Seeders automaticamente.
     networks:
       - techsync-net
 
@@ -60,10 +59,10 @@ services:
     container_name: zabbix-appliance
     restart: always
     ports:
-      - "8081:80"      # Interface Web do Zabbix (evita conflito com a porta 80 do front)
-      - "10051:10051"  # Porta do Servidor Zabbix (Agentes)
+      - "8081:80"
+      - "10051:10051"
     volumes:
-      - zabbix_data:/var/lib/mysql # Persistência do banco interno do Zabbix
+      - zabbix_data:/var/lib/mysql
     networks:
       - techsync-net
 
@@ -75,24 +74,21 @@ services:
     container_name: techsync-grafana
     restart: always
     ports:
-      - "3001:3000"    # Grafana na porta 3001
+      - "3001:3000"
     environment:
       - GF_INSTALL_PLUGINS=alexanderzobnin-zabbix-app
-      - GF_SECURITY_ADMIN_PASSWORD=admin # Senha padrão p/ facilitar dev
+      - GF_SECURITY_ADMIN_PASSWORD=admin
     volumes:
       - grafana_data:/var/lib/grafana
-      # Provisionamento automático (Dashboards e Data Source)
       - ./grafana_provisioning:/etc/grafana/provisioning
     networks:
       - techsync-net
 
-# Definição dos Volumes (Persistência)
 volumes:
   mysql_data:
   zabbix_data:
   grafana_data:
 
-# Definição da Rede
 networks:
   techsync-net:
     driver: bridge

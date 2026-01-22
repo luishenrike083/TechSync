@@ -1,22 +1,19 @@
 // back/src/index.js
 const express = require('express');
 const cors = require('cors');
-const dbManager = require('./database/dbManager'); // <--- Importa aqui
+const routes = require('./routes'); // Importa suas rotas
 
 const app = express();
+const PORT = 3000;
+
 app.use(express.json());
 app.use(cors());
 
-// Suas rotas aqui...
-// app.post('/register', ...);
+// Usa as rotas
+app.use(routes);
 
-const PORT = 3000;
-
-// Só inicia o servidor DEPOIS que o banco estiver pronto
-dbManager.run().then(() => {
-    app.listen(PORT, () => {
-        console.log(`Servidor rodando na porta ${PORT}`);
-    });
-}).catch(err => {
-    console.error('Falha crítica ao iniciar:', err);
+// Inicia o servidor
+app.listen(PORT, () => {
+    console.log(`Servidor rodando na porta ${PORT}`);
+    console.log(`➜ Teste em: http://localhost:${PORT}`);
 });

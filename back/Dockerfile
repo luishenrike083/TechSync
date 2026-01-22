@@ -1,5 +1,5 @@
 # Usa uma versão leve do Node.js (Alpine Linux)
-FROM node:18-alpine
+FROM node:22-alpine
 
 # Define a pasta de trabalho dentro do container
 WORKDIR /app

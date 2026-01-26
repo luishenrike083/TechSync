@@ -15,6 +15,7 @@ model Contact {
   name      String
   email     String   @unique
   number    String
+  message   String   @db.Text
   createdAt DateTime @default(now())
 }
 

@@ -6,6 +6,7 @@
   <title>TechSync - Dashboard</title>
   <link rel="icon" href="imagem/logo.png">
   <style>
+    /* === ESTILIZAÇÃO ORIGINAL MANTIDA 100% === */
     :root {
         --cor-principal: #6a61ff; 
         --cor-fundo-card: #20202a;
@@ -26,7 +27,6 @@
     }
     .dashboard { display: flex; height: 100%; flex: 1; }
     
-    /* Sidebar */
     .sidebar {
       width: 220px;
       background: var(--cor-fundo-sidebar); 
@@ -51,7 +51,6 @@
     .sidebar a:hover, .sidebar a.active { color: var(--cor-destaque); text-shadow: 0 0 7px var(--cor-destaque); }
     .sidebar a.active { font-weight: 700; }
 
-    /* Main & Header */
     .main { flex: 1; display: flex; flex-direction: column; }
     .header {
       background-color: rgba(18, 18, 20, 0.7);
@@ -69,7 +68,6 @@
     .btn-toggle:hover { color: var(--cor-destaque); }
     .content { padding: 30px; flex: 1; overflow-y: auto; }
 
-    /* Charts */
     .charts-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
     .chart-card {
         background: var(--cor-fundo-card); padding: 25px; border-radius: 8px;
@@ -81,7 +79,7 @@
         border-bottom: 1px solid var(--cor-borda); padding-bottom: 10px;
     }
     .chart-full { grid-column: 1 / -1; }
-    iframe { flex: 1; display: block; border: 0; }
+    iframe { flex: 1; display: block; border: 0; width: 100%; height: 100%; }
     @media (max-width: 768px) { .charts-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
@@ -110,51 +108,72 @@
       </header>
 
       <div class="content">
-        <div class="charts-grid">
-            <div class="chart-card">
-                <h3>Uso da Rede</h3>
-                <iframe src="http://192.168.56.2:3001/d-solo/adqjrmm/uso-de-rede?orgId=1&timezone=browser&theme=dark&panelId=panel-1&__feature.dashboardSceneSolo=true&from=now-1h&to=now"></iframe>          
-            </div>
-            <div class="chart-card">  
-              <h3>Latência da Rede</h3>
-                <iframe src="http://192.168.56.2:3001/d-solo/adlm6lm/latncia?orgId=1&timezone=browser&showCategory=Graph%20styles&theme=dark&panelId=panel-1&__feature.dashboardSceneSolo=true&from=now-1h&to=now"></iframe>
-            </div>
-            <div class="chart-card chart-full">
-                <h3>Uso do CPU</h3>
-                 <iframe src="http://192.168.56.2:3001/d-solo/admnz6c/uso-do-cpu?orgId=1&timezone=browser&theme=dark&panelId=panel-1&__feature.dashboardSceneSolo=true&refresh=2m"></iframe>
-            </div>
-            <div class="chart-card chart-full">
-              <h3>Incidentes</h3>
-              <iframe src="http://192.168.56.2:3001/d-solo/ad84kr5/problemas-recentes?orgId=1&timezone=browser&theme=dark&panelId=panel-1&__feature.dashboardSceneSolo=true&kiosk&from=now-30d&to=now&refresh=1m"></iframe>
-            </div>
+        <div class="charts-grid" id="chartsContainer">
+            <p style="color: var(--cor-texto-secundario); font-size: 1.1rem;">Carregando painéis de monitoramento...</p>
         </div>
       </div>
     </main>
   </div>
   
   <script>
-    // 1. Verificação de Segurança (Auth Guard)
-    // Se o usuário tentar entrar direto no dashboard sem logar, redireciona para o login
-    const user = localStorage.getItem('usuarioLogadoNome');
+    const username = localStorage.getItem('usuarioLogadoNome');
     
-    if (!user) {
+    if (!username) {
         window.location.href = 'login.html';
     } else {
-        // Formata o nome para exibição (Primeira letra maiúscula)
-        document.getElementById('userName').textContent = user.charAt(0).toUpperCase() + user.slice(1);
+        document.getElementById('userName').textContent = username.charAt(0).toUpperCase() + username.slice(1);
     }
 
-    // 2. Lógica de Logout
+    // Logout
     document.getElementById('logoutLink').onclick = (e) => {
         e.preventDefault();
-        localStorage.removeItem('usuarioLogadoNome'); // Limpa a sessão
-        window.location.href = 'index.html'; // Redireciona para a home
+        localStorage.removeItem('usuarioLogadoNome');
+        window.location.href = 'index.html'; 
     };
-
-    // 3. Toggle da Sidebar
     document.getElementById('toggleBtn').onclick = () => {
         document.getElementById('dashboard').classList.toggle('sidebar-toggled');
     };
+
+    // === Buscar painéis Grafana do Banco de Dados ===
+    async function carregarPaineisDoUsuario() {
+        try {
+            const response = await fetch('http://localhost:3000/users');
+            const usuarios = await response.json();
+            const usuarioLogado = usuarios.find(u => u.username === username);
+
+            const container = document.getElementById('chartsContainer');
+            container.innerHTML = '';
+
+            if (usuarioLogado && usuarioLogado.links && usuarioLogado.links.length > 0) {
+                
+                // criar Card do Grafana
+                usuarioLogado.links.forEach((link, index) => {
+                    const card = document.createElement('div');
+                    card.className = index >= 2 ? 'chart-card chart-full' : 'chart-card';
+
+                    card.innerHTML = `
+                        <h3>${link.name}</h3>
+                        <iframe src="${link.url}"></iframe>
+                    `;
+                    container.appendChild(card);
+                });
+
+            } else {
+                container.innerHTML = `
+                    <p style="color: var(--cor-texto-secundario); grid-column: 1 / -1; background: var(--cor-fundo-card); padding: 20px; border-radius: 8px;">
+                        Nenhum painel de monitoramento cadastrado para este usuário.
+                    </p>`;
+            }
+
+        } catch (error) {
+            console.error("Erro ao carregar painéis:", error);
+            document.getElementById('chartsContainer').innerHTML = 
+                '<p style="color: #ff5555; grid-column: 1 / -1;">Falha ao conectar com o banco de dados. Verifique o servidor.</p>';
+        }
+    }
+
+    // Inicia a busca dos painéis
+    carregarPaineisDoUsuario();
   </script>
 </body>
 </html>

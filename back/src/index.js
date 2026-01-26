@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(cors());
 
 // Usa as rotas
-app.use(routes);
+app.use('/', routes);
 
 // Inicia o servidor
 app.listen(PORT, () => {

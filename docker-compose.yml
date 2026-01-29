@@ -7,7 +7,7 @@ services:
     container_name: techsync-front
     restart: always
     ports:
-      - "8000:80"
+      - '8000:80'
     volumes:
       - ./front:/usr/share/nginx/html
     networks:
@@ -21,13 +21,12 @@ services:
     container_name: techsync-back
     restart: always
     ports:
-      - "3000:3000"
+      - '3000:3000'
     depends_on:
       - db-mysql
     environment:
       # O Prisma precisa desta variavel exata.
-      # Nota: Dentro do Docker, o host é 'db-mysql', não 'localhost'
-      - DATABASE_URL=mysql://techsync:senha_forte@db-mysql:3306/techsync_db
+      - DATABASE_URL=mysql://root:root_pwd@db-mysql:3306/techsync_db
     networks:
       - techsync-net
 
@@ -45,7 +44,7 @@ services:
       MYSQL_ROOT_PASSWORD: root_pwd
     ports:
       # IMPORTANTE: Expõe a porta para você rodar 'npx prisma migrate' do seu terminal
-      - "3306:3306"
+      - '3306:3306'
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
@@ -59,8 +58,8 @@ services:
     container_name: zabbix-appliance
     restart: always
     ports:
-      - "8081:80"
-      - "10051:10051"
+      - '8081:80'
+      - '10051:10051'
     volumes:
       - zabbix_data:/var/lib/mysql
     networks:
@@ -74,7 +73,7 @@ services:
     container_name: techsync-grafana
     restart: always
     ports:
-      - "3001:3000"
+      - '3001:3000'
     environment:
       - GF_INSTALL_PLUGINS=alexanderzobnin-zabbix-app
       - GF_SECURITY_ADMIN_PASSWORD=admin

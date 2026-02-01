@@ -122,8 +122,6 @@
     </div>
 
     <script type="module">
-        // Aponta para o backend Node.js rodando no Docker (porta 3000)
-        // A rota agora é específica para autenticação: /login
         const API_LOGIN_URL = 'http://localhost:3000/login';
 
         document.getElementById('loginForm').addEventListener('submit', async function(event) {
@@ -133,8 +131,6 @@
             const senha = document.getElementById('senha').value;
 
             try {
-                // MUDANÇA CRÍTICA: Uso de POST e envio de JSON no corpo (Body)
-                // Isso esconde a senha da URL e envia para a API processar com o MySQL
                 const response = await fetch(API_LOGIN_URL, {
                     method: 'POST',
                     headers: {
@@ -146,18 +142,18 @@
                     })
                 });
 
-                // A API agora retorna um objeto JSON com o status da operação
                 const resultado = await response.json();
 
                 if (response.ok && resultado.success) {
-                    // Login bem sucedido
-                    // Salva o nome retornado pelo banco de dados
                     localStorage.setItem('usuarioLogadoNome', resultado.nome);
-                    
-                    // Redireciona para o dashboard
-                    window.location.href = 'Dispositivos.html';
+                
+                    if (resultado.nome.toLowerCase() === 'admin') {
+                        window.location.href = 'admin.html';
+                    } else {
+                        window.location.href = 'Dispositivos.html';
+                    }
+
                 } else {
-                    // Exibe a mensagem de erro vinda da API (ex: "Email ou senha incorretos")
                     alert(resultado.message || 'Falha ao realizar login. Verifique suas credenciais.');
                 }
 

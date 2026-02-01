@@ -129,4 +129,29 @@ router.post('/contacts', async (req, res) => {
     }
 });
 
+// Deletar
+router.delete('/users/:id', async (req, res) => {
+    const { id } = req.params;
+    
+    try {
+        await prisma.grafanaLink.deleteMany({
+            where: { userId: Number(id) }
+        });
+
+        // Deletar o usuário
+        const deletedUser = await prisma.user.delete({
+            where: { id: Number(id) }
+        });
+
+        res.json({ success: true, message: "Usuário removido com sucesso." });
+    } catch (error) {
+        console.error("Erro ao deletar usuário:", error);
+        // Verifica se é erro de registro não encontrado
+        if (error.code === 'P2025') {
+            return res.status(404).json({ success: false, message: "Usuário não encontrado." });
+        }
+        res.status(500).json({ success: false, message: "Erro ao remover usuário." });
+    }
+});
+
 module.exports = router;

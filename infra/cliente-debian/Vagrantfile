@@ -1,0 +1,25 @@
+Vagrant.configure("2") do |config|
+  # === SO ===
+  config.vm.box = "debian/bookworm64"
+
+  # === REDE ===
+  config.vm.network "private_network", ip: "192.168.56.102"
+
+  # === HOSTNAME ===
+  config.vm.hostname = "TechSync-Cliente-Debian"
+
+  # === HARDWARE ===
+  config.vm.provider "virtualbox" do |vb|
+    vb.name = "TechSync_Cliente_Debian"
+    vb.memory = "1024"
+    vb.cpus = 1
+  end
+
+  # === PROVISIONAMENTO (ANSIBLE) ===
+  # "ansible_local" instala o ansible na VM e roda o playbook lá dentro.
+  config.vm.provision "ansible_local" do |ansible|
+    ansible.playbook = "playbook.yml"
+    # Se quiser ver o log colorido e detalhado:
+    ansible.verbose = true 
+  end
+end

@@ -79,7 +79,7 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin
     volumes:
       - grafana_data:/var/lib/grafana
-      - ./grafana_provisioning:/etc/grafana/provisioning
+      #- ./grafana_provisioning:/etc/grafana/provisioning
     networks:
       - techsync-net
 

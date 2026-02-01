@@ -1,0 +1,44 @@
+---
+- name: Configuração do Cliente Zabbix (TechSync)
+  hosts: all
+  become: true # Roda como root (sudo)
+
+  # Variáveis para facilitar a manutenção
+  vars:
+    zabbix_server_ip: "192.168.56.1"
+    vm_hostname: "debian-bookworm-01"
+
+  tasks:
+    - name: Atualizar cache de pacotes (apt update)
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600 # Só atualiza se o cache for mais velho que 1 hora
+
+    - name: Instalar o Zabbix Agent
+      apt:
+        name: zabbix-agent
+        state: present
+
+    - name: Configurar IP do Server (Zabbix Server)
+      lineinfile:
+        path: /etc/zabbix/zabbix_agentd.conf
+        regexp: '^Server=127.0.0.1'
+        line: "Server={{ zabbix_server_ip }}"
+
+    - name: Configurar IP do ServerActive
+      lineinfile:
+        path: /etc/zabbix/zabbix_agentd.conf
+        regexp: '^ServerActive=127.0.0.1'
+        line: "ServerActive={{ zabbix_server_ip }}"
+
+    - name: Definir o Hostname no arquivo de configuração
+      lineinfile:
+        path: /etc/zabbix/zabbix_agentd.conf
+        regexp: '^Hostname=Zabbix server'
+        line: "Hostname={{ vm_hostname }}"
+
+    - name: Reiniciar e Habilitar o Zabbix Agent
+      service:
+        name: zabbix-agent
+        state: restarted
+        enabled: yes

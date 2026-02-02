@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TechSync - Dispositivos</title>
+  <title>TechSync - Meus Dispositivos</title>
   <link rel="icon" href="imagem/logo.png">
   <style>
     :root {
@@ -69,35 +69,49 @@
     .btn-toggle:hover { color: var(--cor-destaque); }
     .content { padding: 30px; flex: 1; overflow-y: auto; }
 
+    /* --- ESTILO NOVO PARA OS GRÁFICOS --- */
     .devices-grid { 
         display: grid; 
-        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
+        grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); /* Mais largo para caber o gráfico */
         gap: 20px; 
     }
-    .device-card {
-        background: var(--cor-fundo-card); padding: 25px; border-radius: 8px;
-        box-shadow: var(--sombra); border: 1px solid var(--cor-borda);
+    .grafana-card {
+        background: var(--cor-fundo-card); 
+        border-radius: 8px;
+        box-shadow: var(--sombra); 
+        border: 1px solid var(--cor-borda);
+        overflow: hidden;
+        height: 380px; /* Altura fixa */
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.2s;
     }
-    .device-card h3 {
-        margin-bottom: 10px; color: var(--cor-destaque); font-size: 18px;
-        border-bottom: 1px solid var(--cor-borda); padding-bottom: 10px;
+    .grafana-card:hover {
+        border-color: var(--cor-principal);
     }
-    .device-list { list-style: none; margin-top: 15px; }
-    .device-item {
-        background: rgba(255, 255, 255, 0.03); padding: 12px; border-radius: 5px;
-        margin-bottom: 10px; border-left: 3px solid var(--cor-principal);
-        display: flex; justify-content: space-between; align-items: center;
+    .card-header {
+        padding: 10px 20px;
+        background: rgba(0,0,0,0.2);
+        border-bottom: 1px solid var(--cor-borda);
+        font-weight: bold;
+        color: var(--cor-destaque);
+        display: flex; justify-content: space-between;
     }
-    .link-grafana {
-        color: var(--cor-principal); text-decoration: none; font-size: 14px;
+    .card-iframe-container {
+        flex: 1;
+        position: relative;
     }
-    .link-grafana:hover { color: var(--cor-destaque); text-decoration: underline; }
+    iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
   </style>
 </head>
 <body>
   <div class="dashboard" id="dashboard">
     <aside class="sidebar">
-      <a href="#" id="logoutLink" style="text-decoration:none; display:block;">
+      <a href="#" style="text-decoration:none; display:block;">
         <img src="imagem/logo.png" alt="TechSync">
       </a>
       <h2>TechSync</h2>
@@ -107,86 +121,120 @@
         <li><a href="relatorio.html">Relatórios</a></li>
         <li><a href="configuracao.html">Configurações</a></li>
       </ul>
+      <div style="margin-top: 50px; text-align: center;">
+          <a href="#" id="logoutLink" style="color: #ff5555; font-size: 16px;">Sair da conta</a>
+      </div>
     </aside>
 
     <main class="main">
       <header class="header">
         <div class="header-actions">
           <button class="btn-toggle" id="toggleBtn">☰</button>
-          <h2 style="font-size: 24px; margin: 0;">Dispositivos Conectados</h2>
+          <h2 style="font-size: 24px; margin: 0;">Meus Dispositivos</h2>
         </div>
-        <div style="font-weight: 600;">👤 <span id="userName">Admin</span></div>
+        <div style="font-weight: 600;">👤 <span id="userName">Usuário</span></div>
       </header>
 
       <div class="content">
         <div class="devices-grid" id="devicesContainer">
-            <p>Carregando dispositivos do servidor...</p>
+            <p style="color: #ccc;">Carregando seus dashboards...</p>
         </div>
       </div>
     </main>
   </div>
   
-  <script>
-    const user = localStorage.getItem('usuarioLogadoNome');
-    if (!user) {
+<script>
+    // --- 1. LÓGICA DE INICIALIZAÇÃO (Roda assim que abre) ---
+    
+    // Recupera os dados salvos no Login
+    const userId = localStorage.getItem('userId');
+    const userName = localStorage.getItem('usuarioLogadoNome');
+
+    // Segurança: Se não tiver ID, chuta para o login
+    if (!userId || userId === "undefined") {
+        alert('Sessão expirada. Faça login novamente.');
         window.location.href = 'login.html';
     } else {
-        document.getElementById('userName').textContent = user.charAt(0).toUpperCase() + user.slice(1);
+        // ATUALIZA O NOME NA TELA AQUI 👇
+        const elementoNome = document.getElementById('userName');
+        if (elementoNome) {
+            // Se tiver nome salvo, usa. Se não, usa "Cliente".
+            // O comando charAt(0).toUpperCase() deixa a primeira letra maiúscula.
+            elementoNome.textContent = userName ? userName.charAt(0).toUpperCase() + userName.slice(1) : 'Cliente';
+        }
     }
 
+    // --- 2. BOTÕES E INTERAÇÃO ---
+
+    // Botão Sair (Logout)
     document.getElementById('logoutLink').onclick = (e) => {
         e.preventDefault();
-        localStorage.removeItem('usuarioLogadoNome');
-        window.location.href = 'index.html'; 
+        localStorage.clear(); // Limpa tudo
+        window.location.href = 'login.html'; 
     };
 
+    // Botão Menu (Sidebar)
     document.getElementById('toggleBtn').onclick = () => {
         document.getElementById('dashboard').classList.toggle('sidebar-toggled');
     };
 
+    // --- 3. FUNÇÃO DE CARREGAR OS GRÁFICOS ---
     async function carregarDispositivos() {
-        try {
-            const response = await fetch('http://localhost:3000/users');
-            const usuarios = await response.json();
+        const container = document.getElementById('devicesContainer');
+        const API_URL = `http://localhost:3000/users/${userId}/links`;
 
-            const container = document.getElementById('devicesContainer');
-            container.innerHTML = '';
-            usuarios.forEach(u => {
-                let linksHtml = '';
-                if (u.links && u.links.length > 0) {
-                    linksHtml = '<ul class="device-list">';
-                    u.links.forEach(link => {
-                        linksHtml += `
-                            <li class="device-item">
-                                <span style="font-weight:bold;">${link.name}</span>
-                                <a href="${link.url}" target="_blank" class="link-grafana">Ver Painel ↗</a>
-                            </li>
-                        `;
-                    });
-                    linksHtml += '</ul>';
-                } else {
-                    linksHtml = '<p style="color: var(--cor-texto-secundario); font-size: 14px; margin-top: 15px;">Sem dispositivos conectados.</p>';
+        console.log("Chamando API para usuário:", userId);
+
+        try {
+            const response = await fetch(API_URL);
+            const dados = await response.json(); 
+
+            // Se der erro no back, ele retorna um objeto de erro, não uma lista
+            if (!Array.isArray(dados)) {
+                throw new Error(dados.error || "Erro desconhecido no servidor");
+            }
+
+            const links = dados; 
+            container.innerHTML = ''; 
+
+            if (links.length === 0) {
+                container.innerHTML = '<p style="padding: 20px;">Nenhum dispositivo encontrado.</p>';
+                return;
+            }
+
+            links.forEach(link => {
+                let urlFinal = link.url;
+                // Garante o modo Kiosk (sem menus do Grafana)
+                if (!urlFinal.includes('kiosk')) {
+                    urlFinal += urlFinal.includes('?') ? '&kiosk' : '?kiosk';
                 }
 
                 const card = document.createElement('div');
-                card.className = 'device-card';
+                card.className = 'grafana-card';
                 card.innerHTML = `
-                    <h3>Dispositivos de: ${u.username}</h3>
-                    <p style="font-size: 14px; color: var(--cor-texto-secundario);">Email: ${u.email}</p>
-                    ${linksHtml}
+                    <div class="card-header">
+                        <span>${link.name}</span>
+                        <small style="color: #4cd137;">● Online</small>
+                    </div>
+                    <div class="card-iframe-container">
+                        <iframe src="${urlFinal}" allow="autoplay"></iframe>
+                    </div>
                 `;
-
                 container.appendChild(card);
             });
 
         } catch (error) {
-            console.error(error);
-            document.getElementById('devicesContainer').innerHTML = 
-                '<p style="color: #ff5555;">Falha na conexão com o servidor. Verifique se a API está rodando.</p>';
+            console.error("Erro capturado:", error);
+            container.innerHTML = `
+                <div style="background: #2a2020; padding: 20px; border-left: 4px solid red; border-radius: 4px; margin: 20px;">
+                    <h3 style="color: #ff5555; margin-top:0;">Erro de Conexão</h3>
+                    <p>${error.message}</p>
+                    <small>Verifique se o backend está rodando na porta 3000.</small>
+                </div>`;
         }
     }
 
-    // Executa a busca ao carregar a página
+    // --- 4. EXECUTA TUDO AGORA ---
     carregarDispositivos();
   </script>
 </body>

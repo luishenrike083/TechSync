@@ -77,6 +77,10 @@ services:
     environment:
       - GF_INSTALL_PLUGINS=alexanderzobnin-zabbix-app
       - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SECURITY_ALLOW_EMBEDDING=true   # <--- ESSA É A CHAVE! (Permite Iframe)
+      - GF_AUTH_ANONYMOUS_ENABLED=true     # <--- Permite ver sem logar de novo
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Viewer  # <--- Define como visualizador
+      - GF_SERVER_ROOT_URL=http://localhost:3001 # <--- Ajuda o Grafana a saber quem ele é
     volumes:
       - grafana_data:/var/lib/grafana
       #- ./grafana_provisioning:/etc/grafana/provisioning

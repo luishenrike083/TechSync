@@ -1,25 +1,40 @@
+# Definição das máquinas (Nome, IP, Hostname)
+maquinas = [
+  { :nome => "cliente1", :ip => "192.168.56.102", :hostname => "TechSync-Cliente-01" },
+  { :nome => "cliente2", :ip => "192.168.56.103", :hostname => "TechSync-Cliente-02" },
+  { :nome => "cliente3", :ip => "192.168.56.104", :hostname => "TechSync-Cliente-03" },
+  { :nome => "cliente4", :ip => "192.168.56.105", :hostname => "TechSync-Cliente-04" }
+]
+
 Vagrant.configure("2") do |config|
-  # === SO ===
+  
+  # Configuração comum para TODAS as máquinas
   config.vm.box = "debian/bookworm64"
 
-  # === REDE ===
-  config.vm.network "private_network", ip: "192.168.56.102"
+  # Loop para criar cada máquina da lista acima
+  maquinas.each do |maquina|
+    config.vm.define maquina[:nome] do |node|
+      
+      # === REDE ===
+      node.vm.network "private_network", ip: maquina[:ip]
 
-  # === HOSTNAME ===
-  config.vm.hostname = "TechSync-Cliente-Debian"
+      # === HOSTNAME ===
+      node.vm.hostname = maquina[:hostname]
 
-  # === HARDWARE ===
-  config.vm.provider "virtualbox" do |vb|
-    vb.name = "TechSync_Cliente_Debian"
-    vb.memory = "1024"
-    vb.cpus = 1
-  end
+      # === HARDWARE ===
+      node.vm.provider "virtualbox" do |vb|
+        # O nome na lista do VirtualBox será único para cada uma
+        vb.name = "TechSync_#{maquina[:hostname]}"
+        vb.memory = "1024"
+        vb.cpus = 1
+      end
 
-  # === PROVISIONAMENTO (ANSIBLE) ===
-  # "ansible_local" instala o ansible na VM e roda o playbook lá dentro.
-  config.vm.provision "ansible_local" do |ansible|
-    ansible.playbook = "playbook.yml"
-    # Se quiser ver o log colorido e detalhado:
-    ansible.verbose = true 
+      # === PROVISIONAMENTO (ANSIBLE) ===
+      node.vm.provision "ansible_local" do |ansible|
+        ansible.playbook = "playbook.yml"
+        ansible.verbose = true
+      end
+      
+    end
   end
 end

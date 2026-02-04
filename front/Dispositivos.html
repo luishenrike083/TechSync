@@ -15,8 +15,11 @@
         --cor-destaque: #ff79c6;
         --cor-borda: #383842;
         --sombra: 0 4px 15px rgba(0, 0, 0, 0.3);
+        --cor-erro: #ff5555;
+        --cor-online: #4cd137;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    
     body {
       background: url("imagem/fundo_roxo.png") no-repeat center center/cover; 
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -24,8 +27,12 @@
       height: 100vh;
       display: flex;
     }
-    .dashboard { display: flex; height: 100%; flex: 1; }
     
+    /* Layout */
+    .dashboard { display: flex; height: 100%; flex: 1; }
+    .main { flex: 1; display: flex; flex-direction: column; }
+    .content { padding: 30px; flex: 1; overflow-y: auto; }
+
     /* Sidebar */
     .sidebar {
       width: 220px;
@@ -33,26 +40,33 @@
       padding: 20px;
       box-shadow: 2px 0 5px rgba(0,0,0,0.2);
       border-right: 1px solid var(--cor-borda);
-      transition: all 0.3s ease;
+      transition: width 0.3s ease, padding 0.3s ease;
       overflow: hidden; 
       white-space: nowrap;
+      display: flex;
+      flex-direction: column;
     }
-    .dashboard.sidebar-toggled .sidebar { width: 0; min-width: 0; padding: 0; }
-    .sidebar h2 { 
-      font-size: 40px; text-align: center; margin-bottom: 20px; 
-      color: var(--cor-principal); text-shadow: 0 0 10px rgba(106, 97, 255, 0.3);
+    .dashboard.sidebar-toggled .sidebar { width: 0; padding: 0; border: none; }
+    
+    .sidebar-header { text-align: center; margin-bottom: 20px; }
+    .sidebar-logo { width: 100px; display: block; margin: 0 auto 10px; }
+    .sidebar-title { 
+      font-size: 40px; color: var(--cor-principal); 
+      text-shadow: 0 0 10px rgba(106, 97, 255, 0.3);
     }
-    .sidebar img { width: 100px; display: block; margin: 0 auto 20px; }
-    .sidebar ul { list-style: none; }
+    
+    .sidebar ul { list-style: none; flex: 1; }
     .sidebar li { margin: 15px 0; font-size: 20px; }
     .sidebar a {
       color: var(--cor-texto-secundario); text-decoration: none; font-weight: 500; transition: color 0.3s;
     }
     .sidebar a:hover, .sidebar a.active { color: var(--cor-destaque); text-shadow: 0 0 7px var(--cor-destaque); }
     .sidebar a.active { font-weight: 700; }
+    
+    .logout-container { margin-top: auto; text-align: center; }
+    .logout-btn { color: var(--cor-erro); font-size: 16px; text-decoration: none; }
 
-    /* Main & Header */
-    .main { flex: 1; display: flex; flex-direction: column; }
+    /* Header */
     .header {
       background-color: rgba(18, 18, 20, 0.7);
       backdrop-filter: blur(5px); 
@@ -61,181 +75,206 @@
       display: flex; justify-content: space-between; align-items: center;
       border-bottom: 1px solid var(--cor-borda);
     }
-    .header-actions { display: flex; align-items: center; gap: 15px; }
+    .header-left { display: flex; align-items: center; gap: 15px; }
+    .page-title { font-size: 24px; margin: 0; }
+    .user-info { font-weight: 600; }
+    
     .btn-toggle {
         background: none; border: none; color: var(--cor-texto-primario);
-        font-size: 24px; cursor: pointer; margin-right: 10px; transition: color 0.3s;
+        font-size: 24px; cursor: pointer; transition: color 0.3s;
     }
     .btn-toggle:hover { color: var(--cor-destaque); }
-    .content { padding: 30px; flex: 1; overflow-y: auto; }
 
-    /* --- ESTILO NOVO PARA OS GRÁFICOS --- */
+    /* --- GRID --- */
     .devices-grid { 
         display: grid; 
-        grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); /* Mais largo para caber o gráfico */
+        grid-template-columns: 1fr 1fr; 
         gap: 20px; 
     }
+    @media (max-width: 900px) {
+        .devices-grid { grid-template-columns: 1fr; }
+    }
+
+    /* --- CARDS --- */
     .grafana-card {
         background: var(--cor-fundo-card); 
         border-radius: 8px;
         box-shadow: var(--sombra); 
         border: 1px solid var(--cor-borda);
         overflow: hidden;
-        height: 380px; /* Altura fixa */
+        
+        /* 1. MUDANÇAS AQUI: Tamanho reduzido para os cards de cima */
+        height: 400px; 
+        width: 100%;
+        max-width: 400px; /* <--- Limita a largura dos cards pequenos */
+        margin: 0 auto;   /* <--- Centraliza o card na coluna dele */
+        
         display: flex;
         flex-direction: column;
-        transition: transform 0.2s;
+        transition: border-color 0.2s;
     }
-    .grafana-card:hover {
-        border-color: var(--cor-principal);
+    .grafana-card:hover { border-color: var(--cor-principal); }
+
+    /* 2. Configuração dos cards grandes (Tabelas) */
+    .grafana-card.full-width {
+        grid-column: 1 / -1; 
+        height: 500px; 
+        max-width: 100%; 
     }
+    
     .card-header {
-        padding: 10px 20px;
+        padding: 8px 20px;
         background: rgba(0,0,0,0.2);
         border-bottom: 1px solid var(--cor-borda);
         font-weight: bold;
         color: var(--cor-destaque);
-        display: flex; justify-content: space-between;
+        display: flex; justify-content: space-between; align-items: center;
     }
-    .card-iframe-container {
-        flex: 1;
-        position: relative;
-    }
-    iframe {
-        width: 100%;
-        height: 100%;
-        border: none;
-    }
+    .status-online { color: var(--cor-online); font-size: 0.9em; }
+    
+    .card-iframe-container { flex: 1; position: relative; }
+    iframe { width: 100%; height: 100%; border: none; }
+    
+    .msg-loading { color: #ccc; }
+    .msg-error { color: var(--cor-erro); padding: 20px; }
   </style>
 </head>
 <body>
   <div class="dashboard" id="dashboard">
     <aside class="sidebar">
-      <a href="#" style="text-decoration:none; display:block;">
-        <img src="imagem/logo.png" alt="TechSync">
-      </a>
-      <h2>TechSync</h2>
-      <ul>
-        <li><a href="dashboard.html">Dashboard</a></li>
-        <li><a href="Dispositivos.html" class="active">Dispositivos</a></li>
-        <li><a href="relatorio.html">Relatórios</a></li>
-        <li><a href="configuracao.html">Configurações</a></li>
-      </ul>
-      <div style="margin-top: 50px; text-align: center;">
-          <a href="#" id="logoutLink" style="color: #ff5555; font-size: 16px;">Sair da conta</a>
+      <div class="sidebar-header">
+        <a href="#"><img src="imagem/logo.png" alt="TechSync" class="sidebar-logo"></a>
+        <h2 class="sidebar-title">TechSync</h2>
+      </div>
+      <nav>
+        <ul>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="Dispositivos.html" class="active">Dispositivos</a></li>
+            <li><a href="relatorio.html">Relatórios</a></li>
+            <li><a href="configuracao.html">Configurações</a></li>
+        </ul>
+      </nav>
+      <div class="logout-container">
+          <a href="#" id="logoutLink" class="logout-btn">Sair da conta</a>
       </div>
     </aside>
 
     <main class="main">
       <header class="header">
-        <div class="header-actions">
+        <div class="header-left">
           <button class="btn-toggle" id="toggleBtn">☰</button>
-          <h2 style="font-size: 24px; margin: 0;">Meus Dispositivos</h2>
+          <h2 class="page-title">Meus Dispositivos</h2>
         </div>
-        <div style="font-weight: 600;">👤 <span id="userName">Usuário</span></div>
+        <div class="user-info">👤 <span id="userName">Usuário</span></div>
       </header>
 
       <div class="content">
         <div class="devices-grid" id="devicesContainer">
-            <p style="color: #ccc;">Carregando seus dashboards...</p>
+            <p class="msg-loading">Carregando seus dashboards...</p>
         </div>
       </div>
     </main>
   </div>
   
 <script>
-    // --- 1. LÓGICA DE INICIALIZAÇÃO (Roda assim que abre) ---
-    
-    // Recupera os dados salvos no Login
-    const userId = localStorage.getItem('userId');
-    const userName = localStorage.getItem('usuarioLogadoNome');
+    const CONFIG_DASHBOARDS = {
+        'contador': 1,         
+        'quantidade': 2,       
+        'problemas recentes': 3, 
+        'dispositivos up': 4     
+    };
 
-    // Segurança: Se não tiver ID, chuta para o login
-    if (!userId || userId === "undefined") {
-        alert('Sessão expirada. Faça login novamente.');
-        window.location.href = 'login.html';
-    } else {
-        // ATUALIZA O NOME NA TELA AQUI 👇
-        const elementoNome = document.getElementById('userName');
-        if (elementoNome) {
-            // Se tiver nome salvo, usa. Se não, usa "Cliente".
-            // O comando charAt(0).toUpperCase() deixa a primeira letra maiúscula.
-            elementoNome.textContent = userName ? userName.charAt(0).toUpperCase() + userName.slice(1) : 'Cliente';
+    const API_BASE_URL = 'http://localhost:3000/users';
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const userId = localStorage.getItem('userId');
+        const userName = localStorage.getItem('usuarioLogadoNome');
+
+        if (!userId || userId === "undefined") {
+            window.location.href = 'login.html';
+            return;
         }
-    }
 
-    // --- 2. BOTÕES E INTERAÇÃO ---
+        const userEl = document.getElementById('userName');
+        if (userEl && userName) {
+            userEl.textContent = userName.charAt(0).toUpperCase() + userName.slice(1);
+        }
 
-    // Botão Sair (Logout)
-    document.getElementById('logoutLink').onclick = (e) => {
-        e.preventDefault();
-        localStorage.clear(); // Limpa tudo
-        window.location.href = 'login.html'; 
-    };
+        document.getElementById('logoutLink').addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.clear();
+            window.location.href = 'login.html'; 
+        });
 
-    // Botão Menu (Sidebar)
-    document.getElementById('toggleBtn').onclick = () => {
-        document.getElementById('dashboard').classList.toggle('sidebar-toggled');
-    };
+        document.getElementById('toggleBtn').addEventListener('click', () => {
+            document.getElementById('dashboard').classList.toggle('sidebar-toggled');
+        });
 
-    // --- 3. FUNÇÃO DE CARREGAR OS GRÁFICOS ---
-    async function carregarDispositivos() {
+        carregarDispositivos(userId);
+    });
+
+    async function carregarDispositivos(userId) {
         const container = document.getElementById('devicesContainer');
-        const API_URL = `http://localhost:3000/users/${userId}/links`;
-
-        console.log("Chamando API para usuário:", userId);
 
         try {
-            const response = await fetch(API_URL);
-            const dados = await response.json(); 
+            const response = await fetch(`${API_BASE_URL}/${userId}/links`);
+            const links = await response.json(); 
 
-            // Se der erro no back, ele retorna um objeto de erro, não uma lista
-            if (!Array.isArray(dados)) {
-                throw new Error(dados.error || "Erro desconhecido no servidor");
-            }
+            if (!Array.isArray(links)) throw new Error("Formato de resposta inválido");
 
-            const links = dados; 
-            container.innerHTML = ''; 
+            const dashboardsFiltrados = links
+                .filter(link => {
+                    const nome = link.name.toLowerCase();
+                    return Object.keys(CONFIG_DASHBOARDS).some(key => nome.includes(key));
+                })
+                .sort((a, b) => {
+                    const nomeA = a.name.toLowerCase();
+                    const nomeB = b.name.toLowerCase();
+                    const pesoA = Object.keys(CONFIG_DASHBOARDS).find(k => nomeA.includes(k)) || '';
+                    const pesoB = Object.keys(CONFIG_DASHBOARDS).find(k => nomeB.includes(k)) || '';
+                    return (CONFIG_DASHBOARDS[pesoA] || 99) - (CONFIG_DASHBOARDS[pesoB] || 99);
+                });
 
-            if (links.length === 0) {
-                container.innerHTML = '<p style="padding: 20px;">Nenhum dispositivo encontrado.</p>';
+            container.innerHTML = '';
+
+            if (dashboardsFiltrados.length === 0) {
+                container.innerHTML = '<p class="msg-loading">Nenhum dashboard relevante encontrado.</p>';
                 return;
             }
 
-            links.forEach(link => {
-                let urlFinal = link.url;
-                // Garante o modo Kiosk (sem menus do Grafana)
-                if (!urlFinal.includes('kiosk')) {
-                    urlFinal += urlFinal.includes('?') ? '&kiosk' : '?kiosk';
-                }
+            dashboardsFiltrados.forEach(link => {
+                const separator = link.url.includes('?') ? '&' : '?';
+                const urlFinal = `${link.url}${separator}kiosk`;
+                const nomeLower = link.name.toLowerCase();
+
+                const isFullWidth = nomeLower.includes('problemas recentes') || 
+                                    nomeLower.includes('dispositivos up');
 
                 const card = document.createElement('div');
-                card.className = 'grafana-card';
+                card.className = `grafana-card ${isFullWidth ? 'full-width' : ''}`;
+                
                 card.innerHTML = `
                     <div class="card-header">
                         <span>${link.name}</span>
-                        <small style="color: #4cd137;">● Online</small>
+                        <small class="status-online">● Online</small>
                     </div>
                     <div class="card-iframe-container">
-                        <iframe src="${urlFinal}" allow="autoplay"></iframe>
+                        <iframe 
+                            src="${urlFinal}" 
+                            loading="lazy"
+                            allow="autoplay">
+                        </iframe>
                     </div>
                 `;
                 container.appendChild(card);
             });
 
         } catch (error) {
-            console.error("Erro capturado:", error);
-            container.innerHTML = `
-                <div style="background: #2a2020; padding: 20px; border-left: 4px solid red; border-radius: 4px; margin: 20px;">
-                    <h3 style="color: #ff5555; margin-top:0;">Erro de Conexão</h3>
-                    <p>${error.message}</p>
-                    <small>Verifique se o backend está rodando na porta 3000.</small>
-                </div>`;
+            console.error("Erro ao carregar dashboards:", error);
+            container.innerHTML = `<p class="msg-error">Erro ao carregar: ${error.message}</p>`;
         }
     }
+</script>
 
-    // --- 4. EXECUTA TUDO AGORA ---
-    carregarDispositivos();
-  </script>
 </body>
 </html>

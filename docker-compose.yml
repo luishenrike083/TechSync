@@ -64,7 +64,24 @@ services:
       - zabbix_data:/var/lib/mysql
     networks:
       - techsync-net
+      
 
+
+  # ==========================================
+  # AGENTE ZABBIX (Para monitorar o servidor)
+  # ==========================================
+  zabbix-agent:
+    image: zabbix/zabbix-agent:latest
+    container_name: zabbix-agent
+    restart: always
+    networks:
+      - techsync-net
+    environment:
+      - ZBX_HOSTNAME=Zabbix server
+      - ZBX_SERVER_HOST=zabbix-appliance
+      
+      
+      
   # ==========================================
   # 5. MONITORAMENTO (Grafana)
   # ==========================================

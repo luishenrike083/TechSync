@@ -141,7 +141,6 @@ docker-compose up -d
 ## 📈 Possíveis Evoluções Futuras
 
 * Implementação de backend real (API REST);
-* Autenticação de usuários;
 * Banco de dados relacional ou NoSQL;
 * Deploy em nuvem;
 * Monitoramento real de serviços e dispositivos;

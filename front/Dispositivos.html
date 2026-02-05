@@ -54,7 +54,6 @@
       font-size: 40px; color: var(--cor-principal); 
       text-shadow: 0 0 10px rgba(106, 97, 255, 0.3);
     }
-    
     .sidebar ul { list-style: none; flex: 1; }
     .sidebar li { margin: 15px 0; font-size: 20px; }
     .sidebar a {
@@ -78,48 +77,55 @@
     .header-left { display: flex; align-items: center; gap: 15px; }
     .page-title { font-size: 24px; margin: 0; }
     .user-info { font-weight: 600; }
-    
     .btn-toggle {
         background: none; border: none; color: var(--cor-texto-primario);
         font-size: 24px; cursor: pointer; transition: color 0.3s;
     }
     .btn-toggle:hover { color: var(--cor-destaque); }
 
-    /* --- GRID --- */
+    /* --- GRID INTELIGENTE (4 COLUNAS) --- */
     .devices-grid { 
         display: grid; 
-        grid-template-columns: 1fr 1fr; 
+        /* Dividimos a tela em 4 fatias iguais */
+        grid-template-columns: repeat(4, 1fr); 
         gap: 20px; 
     }
-    @media (max-width: 900px) {
-        .devices-grid { grid-template-columns: 1fr; }
+    
+    /* Responsividade: Celular vira 1 coluna */
+    @media (max-width: 1200px) {
+        .devices-grid { grid-template-columns: 1fr 1fr; } /* Tablet: 2 colunas */
+    }
+    @media (max-width: 768px) {
+        .devices-grid { grid-template-columns: 1fr; } /* Celular: 1 coluna */
     }
 
-    /* --- CARDS --- */
+    /* --- ESTILOS DOS CARDS --- */
     .grafana-card {
         background: var(--cor-fundo-card); 
         border-radius: 8px;
         box-shadow: var(--sombra); 
         border: 1px solid var(--cor-borda);
         overflow: hidden;
-        
-        /* 1. MUDANÇAS AQUI: Tamanho reduzido para os cards de cima */
-        height: 400px; 
-        width: 100%;
-        max-width: 400px; /* <--- Limita a largura dos cards pequenos */
-        margin: 0 auto;   /* <--- Centraliza o card na coluna dele */
-        
         display: flex;
         flex-direction: column;
         transition: border-color 0.2s;
+        
+        /* Padrão: Card Pequeno (Ocupa 1 fatia das 4) */
+        height: 400px; 
+        grid-column: span 1; 
     }
     .grafana-card:hover { border-color: var(--cor-principal); }
 
-    /* 2. Configuração dos cards grandes (Tabelas) */
+    /* CLASSE 1: Card Largo (Latência) -> Ocupa 2 fatias */
+    .grafana-card.wide {
+        grid-column: span 2; 
+        height: 400px; /* Mantém a altura dos pequenos */
+    }
+
+    /* CLASSE 2: Card Full (Tabelas) -> Ocupa tudo */
     .grafana-card.full-width {
-        grid-column: 1 / -1; 
-        height: 500px; 
-        max-width: 100%; 
+        grid-column: 1 / -1; /* Ocupa a linha toda */
+        height: 500px; /* Mais alto */
     }
     
     .card-header {
@@ -131,10 +137,8 @@
         display: flex; justify-content: space-between; align-items: center;
     }
     .status-online { color: var(--cor-online); font-size: 0.9em; }
-    
     .card-iframe-container { flex: 1; position: relative; }
     iframe { width: 100%; height: 100%; border: none; }
-    
     .msg-loading { color: #ccc; }
     .msg-error { color: var(--cor-erro); padding: 20px; }
   </style>
@@ -177,11 +181,15 @@
   </div>
   
 <script>
+    // --- Configuração ---
+    // Adicionei 'latência' e ajustei os números para ordenar
     const CONFIG_DASHBOARDS = {
-        'contador': 1,         
-        'quantidade': 2,       
-        'problemas recentes': 3, 
-        'dispositivos up': 4     
+        'contador': 1,         // Pequeno (1/4)
+        'quantidade': 2,       // Pequeno (1/4)
+        'latência': 3,         // Largo (2/4) - VAI AQUI
+        'latency': 3,          // (Caso esteja em inglês no banco)
+        'problemas recentes': 4, // Full
+        'dispositivos up': 5     // Full
     };
 
     const API_BASE_URL = 'http://localhost:3000/users';
@@ -247,11 +255,21 @@
                 const urlFinal = `${link.url}${separator}kiosk`;
                 const nomeLower = link.name.toLowerCase();
 
+                // Lógica de Layout Atualizada:
+                
+                // 1. Full Width (Tabelas de baixo)
                 const isFullWidth = nomeLower.includes('problemas recentes') || 
                                     nomeLower.includes('dispositivos up');
+                
+                // 2. Wide (Latência - Card da direita superior)
+                const isWide = nomeLower.includes('latência') || nomeLower.includes('latency');
+
+                let classeExtra = '';
+                if (isFullWidth) classeExtra = 'full-width';
+                else if (isWide) classeExtra = 'wide';
 
                 const card = document.createElement('div');
-                card.className = `grafana-card ${isFullWidth ? 'full-width' : ''}`;
+                card.className = `grafana-card ${classeExtra}`;
                 
                 card.innerHTML = `
                     <div class="card-header">

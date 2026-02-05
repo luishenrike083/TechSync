@@ -33,14 +33,15 @@ model User {
   password String
   email    String  @unique
   number   String?
-
   links    GrafanaLink[]
-}
+
 
   // Adicionamos o campo 'plan' aqui.
   // @default(FREE) garante que se não especificarmos o plano no cadastro,
   // ele entra como gratuito automaticamente.
   plan     Plan    @default(FREE)
+
+}
 
 model GrafanaLink {
   id     Int    @id @default(autoincrement())

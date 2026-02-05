@@ -61,6 +61,8 @@ O projeto foi desenvolvido utilizando as seguintes tecnologias e ferramentas:
 
 ---
 
+---
+
 ## 🗂️ Estrutura do Projeto
 
 A organização do repositório segue uma estrutura modular, facilitando manutenção e entendimento:
@@ -76,6 +78,18 @@ TechSync/
 ├── package.json               # Dependências do projeto
 └── README.md                  # Documentação do projeto
 ```
+
+---
+## 🏗️ Arquitetura do Sistema
+
+A solução é composta por múltiplos serviços interconectados via rede Docker:
+| Serviço | Tecnologia | Porta | Descrição |
+| --- | --- | --- | --- |
+| **Frontend** | Nginx | 8000 | Interface do usuário e landing page |
+| **Backend** | Node.js | 3000 | API REST e lógica de negócio |
+| **Database** | MySQL 8.0 | 3306 | Persistência de dados |
+| **Zabbix** | Zabbix Appliance | 8081 | Servidor de monitoramento |
+| **Grafana** | Grafana OSS | 3001 | Visualização de métricas |
 
 ---
 

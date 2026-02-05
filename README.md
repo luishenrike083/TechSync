@@ -1,6 +1,6 @@
-# 🚀 TechSync
+#  TechSync
 
-## 📌 Visão Geral
+##  Visão Geral
 
 O **TechSync** é um projeto acadêmico desenvolvido no contexto da disciplina **Desenvolvimento Web**, pertencente ao curso de **Redes de Computadores**. O objetivo principal do projeto é aplicar, de forma prática, conceitos fundamentais de desenvolvimento web aliados a noções de infraestrutura, monitoramento e organização de serviços, simulando um ambiente próximo ao encontrado em cenários reais de TI.
 
@@ -8,7 +8,7 @@ O sistema foi projetado para demonstrar a integração entre **frontend**, **bac
 
 ---
 
-## 🎯 Objetivos do Projeto
+##  Objetivos do Projeto
 
 * Aplicar conceitos de desenvolvimento web aprendidos em sala de aula;
 * Simular um ambiente de infraestrutura e monitoramento de serviços;
@@ -56,7 +56,7 @@ O TechSync oferece as seguintes funcionalidades:
 
 ---
 
-## 🗂️ Estrutura do Projeto
+##  Estrutura do Projeto
 
 A organização do repositório segue uma estrutura modular:
 
@@ -74,7 +74,7 @@ TechSync/
 
 ---
 
-## 🏗️ Arquitetura do Sistema
+##  Arquitetura do Sistema
 
 A solução é composta por múltiplos serviços interconectados via rede Docker e Máquinas Virtuais:
 
@@ -88,7 +88,7 @@ A solução é composta por múltiplos serviços interconectados via rede Docker
 
 ---
 
-## ⚙️ Pré-requisitos
+##  Pré-requisitos
 
 Antes de executar o projeto, certifique-se de ter instalado:
 
@@ -99,7 +99,7 @@ Antes de executar o projeto, certifique-se de ter instalado:
 
 ---
 
-## ▶️ Como Executar o Projeto
+##  Como Executar o Projeto
 
 ### 1️⃣ Clonar o repositório
 
@@ -145,7 +145,7 @@ docker-compose up -d
 
 ---
 
-## 🔐 Credenciais Padrão
+##  Credenciais Padrão
 
 | Serviço | Usuário | Senha |
 | :--- | :--- | :--- |
@@ -154,7 +154,7 @@ docker-compose up -d
 
 ---
 
-## 🧪 Exemplos de Uso
+##  Exemplos de Uso
 
 1.  **Monitoramento:** Acesse o Grafana para ver o status das VMs ligadas.
 2.  **Gestão:** Utilize o Frontend para visualizar os dispositivos cadastrados.
@@ -162,7 +162,7 @@ docker-compose up -d
 
 ---
 
-## 👨‍💻 Autores
+##  Autores
 
 * **Luis Henrike**
 * **Hugo Antônio**
@@ -170,6 +170,6 @@ docker-compose up -d
 
 ---
 
-## 📄 Licença
+##  Licença
 
 Este projeto é de caráter **acadêmico** e foi desenvolvido exclusivamente para fins educacionais.

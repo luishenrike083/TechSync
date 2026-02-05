@@ -16,6 +16,22 @@ router.get('/', (req, res) => {
     res.json({ status: 'API TechSync Online', database: 'Prisma ORM' });
 });
 
+
+// Listar todos
+router.get('/users', async (req, res) => {
+    try {
+        const users = await prisma.user.findMany({
+            include: { links: true } // Traz os links do Grafana juntos
+        });
+        res.json(users);
+    } catch (error) {
+        res.status(500).json({ error: "Erro ao buscar usuários" });
+    }
+});
+
+
+
+
 // --- ROTA NOVA: AUTORIZAÇÃO POR PLANOS (Pedido do Professor) ---
 // Apenas usuários com plano PRO ou ENTERPRISE podem acessar aqui
 router.get('/monitoramento-avancado', 

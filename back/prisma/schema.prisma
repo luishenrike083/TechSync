@@ -1,6 +1,6 @@
 generator client {
-  provider = "prisma-client-js"  
-  output   = "../src/generated/prisma" 
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -8,7 +8,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// 1. SEUS MODELOS 
+// 1. Definição dos Planos (Enum)
+enum Plan {
+  FREE
+  BASIC
+  PRO
+  ENTERPRISE
+}
+
+// 2. SEUS MODELOS 
 
 model Contact {
   id        Int      @id @default(autoincrement())
@@ -20,19 +28,26 @@ model Contact {
 }
 
 model User {
-  id       Int           @id @default(autoincrement())
-  username String        @unique
+  id       Int     @id @default(autoincrement())
+  username String  @unique
   password String
-  email    String        @unique
+  email    String  @unique
   number   String?
+
   links    GrafanaLink[]
 }
 
-model GrafanaLink {
-  id          Int    @id @default(autoincrement())
-  name        String
-  url         String
-  userId      Int
-  user        User   @relation(fields: [userId], references: [id])
-}
+  // Adicionamos o campo 'plan' aqui.
+  // @default(FREE) garante que se não especificarmos o plano no cadastro,
+  // ele entra como gratuito automaticamente.
+  plan     Plan    @default(FREE)
 
+model GrafanaLink {
+  id     Int    @id @default(autoincrement())
+  name   String
+  url    String
+  userId Int
+  
+  // Se deletar o usuário, os links dele somem automaticamente para não sujar o banco.
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
